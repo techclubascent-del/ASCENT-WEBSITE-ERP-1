@@ -1,0 +1,58 @@
+"""Opportunity routes."""
+from typing import Annotated
+
+from fastapi import APIRouter, Depends
+from supabase import Client
+
+from app.core.dependencies import CurrentUser, OrganizerOrAdminUser, get_supabase_client
+from app.repositories.opportunity_repository import OpportunityRepository
+from app.schemas.opportunity import OpportunityCreate, OpportunityResponse, OpportunityUpdate
+from app.services.opportunity_service import OpportunityService
+
+router = APIRouter(prefix="/opportunities", tags=["opportunities"])
+
+
+def get_opportunity_service(
+    client: Annotated[Client, Depends(get_supabase_client)],
+) -> OpportunityService:
+    """Dependency injection for the opportunity service."""
+    repo = OpportunityRepository(client)
+    return OpportunityService(repo)
+
+
+@router.get("", response_model=list[OpportunityResponse])
+async def list_opportunities(
+    service: Annotated[OpportunityService, Depends(get_opportunity_service)],
+) -> list[OpportunityResponse]:
+    """List all published opportunities."""
+    return await service.list_opportunities()
+
+
+@router.get("/{opportunity_id}", response_model=OpportunityResponse)
+async def get_opportunity(
+    opportunity_id: str,
+    service: Annotated[OpportunityService, Depends(get_opportunity_service)],
+) -> OpportunityResponse:
+    """Get a specific opportunity by ID."""
+    return await service.get_opportunity(opportunity_id)
+
+
+@router.post("", response_model=OpportunityResponse)
+async def create_opportunity(
+    data: OpportunityCreate,
+    current_user: OrganizerOrAdminUser,
+    service: Annotated[OpportunityService, Depends(get_opportunity_service)],
+) -> OpportunityResponse:
+    """Create a new opportunity (Organizer or Admin only)."""
+    return await service.create_opportunity(data, current_user.id)
+
+
+@router.patch("/{opportunity_id}", response_model=OpportunityResponse)
+async def update_opportunity(
+    opportunity_id: str,
+    data: OpportunityUpdate,
+    _current_user: OrganizerOrAdminUser,
+    service: Annotated[OpportunityService, Depends(get_opportunity_service)],
+) -> OpportunityResponse:
+    """Update an opportunity (Organizer or Admin only)."""
+    return await service.update_opportunity(opportunity_id, data)
