@@ -52,8 +52,14 @@ class ApplicationService:
     async def update_application_status(
         self, application_id: str, data: ApplicationUpdate
     ) -> ApplicationResponse:
-        """Update application status (Admin/Organizer)."""
-        await self.get_application(application_id)
+        """Update application status (Admin/Organizer).
+
+        Verifies the application exists before updating.
+        Bypasses ownership check — callers must be admins (enforced at the route layer).
+        """
+        existing = await self._repository.get_application_by_id(application_id)
+        if not existing:
+            raise NotFoundError(f"Application {application_id} not found.")
         updated = await self._repository.update_application(application_id, data)
         if not updated:
             raise NotFoundError("Failed to update application.")

@@ -7,6 +7,7 @@ Rules:
 - Returns domain data or raises repository-level exceptions.
 """
 
+from typing import Any, cast
 from supabase import Client
 
 from app.schemas.user import ProfileResponse, ProfileUpdate, UserResponse, UserRole
@@ -32,9 +33,10 @@ class UserRepository:
             .maybe_single()
             .execute()
         )
-        if response.data is None:
+        if response is None or not response.data:
             return None
-        return ProfileResponse(**response.data)
+        row: dict[str, Any] = cast(dict[str, Any], response.data)
+        return ProfileResponse(**row)
 
     async def list_users(self) -> list[UserResponse]:
         """List all users (Admin operation)."""
@@ -52,7 +54,7 @@ class UserRepository:
             except ValueError:
                 role = UserRole.MEMBER
                 
-            users.append(UserResponse(id=u.id, email=u.email, role=role))
+            users.append(UserResponse(id=str(u.id), email=str(u.email or ""), role=role))
         return users
 
     async def update_user_role(self, user_id: str, role: UserRole) -> UserResponse:
@@ -63,8 +65,9 @@ class UserRepository:
         )
         
         u = res.user if hasattr(res, "user") else res
-        
-        return UserResponse(id=u.id, email=u.email, role=role)
+        uid: str = str(getattr(u, "id", ""))
+        uemail: str = str(getattr(u, "email", "") or "")
+        return UserResponse(id=uid, email=uemail, role=role)
 
     async def update_profile(self, user_id: str, data: ProfileUpdate) -> ProfileResponse:
         """Update user profile."""
@@ -78,4 +81,5 @@ class UserRepository:
         if not res.data:
             from app.core.exceptions import NotFoundError
             raise NotFoundError(detail="Profile not found")
-        return ProfileResponse(**res.data[0])
+        rows: list[dict[str, Any]] = cast(list[dict[str, Any]], res.data)
+        return ProfileResponse(**rows[0])

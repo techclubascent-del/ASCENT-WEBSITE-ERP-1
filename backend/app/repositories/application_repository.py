@@ -1,5 +1,7 @@
 """Application repository."""
 
+from typing import Any, cast
+
 from supabase import Client
 
 from app.schemas.application import ApplicationCreate, ApplicationResponse, ApplicationUpdate
@@ -22,7 +24,8 @@ class ApplicationRepository:
             query = query.eq("opportunity_id", opportunity_id)
 
         response = query.execute()
-        return [ApplicationResponse(**row) for row in response.data]
+        rows: list[dict[str, Any]] = cast(list[dict[str, Any]], response.data)
+        return [ApplicationResponse(**row) for row in rows]
 
     async def get_application_by_id(self, application_id: str) -> ApplicationResponse | None:
         """Fetch a single application by ID."""
@@ -33,9 +36,10 @@ class ApplicationRepository:
             .maybe_single()
             .execute()
         )
-        if not response.data:
+        if response is None or not response.data:
             return None
-        return ApplicationResponse(**response.data)
+        row: dict[str, Any] = cast(dict[str, Any], response.data)
+        return ApplicationResponse(**row)
 
     async def create_application(
         self, data: ApplicationCreate, user_id: str
@@ -47,7 +51,8 @@ class ApplicationRepository:
         response = self._client.table("applications").insert(payload).execute()
         if not response.data:
             return None
-        return ApplicationResponse(**response.data[0])
+        rows: list[dict[str, Any]] = cast(list[dict[str, Any]], response.data)
+        return ApplicationResponse(**rows[0])
 
     async def update_application(
         self, application_id: str, data: ApplicationUpdate
@@ -59,4 +64,5 @@ class ApplicationRepository:
         )
         if not response.data:
             return None
-        return ApplicationResponse(**response.data[0])
+        rows: list[dict[str, Any]] = cast(list[dict[str, Any]], response.data)
+        return ApplicationResponse(**rows[0])

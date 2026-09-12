@@ -1,5 +1,7 @@
 """Opportunity repository."""
 
+from typing import Any, cast
+
 from supabase import Client
 
 from app.schemas.opportunity import OpportunityCreate, OpportunityResponse, OpportunityUpdate
@@ -17,7 +19,8 @@ class OpportunityRepository:
         if published_only:
             query = query.eq("status", "published")
         response = query.execute()
-        return [OpportunityResponse(**row) for row in response.data]
+        rows: list[dict[str, Any]] = cast(list[dict[str, Any]], response.data)
+        return [OpportunityResponse(**row) for row in rows]
 
     async def get_opportunity_by_id(self, opportunity_id: str) -> OpportunityResponse | None:
         """Fetch a single opportunity by ID."""
@@ -28,9 +31,10 @@ class OpportunityRepository:
             .maybe_single()
             .execute()
         )
-        if not response.data:
+        if response is None or not response.data:
             return None
-        return OpportunityResponse(**response.data)
+        row: dict[str, Any] = cast(dict[str, Any], response.data)
+        return OpportunityResponse(**row)
 
     async def create_opportunity(
         self, data: OpportunityCreate, user_id: str
@@ -42,7 +46,8 @@ class OpportunityRepository:
         response = self._client.table("opportunities").insert(payload).execute()
         if not response.data:
             return None
-        return OpportunityResponse(**response.data[0])
+        rows: list[dict[str, Any]] = cast(list[dict[str, Any]], response.data)
+        return OpportunityResponse(**rows[0])
 
     async def update_opportunity(
         self, opportunity_id: str, data: OpportunityUpdate
@@ -55,4 +60,5 @@ class OpportunityRepository:
         )
         if not response.data:
             return None
-        return OpportunityResponse(**response.data[0])
+        rows: list[dict[str, Any]] = cast(list[dict[str, Any]], response.data)
+        return OpportunityResponse(**rows[0])
