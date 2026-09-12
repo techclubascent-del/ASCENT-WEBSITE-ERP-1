@@ -6,11 +6,11 @@ Rules:
 - The global handler converts them to consistent ErrorResponse JSON.
 - Never leak internal exception details to clients in production.
 """
+
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
 from app.schemas.common import ErrorResponse
-
 
 # ── Custom exception classes ───────────────────────────────────────────────
 
@@ -63,7 +63,7 @@ class ConflictError(AscentError):
 class ValidationError(AscentError):
     """Raised for business-level validation failures (distinct from Pydantic)."""
 
-    status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+    status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
     detail = "The provided data is invalid."
     code = "VALIDATION_ERROR"
 
@@ -75,9 +75,7 @@ def register_exception_handlers(app: FastAPI) -> None:
     """Register global exception handlers on the FastAPI app instance."""
 
     @app.exception_handler(AscentError)
-    async def ascent_error_handler(
-        _request: Request, exc: AscentError
-    ) -> JSONResponse:
+    async def ascent_error_handler(_request: Request, exc: AscentError) -> JSONResponse:
         return JSONResponse(
             status_code=exc.status_code,
             content=ErrorResponse(detail=exc.detail, code=exc.code).model_dump(),

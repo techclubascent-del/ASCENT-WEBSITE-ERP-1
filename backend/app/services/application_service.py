@@ -1,7 +1,9 @@
 """Application service."""
-from app.core.exceptions import NotFoundError, ConflictError
+
+from app.core.exceptions import ForbiddenError, NotFoundError
 from app.repositories.application_repository import ApplicationRepository
 from app.schemas.application import ApplicationCreate, ApplicationResponse, ApplicationUpdate
+from app.schemas.user import UserResponse, UserRole
 
 
 class ApplicationService:
@@ -18,11 +20,20 @@ class ApplicationService:
         """Fetch all applications for a specific opportunity (Admin/Organizer)."""
         return await self._repository.list_applications(opportunity_id=opportunity_id)
 
-    async def get_application(self, application_id: str) -> ApplicationResponse:
-        """Fetch a single application, raising 404 if not found."""
+    async def get_application(
+        self, application_id: str, current_user: UserResponse
+    ) -> ApplicationResponse:
+        """Fetch a single application, raising 404 if not found.
+        Members can only see their own applications; admins can see any.
+        """
         application = await self._repository.get_application_by_id(application_id)
         if not application:
             raise NotFoundError(f"Application {application_id} not found.")
+        if (
+            current_user.role == UserRole.MEMBER
+            and application.user_id != current_user.id
+        ):
+            raise ForbiddenError(detail="You can only view your own applications.")
         return application
 
     async def submit_application(

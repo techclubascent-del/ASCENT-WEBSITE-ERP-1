@@ -49,7 +49,7 @@ export default function NewOpportunityPage() {
       description,
       status,
       deadline: deadline ? new Date(deadline).toISOString() : undefined,
-    } as any);
+    } as Partial<Opportunity>);
   };
 
   return (

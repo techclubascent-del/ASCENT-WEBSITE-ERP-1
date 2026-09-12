@@ -32,9 +32,9 @@ export default function OpportunitiesPage() {
       </div>
 
       <AsyncBoundary
-        query={query}
-        loadingMessage="Loading opportunities..."
-        isEmpty={query.data?.length === 0}
+        isLoading={query.isLoading}
+        error={query.error}
+        isEmpty={!query.data || query.data.length === 0}
         emptyMessage="No opportunities available right now."
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

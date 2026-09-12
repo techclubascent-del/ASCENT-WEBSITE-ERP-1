@@ -1,4 +1,5 @@
 """Health check route."""
+
 from fastapi import APIRouter
 
 from app.schemas.common import HealthResponse

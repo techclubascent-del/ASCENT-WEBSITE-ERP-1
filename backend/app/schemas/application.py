@@ -1,4 +1,5 @@
 """Application schemas."""
+
 from datetime import datetime
 from enum import StrEnum
 

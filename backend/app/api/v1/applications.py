@@ -1,10 +1,11 @@
 """Application routes."""
+
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
 from supabase import Client
 
-from app.core.dependencies import CurrentUser, OrganizerOrAdminUser, get_supabase_client
+from app.core.dependencies import AdminUser, CurrentUser, get_supabase_client
 from app.repositories.application_repository import ApplicationRepository
 from app.schemas.application import ApplicationCreate, ApplicationResponse, ApplicationUpdate
 from app.services.application_service import ApplicationService
@@ -32,21 +33,21 @@ async def list_my_applications(
 @router.get("/opportunity/{opportunity_id}", response_model=list[ApplicationResponse])
 async def list_opportunity_applications(
     opportunity_id: str,
-    _current_user: OrganizerOrAdminUser,
+    _current_user: AdminUser,
     service: Annotated[ApplicationService, Depends(get_application_service)],
 ) -> list[ApplicationResponse]:
-    """List all applications for an opportunity (Organizer or Admin only)."""
+    """List all applications for an opportunity (Admin or Super Admin only)."""
     return await service.list_opportunity_applications(opportunity_id)
 
 
 @router.get("/{application_id}", response_model=ApplicationResponse)
 async def get_application(
     application_id: str,
-    _current_user: CurrentUser,  # TODO: Add fine-grained access check in service
+    current_user: CurrentUser,
     service: Annotated[ApplicationService, Depends(get_application_service)],
 ) -> ApplicationResponse:
-    """Get a specific application by ID."""
-    return await service.get_application(application_id)
+    """Get a specific application. Members may only view their own."""
+    return await service.get_application(application_id, current_user)
 
 
 @router.post("", response_model=ApplicationResponse)
@@ -63,8 +64,8 @@ async def submit_application(
 async def update_application_status(
     application_id: str,
     data: ApplicationUpdate,
-    _current_user: OrganizerOrAdminUser,
+    _current_user: AdminUser,
     service: Annotated[ApplicationService, Depends(get_application_service)],
 ) -> ApplicationResponse:
-    """Update application status (Organizer or Admin only)."""
+    """Update application status (Admin or Super Admin only)."""
     return await service.update_application_status(application_id, data)

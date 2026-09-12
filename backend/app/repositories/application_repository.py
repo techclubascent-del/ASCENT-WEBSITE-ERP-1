@@ -1,4 +1,5 @@
 """Application repository."""
+
 from supabase import Client
 
 from app.schemas.application import ApplicationCreate, ApplicationResponse, ApplicationUpdate
@@ -19,13 +20,19 @@ class ApplicationRepository:
             query = query.eq("user_id", user_id)
         if opportunity_id:
             query = query.eq("opportunity_id", opportunity_id)
-            
+
         response = query.execute()
         return [ApplicationResponse(**row) for row in response.data]
 
     async def get_application_by_id(self, application_id: str) -> ApplicationResponse | None:
         """Fetch a single application by ID."""
-        response = self._client.table("applications").select("*").eq("id", application_id).maybe_single().execute()
+        response = (
+            self._client.table("applications")
+            .select("*")
+            .eq("id", application_id)
+            .maybe_single()
+            .execute()
+        )
         if not response.data:
             return None
         return ApplicationResponse(**response.data)
@@ -47,7 +54,9 @@ class ApplicationRepository:
     ) -> ApplicationResponse | None:
         """Update an existing application."""
         payload = data.model_dump(exclude_unset=True)
-        response = self._client.table("applications").update(payload).eq("id", application_id).execute()
+        response = (
+            self._client.table("applications").update(payload).eq("id", application_id).execute()
+        )
         if not response.data:
             return None
         return ApplicationResponse(**response.data[0])

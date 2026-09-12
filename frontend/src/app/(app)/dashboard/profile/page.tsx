@@ -30,8 +30,9 @@ export default function ProfilePage() {
       </div>
 
       <AsyncBoundary
-        query={query}
-        loadingMessage="Loading profile..."
+        isLoading={query.isLoading}
+        error={query.error}
+        isEmpty={!query.data}
         emptyMessage="Failed to load profile."
       >
         {query.data && (

@@ -30,7 +30,6 @@ type SignupValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
   const { signUp } = useAuth();
-  const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const [verifyMessage, setVerifyMessage] = useState<string | null>(null);
 

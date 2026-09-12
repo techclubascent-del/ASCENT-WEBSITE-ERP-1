@@ -1,6 +1,7 @@
 """
 Shared Pydantic schemas used across multiple domains.
 """
+
 from pydantic import BaseModel
 
 

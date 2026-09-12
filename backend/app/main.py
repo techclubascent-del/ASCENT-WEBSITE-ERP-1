@@ -6,6 +6,7 @@ Architecture notes (ARCHITECTURE.md):
 - Global exception handlers are registered at the app level.
 - CORS is configured from environment variables.
 """
+
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 

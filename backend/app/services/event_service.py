@@ -1,4 +1,5 @@
 """Event service."""
+
 from app.core.exceptions import NotFoundError
 from app.repositories.event_repository import EventRepository
 from app.schemas.event import EventCreate, EventResponse, EventUpdate
@@ -21,18 +22,14 @@ class EventService:
             raise NotFoundError(f"Event {event_id} not found.")
         return event
 
-    async def create_event(
-        self, data: EventCreate, user_id: str
-    ) -> EventResponse:
+    async def create_event(self, data: EventCreate, user_id: str) -> EventResponse:
         """Create an event. Assumes caller is authorized (enforced in router)."""
         created = await self._repository.create_event(data, user_id)
         if not created:
             raise NotFoundError("Failed to create event.")
         return created
 
-    async def update_event(
-        self, event_id: str, data: EventUpdate
-    ) -> EventResponse:
+    async def update_event(self, event_id: str, data: EventUpdate) -> EventResponse:
         """Update an event. Assumes caller is authorized (enforced in router)."""
         await self.get_event(event_id)
         updated = await self._repository.update_event(event_id, data)

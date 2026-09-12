@@ -45,9 +45,9 @@ export default function ApplicationsPage() {
       </div>
 
       <AsyncBoundary
-        query={query}
-        loadingMessage="Loading applications..."
-        isEmpty={query.data?.length === 0}
+        isLoading={query.isLoading}
+        error={query.error}
+        isEmpty={!query.data || query.data.length === 0}
         emptyMessage="You haven't submitted any applications yet."
       >
         <div className="space-y-4">

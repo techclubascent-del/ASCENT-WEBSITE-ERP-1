@@ -1,4 +1,5 @@
 """Opportunity service."""
+
 from app.core.exceptions import NotFoundError
 from app.repositories.opportunity_repository import OpportunityRepository
 from app.schemas.opportunity import OpportunityCreate, OpportunityResponse, OpportunityUpdate
@@ -10,10 +11,9 @@ class OpportunityService:
     def __init__(self, repository: OpportunityRepository) -> None:
         self._repository = repository
 
-    async def list_opportunities(self) -> list[OpportunityResponse]:
-        """Fetch all published opportunities (public view)."""
-        # TODO: Add filters for status
-        return await self._repository.list_opportunities()
+    async def list_opportunities(self, published_only: bool = True) -> list[OpportunityResponse]:
+        """Fetch opportunities — public view is published-only; admin can see all."""
+        return await self._repository.list_opportunities(published_only=published_only)
 
     async def get_opportunity(self, opportunity_id: str) -> OpportunityResponse:
         """Fetch a single opportunity, raising 404 if not found."""
@@ -37,7 +37,7 @@ class OpportunityService:
         """Update an opportunity. Assumes caller is authorized (enforced in router)."""
         # Ensure it exists
         await self.get_opportunity(opportunity_id)
-        
+
         updated = await self._repository.update_opportunity(opportunity_id, data)
         if not updated:
             raise NotFoundError("Failed to update opportunity.")

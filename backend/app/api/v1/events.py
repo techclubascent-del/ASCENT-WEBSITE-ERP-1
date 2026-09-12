@@ -1,10 +1,11 @@
 """Event routes."""
+
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
 from supabase import Client
 
-from app.core.dependencies import OrganizerOrAdminUser, get_supabase_client
+from app.core.dependencies import AdminUser, get_supabase_client
 from app.repositories.event_repository import EventRepository
 from app.schemas.event import EventCreate, EventResponse, EventUpdate
 from app.services.event_service import EventService
@@ -40,10 +41,10 @@ async def get_event(
 @router.post("", response_model=EventResponse)
 async def create_event(
     data: EventCreate,
-    current_user: OrganizerOrAdminUser,
+    current_user: AdminUser,
     service: Annotated[EventService, Depends(get_event_service)],
 ) -> EventResponse:
-    """Create a new event (Organizer or Admin only)."""
+    """Create a new event (Admin or Super Admin only)."""
     return await service.create_event(data, current_user.id)
 
 
@@ -51,8 +52,8 @@ async def create_event(
 async def update_event(
     event_id: str,
     data: EventUpdate,
-    _current_user: OrganizerOrAdminUser,
+    _current_user: AdminUser,
     service: Annotated[EventService, Depends(get_event_service)],
 ) -> EventResponse:
-    """Update an event (Organizer or Admin only)."""
+    """Update an event (Admin or Super Admin only)."""
     return await service.update_event(event_id, data)

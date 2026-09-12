@@ -1,4 +1,5 @@
 """Event repository."""
+
 from supabase import Client
 
 from app.schemas.event import EventCreate, EventResponse, EventUpdate
@@ -17,17 +18,17 @@ class EventRepository:
 
     async def get_event_by_id(self, event_id: str) -> EventResponse | None:
         """Fetch a single event by ID."""
-        response = self._client.table("events").select("*").eq("id", event_id).maybe_single().execute()
+        response = (
+            self._client.table("events").select("*").eq("id", event_id).maybe_single().execute()
+        )
         if not response.data:
             return None
         return EventResponse(**response.data)
 
     async def create_event(self, data: EventCreate, user_id: str) -> EventResponse | None:
         """Create a new event."""
-        payload = data.model_dump(exclude_unset=True)
+        payload = data.model_dump(exclude_unset=True, mode="json")
         payload["created_by"] = user_id
-        if payload.get("event_date"):
-            payload["event_date"] = payload["event_date"].isoformat()
 
         response = self._client.table("events").insert(payload).execute()
         if not response.data:
@@ -36,10 +37,8 @@ class EventRepository:
 
     async def update_event(self, event_id: str, data: EventUpdate) -> EventResponse | None:
         """Update an existing event."""
-        payload = data.model_dump(exclude_unset=True)
-        if payload.get("event_date"):
-            payload["event_date"] = payload["event_date"].isoformat()
-            
+        payload = data.model_dump(exclude_unset=True, mode="json")
+
         response = self._client.table("events").update(payload).eq("id", event_id).execute()
         if not response.data:
             return None

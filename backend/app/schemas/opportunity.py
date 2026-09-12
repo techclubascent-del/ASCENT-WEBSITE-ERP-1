@@ -1,4 +1,5 @@
 """Opportunity schemas."""
+
 from datetime import datetime
 from enum import StrEnum
 
@@ -20,6 +21,7 @@ class OpportunityBase(BaseModel):
     description: str
     status: OpportunityStatus = OpportunityStatus.DRAFT
     deadline: datetime | None = None
+    published_at: datetime | None = None
 
 
 class OpportunityCreate(OpportunityBase):
@@ -35,6 +37,7 @@ class OpportunityUpdate(BaseModel):
     description: str | None = None
     status: OpportunityStatus | None = None
     deadline: datetime | None = None
+    published_at: datetime | None = None
 
 
 class OpportunityResponse(OpportunityBase):

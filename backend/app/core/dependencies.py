@@ -8,13 +8,18 @@ Usage:
     @router.get("/me")
     async def get_me(current_user: CurrentUser) -> UserResponse:
         ...
+
+    @router.post("/opportunities")
+    async def create(current_user: AdminUser) -> OpportunityResponse:
+        ...
 """
+
 from typing import Annotated
 
 from fastapi import Depends, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
-from supabase import Client
+from supabase import Client, create_client
 
 from app.config import Settings, get_settings
 from app.core.exceptions import ForbiddenError, UnauthorizedError
@@ -27,8 +32,6 @@ bearer_scheme = HTTPBearer(auto_error=False)
 
 def get_supabase_client(settings: Annotated[Settings, Depends(get_settings)]) -> Client:
     """Return a Supabase client using the service role key for admin operations."""
-    from supabase import create_client
-
     return create_client(settings.supabase_url, settings.supabase_service_role_key)
 
 
@@ -36,9 +39,7 @@ def get_supabase_client(settings: Annotated[Settings, Depends(get_settings)]) ->
 
 
 async def get_current_user(
-    credentials: Annotated[
-        HTTPAuthorizationCredentials | None, Security(bearer_scheme)
-    ],
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Security(bearer_scheme)],
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> UserResponse:
     """
@@ -59,11 +60,11 @@ async def get_current_user(
             options={"verify_aud": False},
         )
     except JWTError:
-        raise UnauthorizedError(detail="Invalid or expired token.")
+        raise UnauthorizedError(detail="Invalid or expired token.") from None
 
     user_id: str | None = payload.get("sub")
     email: str | None = payload.get("email")
-    role_str: str = payload.get("user_metadata", {}).get("role", UserRole.USER)
+    role_str: str = payload.get("user_metadata", {}).get("role", UserRole.MEMBER)
 
     if not user_id or not email:
         raise UnauthorizedError(detail="Token payload is malformed.")
@@ -71,7 +72,7 @@ async def get_current_user(
     try:
         role = UserRole(role_str)
     except ValueError:
-        role = UserRole.USER
+        role = UserRole.MEMBER
 
     return UserResponse(id=user_id, email=email, role=role)
 
@@ -82,17 +83,23 @@ async def get_current_user(
 async def require_admin(
     current_user: Annotated[UserResponse, Depends(get_current_user)],
 ) -> UserResponse:
-    """Restrict a route to admin users only."""
-    if current_user.role != UserRole.ADMIN:
+    """
+    Restrict a route to admin and super_admin users.
+    Admins can manage content, members, certificates, and assign roles up to 'admin'.
+    """
+    if current_user.role not in (UserRole.ADMIN, UserRole.SUPER_ADMIN):
         raise ForbiddenError()
     return current_user
 
 
-async def require_organizer_or_admin(
+async def require_super_admin(
     current_user: Annotated[UserResponse, Depends(get_current_user)],
 ) -> UserResponse:
-    """Restrict a route to organizers and admins."""
-    if current_user.role not in (UserRole.ORGANIZER, UserRole.ADMIN):
+    """
+    Restrict a route to super_admin users only.
+    Super admins have full platform access including security and role promotion.
+    """
+    if current_user.role != UserRole.SUPER_ADMIN:
         raise ForbiddenError()
     return current_user
 
@@ -101,4 +108,4 @@ async def require_organizer_or_admin(
 
 CurrentUser = Annotated[UserResponse, Depends(get_current_user)]
 AdminUser = Annotated[UserResponse, Depends(require_admin)]
-OrganizerOrAdminUser = Annotated[UserResponse, Depends(require_organizer_or_admin)]
+SuperAdminUser = Annotated[UserResponse, Depends(require_super_admin)]

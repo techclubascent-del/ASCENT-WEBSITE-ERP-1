@@ -4,6 +4,7 @@ Application settings loaded from environment variables.
 Uses pydantic-settings so all config is type-safe and validated on startup.
 Add new settings here — never read os.environ directly in business code.
 """
+
 from functools import lru_cache
 
 from pydantic import field_validator
@@ -31,9 +32,13 @@ class Settings(BaseSettings):
     @field_validator("cors_origins", mode="before")
     @classmethod
     def parse_cors_origins(cls, v: str | list[str]) -> list[str]:
-        """Allow CORS_ORIGINS to be set as a comma-separated string."""
+        """Allow CORS_ORIGINS to be a comma-separated string or JSON array string."""
         if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",") if origin.strip()]
+            stripped = v.strip()
+            if stripped.startswith("["):
+                import json
+                return json.loads(stripped)
+            return [origin.strip() for origin in stripped.split(",") if origin.strip()]
         return v
 
     @property

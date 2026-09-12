@@ -4,6 +4,7 @@ Health check endpoint tests.
 These tests verify that the service starts correctly and the health endpoint
 responds as expected. No database connection is required.
 """
+
 from fastapi.testclient import TestClient
 
 from app.main import app
