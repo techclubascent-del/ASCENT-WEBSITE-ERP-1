@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 import { AsyncBoundary } from "@/components/async/async-boundary";
+import Link from "next/link";
 
 export default function OpportunitiesPage() {
   const query = useQuery({
@@ -59,7 +60,9 @@ export default function OpportunitiesPage() {
                 </p>
               </CardContent>
               <CardFooter>
-                <Button className="w-full">View Details</Button>
+                <Link href={`/dashboard/opportunities/${opp.id}`} className="w-full">
+                  <Button className="w-full">View Details</Button>
+                </Link>
               </CardFooter>
             </Card>
           ))}

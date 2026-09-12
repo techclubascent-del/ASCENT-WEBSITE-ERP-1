@@ -15,15 +15,14 @@
  */
 export type UserRole = "member" | "admin" | "super_admin";
 
-export type OpportunityStatus = "draft" | "published" | "closed" | "archived";
+export type OpportunityStatus = "draft" | "published" | "closed";
 
 export type ApplicationStatus =
   | "draft"
   | "submitted"
   | "under_review"
   | "accepted"
-  | "rejected"
-  | "withdrawn";
+  | "rejected";
 
 // ── Core domain types ─────────────────────────────────────────────────────────
 
@@ -31,7 +30,6 @@ export interface User {
   id: string;
   email: string;
   role: UserRole;
-  created_at: string;
 }
 
 export interface Profile {
@@ -46,10 +44,9 @@ export interface Opportunity {
   id: string;
   created_by: string;
   title: string;
-  description: string | null;
+  description: string;
   status: OpportunityStatus;
   deadline: string | null;
-  /** When set, the opportunity auto-publishes at this UTC timestamp. */
   published_at: string | null;
   created_at: string;
 }
@@ -67,9 +64,10 @@ export interface Application {
 export interface Event {
   id: string;
   title: string;
-  description: string | null;
+  description: string;
   event_date: string;
   location: string | null;
+  created_by: string;
   created_at: string;
 }
 
@@ -86,67 +84,8 @@ export interface Attendance {
   id: string;
   user_id: string;
   event_id: string;
-  attended: boolean;
+  status: "present" | "absent" | "excused";
   marked_at: string;
-}
-
-// ── API response wrappers ─────────────────────────────────────────────────────
-
-export interface ApiError {
-  detail: string;
-  code?: string;
-}
-
-// ── Utility types ──────────────────────────────────────────────────────────────
-
-/** Makes specified keys of T required and non-nullable. */
-export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: NonNullable<T[P]> };
-
-
-
-// ── Core domain types ─────────────────────────────────────────────────────────
-
-export interface User {
-  id: string;
-  email: string;
-  role: UserRole;
-  created_at: string;
-}
-
-export interface Profile {
-  id: string;
-  user_id: string;
-  full_name: string | null;
-  bio: string | null;
-  avatar_url: string | null;
-}
-
-export interface Opportunity {
-  id: string;
-  created_by: string;
-  title: string;
-  description: string | null;
-  status: OpportunityStatus;
-  deadline: string | null;
-  created_at: string;
-}
-
-export interface Application {
-  id: string;
-  user_id: string;
-  opportunity_id: string;
-  status: ApplicationStatus;
-  answers: Record<string, string>;
-  submitted_at: string | null;
-  created_at: string;
-}
-
-export interface Event {
-  id: string;
-  title: string;
-  description: string | null;
-  event_date: string;
-  created_at: string;
 }
 
 // ── API response wrappers ─────────────────────────────────────────────────────
