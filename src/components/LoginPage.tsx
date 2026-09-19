@@ -26,7 +26,7 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration }: LoginPageP
   };
 
   return (
-    <div className="w-full max-w-md mx-auto my-auto px-3 sm:px-4 py-2">
+    <div className="w-full max-w-md ml-0 mr-auto sm:ml-8 lg:ml-16 my-auto px-3 sm:px-4 py-2">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

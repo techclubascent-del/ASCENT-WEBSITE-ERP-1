@@ -38,7 +38,7 @@ export default function App() {
           currentView === 'portal'
             ? 'w-full min-h-screen'
             : currentView === 'login'
-            ? 'w-full min-h-screen flex items-center justify-center p-3 sm:p-6'
+            ? 'w-full min-h-screen flex items-center justify-start p-3 sm:p-6 lg:p-12'
             : 'w-full min-h-screen flex items-center justify-center p-4 sm:p-8'
         }
       >
@@ -50,7 +50,7 @@ export default function App() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="w-full flex items-center justify-center"
+              className="w-full flex items-center justify-start"
             >
               <LoginPage
                 onLoginClick={handleLogin}
