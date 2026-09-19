@@ -1,0 +1,6 @@
+{
+  "name": "ASCENT — Public Platform",
+  "description": "A sleek, minimal, responsive public platform for ASCENT featuring Three.js 3D spaces, monochrome tones with dual accent contrasts, and clean geometric typography.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
