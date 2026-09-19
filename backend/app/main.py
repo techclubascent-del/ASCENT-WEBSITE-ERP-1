@@ -16,6 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.router import router as v1_router
 from app.config import get_settings
 from app.core.exceptions import register_exception_handlers
+from app.core.middleware import KillSwitchMiddleware
 
 
 @asynccontextmanager
@@ -51,6 +52,9 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # ── Custom Middleware ─────────────────────────────────────
+    app.add_middleware(KillSwitchMiddleware)
 
     # ── Exception handlers ────────────────────────────────────
     register_exception_handlers(app)

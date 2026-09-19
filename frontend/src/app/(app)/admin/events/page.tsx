@@ -48,30 +48,42 @@ export default function AdminEventsPage() {
         emptyMessage="No events yet. Create your first one!"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {query.data?.map((event) => (
-            <Card key={event.id}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">{event.title}</CardTitle>
-                <CardDescription className="flex flex-col gap-1 mt-1">
-                  <span className="flex items-center gap-1.5 text-xs">
-                    <Calendar className="h-3 w-3" />
-                    {formatDate(event.event_date)}
-                  </span>
-                  {event.location && (
+          {query.data?.map((event) => {
+            const match = event.description.match(/\[IMAGE:\s*(.*?)\]/);
+            const imageUrl = match ? match[1] : null;
+            const displayDescription = event.description.replace(/\[IMAGE:\s*.*?\]/g, "").trim();
+
+            return (
+              <Card key={event.id} className="overflow-hidden">
+                {imageUrl && (
+                  <div className="w-full h-32 bg-muted">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={imageUrl} alt={event.title} className="w-full h-full object-cover" />
+                  </div>
+                )}
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">{event.title}</CardTitle>
+                  <CardDescription className="flex flex-col gap-1 mt-1">
                     <span className="flex items-center gap-1.5 text-xs">
-                      <MapPin className="h-3 w-3" />
-                      {event.location}
+                      <Calendar className="h-3 w-3" />
+                      {formatDate(event.event_date)}
                     </span>
-                  )}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-xs text-muted-foreground line-clamp-2">
-                  {event.description}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+                    {event.location && (
+                      <span className="flex items-center gap-1.5 text-xs">
+                        <MapPin className="h-3 w-3" />
+                        {event.location}
+                      </span>
+                    )}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xs text-muted-foreground line-clamp-2">
+                    {displayDescription}
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </AsyncBoundary>
     </div>

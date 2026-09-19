@@ -3,6 +3,7 @@
 // Providers are injected here so they are available globally.
 // ─────────────────────────────────────────────────────────────────────────────
 import { QueryProvider } from "@/providers/query-provider";
+import { Analytics } from "@/components/analytics";
 import "@/app/globals.css";
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google";
@@ -40,7 +41,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen font-sans antialiased`}
       >
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <Analytics />
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );

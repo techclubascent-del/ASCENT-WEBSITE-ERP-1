@@ -7,12 +7,14 @@
 // Wraps the Supabase browser client so components stay decoupled from Supabase.
 // ─────────────────────────────────────────────────────────────────────────────
 import { createClient } from "@/lib/supabase";
-import type { User } from "@supabase/supabase-js";
+import type { User, Session } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 
 interface AuthState {
   /** Supabase user object. null while loading or unauthenticated. */
   user: User | null;
+  /** Supabase session object. null while loading or unauthenticated. */
+  session: Session | null;
   /** True while the initial session check is in progress. */
   isLoading: boolean;
   /** True when there is an authenticated session. */
@@ -28,11 +30,13 @@ interface AuthActions {
 export function useAuth(): AuthState & AuthActions {
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Get the current session on mount
     supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
     });
@@ -41,6 +45,7 @@ export function useAuth(): AuthState & AuthActions {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
       setUser(session?.user ?? null);
     });
 
@@ -63,6 +68,7 @@ export function useAuth(): AuthState & AuthActions {
 
   return {
     user,
+    session,
     isLoading,
     isAuthenticated: !!user,
     signIn,

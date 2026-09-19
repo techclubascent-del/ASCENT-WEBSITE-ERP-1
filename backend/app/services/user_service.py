@@ -27,11 +27,19 @@ class UserService:
     async def get_profile(self, user: UserResponse) -> ProfileResponse | None:
         """
         Return the profile for the given user.
-        Phase 0 stub — the profiles table doesn't exist yet.
-
-        Phase 1 will expand this to create a default profile if none exists.
+        Provides a fallback profile with user details if no database record exists yet.
         """
-        return await self._repository.get_profile_by_user_id(user.id)
+        profile = await self._repository.get_profile_by_user_id(user.id)
+        if not profile:
+            name_part = user.email.split("@")[0].replace(".", " ").title()
+            return ProfileResponse(
+                id=user.id,
+                user_id=user.id,
+                full_name=name_part or "ASCENT Admin",
+                bio="Platform Administrator",
+                avatar_url=None,
+            )
+        return profile
 
     async def list_users(self) -> list[UserResponse]:
         """List all users."""

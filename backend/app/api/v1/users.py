@@ -52,6 +52,20 @@ async def get_my_profile(
     return profile
 
 
+@router.patch(
+    "/me/profile",
+    response_model=ProfileResponse,
+    summary="Update current user profile",
+)
+async def update_my_profile(
+    data: ProfileUpdate,
+    current_user: CurrentUser,
+    service: UserService = Depends(get_user_service),
+) -> ProfileResponse:
+    """Update the authenticated user's profile information."""
+    return await service.update_profile(current_user.id, data)
+
+
 @router.get(
     "",
     response_model=list[UserResponse],

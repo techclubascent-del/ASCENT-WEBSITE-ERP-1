@@ -40,10 +40,17 @@ export default function NewEventPage() {
     setError(null);
     const fd = new FormData(e.currentTarget);
     const eventDate = fd.get("event_date") as string;
+    
+    let description = fd.get("description") as string;
+    const imageUrl = fd.get("image_url") as string;
+    
+    if (imageUrl) {
+      description = `${description}\n\n[IMAGE: ${imageUrl}]`;
+    }
 
     mutation.mutate({
       title: fd.get("title") as string,
-      description: fd.get("description") as string,
+      description,
       location: (fd.get("location") as string) || undefined,
       event_date: eventDate ? new Date(eventDate).toISOString() : undefined,
     } as Partial<Event>);
@@ -68,7 +75,7 @@ export default function NewEventPage() {
           <CardHeader>
             <CardTitle>Event Details</CardTitle>
             <CardDescription>
-              All fields except location are required.
+              All fields except location and image are required.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -92,6 +99,12 @@ export default function NewEventPage() {
                 rows={4}
                 required
               />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="image_url">Image/Photo URL (optional)</Label>
+              <Input id="image_url" name="image_url" type="url" placeholder="https://example.com/event-photo.jpg" />
+              <p className="text-xs text-muted-foreground">Add a picture to be displayed with the event details.</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">

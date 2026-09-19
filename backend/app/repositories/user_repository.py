@@ -8,6 +8,7 @@ Rules:
 """
 
 from typing import Any, cast
+
 from supabase import Client
 
 from app.schemas.user import ProfileResponse, ProfileUpdate, UserResponse, UserRole
@@ -22,21 +23,22 @@ class UserRepository:
     async def get_profile_by_user_id(self, user_id: str) -> ProfileResponse | None:
         """
         Fetch a user's profile by their Supabase user ID.
-        Returns None if no profile exists yet.
-
-        Phase 0: Stub — implement fully in Phase 1 when the profiles table exists.
+        Returns None if no profile exists yet or if the table hasn't been migrated.
         """
-        response = (
-            self._client.table("profiles")
-            .select("*")
-            .eq("user_id", user_id)
-            .maybe_single()
-            .execute()
-        )
-        if response is None or not response.data:
+        try:
+            response = (
+                self._client.table("profiles")
+                .select("*")
+                .eq("user_id", user_id)
+                .maybe_single()
+                .execute()
+            )
+            if response is None or not response.data:
+                return None
+            row: dict[str, Any] = cast(dict[str, Any], response.data)
+            return ProfileResponse(**row)
+        except Exception:
             return None
-        row: dict[str, Any] = cast(dict[str, Any], response.data)
-        return ProfileResponse(**row)
 
     async def list_users(self) -> list[UserResponse]:
         """List all users (Admin operation)."""
