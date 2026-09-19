@@ -7,6 +7,7 @@ import {
   KeyRound,
   User,
 } from 'lucide-react';
+import { Panther2D } from './Panther2D/Panther2D';
 
 interface LoginPageProps {
   onLoginClick: (identifier: string) => void;
@@ -26,29 +27,31 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration }: LoginPageP
   };
 
   return (
-    <div className="w-full max-w-md ml-0 mr-auto sm:ml-8 lg:ml-16 my-auto px-3 sm:px-4 py-2">
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, ease: 'easeOut' }}
-        className="w-full"
-      >
-        {/* Member Login Card */}
-        <div className="bg-[#0C0D0E] border border-[#26282A] rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden group hover:border-[#3D4042] transition-colors">
-          {/* Subtle top accent bar */}
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4A373] to-transparent opacity-80" />
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 my-auto flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12 min-h-[85vh]">
+      {/* LEFT SIDE: Member Login Card (Exact original layout & functionality) */}
+      <div className="w-full max-w-md flex-shrink-0">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+          className="w-full"
+        >
+          {/* Member Login Card */}
+          <div className="bg-[#0C0D0E] border border-[#26282A] rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden group hover:border-[#3D4042] transition-colors">
+            {/* Subtle top accent bar */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4A373] to-transparent opacity-80" />
 
-          {/* Accent horizontal bar */}
-          <div className="w-12 h-1 bg-[#D4A373] rounded-full mb-3 shadow-sm shadow-[#D4A373]/30" />
+            {/* Accent horizontal bar */}
+            <div className="w-12 h-1 bg-[#D4A373] rounded-full mb-3 shadow-sm shadow-[#D4A373]/30" />
 
-          <div className="mb-5">
-            <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Member Login
-            </h2>
-          </div>
+            <div className="mb-5">
+              <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Member Login
+              </h2>
+            </div>
 
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Login Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Identifier Input */}
               <div className="space-y-1.5">
                 <label
@@ -157,5 +160,11 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration }: LoginPageP
           </div>
         </motion.div>
       </div>
+
+      {/* RIGHT SIDE: Interactive 2D Three.js Black Panther Scene */}
+      <div className="w-full flex-1 max-w-xl flex items-center justify-center">
+        <Panther2D />
+      </div>
+    </div>
   );
 }
