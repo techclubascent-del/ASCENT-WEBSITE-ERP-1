@@ -92,8 +92,8 @@ async def update_user_role(
 async def update_profile(
     user_id: str,
     data: ProfileUpdate,
-    _current_user: AdminUser,
+    _current_user: CurrentUser,
     service: UserService = Depends(get_user_service),
 ) -> ProfileResponse:
-    """Update a user's profile information (Admin or Super Admin only)."""
+    """Update a user's profile information."""
     return await service.update_profile(user_id, data)

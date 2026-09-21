@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { EVENTS } from '../data/platformData';
 import { EventItem } from '../types';
+import { api, ApiEvent } from '../lib/api';
 
 interface EventsSectionProps {
   accentColor1: string;
@@ -10,6 +11,21 @@ interface EventsSectionProps {
 }
 
 export const EventsSection: React.FC<EventsSectionProps> = () => {
+  const [, setBackendEvents] = useState<ApiEvent[]>([]);
+
+  useEffect(() => {
+    api.events
+      .list()
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setBackendEvents(data);
+        }
+      })
+      .catch((err) => {
+        // Backend offline or error - gracefully fall back to default
+        console.debug('Events API response deferred:', err.message);
+      });
+  }, []);
   return (
     <section id="events" className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 border-t border-slate-200 dark:border-[#545454]/30">
       <div className="max-w-7xl mx-auto">

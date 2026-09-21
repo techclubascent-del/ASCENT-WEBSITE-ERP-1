@@ -2,10 +2,10 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from supabase import Client
 
-from app.core.dependencies import AdminUser, get_supabase_client
+from app.core.dependencies import AdminUser, CurrentUser, get_supabase_client
 from app.repositories.opportunity_repository import OpportunityRepository
 from app.schemas.opportunity import OpportunityCreate, OpportunityResponse, OpportunityUpdate
 from app.services.opportunity_service import OpportunityService
@@ -50,10 +50,10 @@ async def get_opportunity(
 @router.post("", response_model=OpportunityResponse)
 async def create_opportunity(
     data: OpportunityCreate,
-    current_user: AdminUser,
+    current_user: CurrentUser,
     service: Annotated[OpportunityService, Depends(get_opportunity_service)],
 ) -> OpportunityResponse:
-    """Create a new opportunity (Admin or Super Admin only)."""
+    """Create a new opportunity (Member or Admin)."""
     return await service.create_opportunity(data, current_user.id)
 
 

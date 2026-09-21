@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { AscentLogo } from './AscentLogo';
 import { NavSection } from '../types';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon, LogIn, LayoutDashboard } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { motion } from 'motion/react';
 
 interface NavbarProps {
   activeSection: NavSection;
   onNavigate: (section: NavSection) => void;
+  onLoginClick?: () => void;
+  onRegisterClick?: () => void;
+  isAuthenticated?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   activeSection,
   onNavigate,
+  onLoginClick,
+  onRegisterClick,
+  isAuthenticated = false,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
@@ -86,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <motion.div
                       layoutId="nav-active-pill"
                       className="absolute inset-0 bg-[#545454] dark:bg-white rounded-full shadow-[0_2px_12px_rgba(84,84,84,0.3)] dark:shadow-[0_2px_12px_rgba(255,255,255,0.25)] -z-10"
-                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                      transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                     />
                   )}
                   {item.label}
@@ -96,8 +102,29 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
         </div>
 
-        {/* Very Right Corner: Theme Switcher & Mobile Menu Toggle */}
+        {/* Very Right Corner: Member Portal Login + Theme Switcher & Mobile Menu Toggle */}
         <div className="flex items-center justify-end gap-2.5 z-10">
+          {/* Member Login / Portal Link */}
+          {onLoginClick && (
+            <button
+              onClick={onLoginClick}
+              id="navbar-member-portal-button"
+              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-heading font-bold bg-[#D4A373] hover:bg-[#c49363] text-[#000000] shadow-sm shadow-[#D4A373]/20 transition-all cursor-pointer"
+            >
+              {isAuthenticated ? (
+                <>
+                  <LayoutDashboard size={13} className="text-black" />
+                  <span>Member Portal</span>
+                </>
+              ) : (
+                <>
+                  <LogIn size={13} className="text-black" />
+                  <span>Member Login</span>
+                </>
+              )}
+            </button>
+          )}
+
           {/* Theme Mode Switcher */}
           <button
             onClick={toggleTheme}
@@ -145,6 +172,42 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
               );
             })}
+
+            {/* Mobile Portal / Login Button */}
+            {onLoginClick && (
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onLoginClick();
+                }}
+                className="mt-2 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#D4A373] text-black font-heading font-bold text-sm shadow-sm cursor-pointer"
+              >
+                {isAuthenticated ? (
+                  <>
+                    <LayoutDashboard size={15} />
+                    <span>Go to Member Portal</span>
+                  </>
+                ) : (
+                  <>
+                    <LogIn size={15} />
+                    <span>Member Login</span>
+                  </>
+                )}
+              </button>
+            )}
+
+            {/* Mobile Register Button */}
+            {onRegisterClick && (
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onRegisterClick();
+                }}
+                className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#1A1A1A] text-white dark:bg-[#2A2A2A] font-heading font-bold text-sm shadow-sm cursor-pointer"
+              >
+                <span>Register Candidate Profile</span>
+              </button>
+            )}
           </div>
         </div>
       )}
