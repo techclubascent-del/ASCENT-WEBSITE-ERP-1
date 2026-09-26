@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, type FormEvent } from 'react';
+import { useState, useEffect, useMemo, useRef, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   MemberProfile,
@@ -43,13 +43,15 @@ import {
   Download,
   Terminal,
   MoreHorizontal,
+  FileText,
+  Video,
   UserCheck,
   Bell,
   Code2,
+  Briefcase
 } from 'lucide-react';
 import { CertificateModal } from './CertificateModal';
 import { UploadProjectModal } from './UploadProjectModal';
-import { BookHardwareModal } from './BookHardwareModal';
 import { ChangePasswordModal } from './ChangePasswordModal';
 import { EditProfileModal } from './EditProfileModal';
 import { EditCoverModal, COVER_PRESETS } from './EditCoverModal';
@@ -57,6 +59,10 @@ import { HomeView } from './views/HomeView';
 import { ProjectsView } from './views/ProjectsView';
 import { CertificatesView } from './views/CertificatesView';
 import { SettingsView } from './views/SettingsView';
+import { PublicProfileView } from './views/PublicProfileView';
+import { EventsView } from './views/EventsView';
+import { OpportunitiesView } from './views/OpportunitiesView';
+import { UniversalSearchModal } from '../shared/UniversalSearchModal';
 import { api } from '../../lib/api';
 
 interface MemberPortalProps {
@@ -258,8 +264,11 @@ export function MemberPortal({
   };
 
   const [activeProfile, setActiveProfile] = useState<MemberProfile>(resolveInitialProfile());
+  const [peerProfile, setPeerProfile] = useState<MemberProfile | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState(false);
-  const [activeNav, setActiveNav] = useState<'home' | 'profile' | 'messages' | 'projects' | 'certificates' | 'gallery' | 'settings'>(initialNav || 'home');
+  const [activeNav, setActiveNav] = useState<'home' | 'profile' | 'peer-profile' | 'messages' | 'projects' | 'certificates' | 'gallery' | 'settings' | 'events' | 'opportunities'>(initialNav || 'home');
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (initialNav) {
@@ -413,8 +422,20 @@ export function MemberPortal({
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isEditCoverOpen, setIsEditCoverOpen] = useState(false);
   const [isUploadProjectOpen, setIsUploadProjectOpen] = useState(false);
-  const [isBookHardwareOpen, setIsBookHardwareOpen] = useState(false);
   const [selectedCertForPreview, setSelectedCertForPreview] = useState<MemberCertificate | null>(null);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+  // Keyboard shortcut for Search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchModalOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Certificate download toast
   const [downloadingCertId, setDownloadingCertId] = useState<string | null>(null);
@@ -511,6 +532,22 @@ export function MemberPortal({
       ...prev,
       coverStyle,
     }));
+  };
+
+  // Upload Avatar
+  const handleUploadAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result as string;
+      setActiveProfile((prev) => ({
+        ...prev,
+        avatar: result,
+      }));
+    };
+    reader.readAsDataURL(file);
   };
 
   // Toggle Like on Post
@@ -704,14 +741,44 @@ export function MemberPortal({
     );
   }, [posts, searchQuery]);
 
+  const isCustomCover = activeProfile.coverStyle?.startsWith('data:image');
   const currentCover =
     COVER_PRESETS.find((c) => c.id === (activeProfile.coverStyle || 'circuit')) || COVER_PRESETS[0];
 
   return (
     <div className="min-h-screen bg-[#000000] text-[#F3F4F6] flex">
+      <UniversalSearchModal 
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+        onNavigate={(view) => setActiveNav(view as any)}
+        onLogout={handleLogout}
+        onViewPeerProfile={(peerUsn) => {
+          const peerKey = Object.keys(SAMPLE_MEMBERS).find(k => k.includes(peerUsn) || SAMPLE_MEMBERS[k].usn?.includes(peerUsn));
+          if (peerKey) {
+            setPeerProfile(SAMPLE_MEMBERS[peerKey]);
+            setActiveNav('peer-profile');
+          }
+        }}
+      />
+      
       <aside className="hidden md:flex flex-col w-64 bg-[#0C0D0E] border-r border-[#26282A] min-h-screen shrink-0 sticky top-0 z-30 justify-between">
         <div>
-          <nav className="p-4 pt-6 space-y-1.5 font-subheading text-xs">
+          <div className="p-4 pt-6">
+            <button
+              onClick={() => setIsSearchModalOpen(true)}
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-[#141517] border border-[#26282A] text-[#8E9296] hover:text-white hover:border-[#D4A373]/50 transition-colors cursor-pointer group"
+            >
+              <div className="flex items-center gap-2 text-sm font-subheading">
+                <Search className="w-4 h-4 group-hover:text-[#D4A373] transition-colors" />
+                <span>Search...</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-[#1E2022] border border-[#26282A] rounded">⌘</kbd>
+                <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-[#1E2022] border border-[#26282A] rounded">K</kbd>
+              </div>
+            </button>
+          </div>
+          <nav className="px-4 pb-4 space-y-1.5 font-subheading text-xs">
             <button
               type="button"
               onClick={() => setActiveNav('home')}
@@ -737,6 +804,19 @@ export function MemberPortal({
               <User className="w-4 h-4" />
               <span>Profile</span>
               <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#D4A373]" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveNav('messages')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all cursor-pointer ${
+                activeNav === 'messages'
+                  ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
+                  : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+              }`}
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span>Messages</span>
             </button>
 
             <button
@@ -771,6 +851,32 @@ export function MemberPortal({
               <span className="ml-auto px-2 py-0.5 rounded-full bg-[#1E2022] text-[#D4A373] text-[10px] border border-[#26282A]">
                 {certCount}
               </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveNav('events')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all cursor-pointer ${
+                activeNav === 'events'
+                  ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
+                  : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+              }`}
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Events & Activities</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveNav('opportunities')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all cursor-pointer ${
+                activeNav === 'opportunities'
+                  ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
+                  : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+              }`}
+            >
+              <Briefcase className="w-4 h-4" />
+              <span>Placement Cell</span>
             </button>
 
             <button
@@ -810,13 +916,23 @@ export function MemberPortal({
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <div className="md:hidden px-4 py-3 bg-[#0C0D0E] border-b border-[#26282A] flex items-center sticky top-0 z-20">
+        <div className="md:hidden px-4 py-3 bg-[#0C0D0E] border-b border-[#26282A] flex items-center justify-between sticky top-0 z-20">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="text-[#8E9296] hover:text-white p-1.5 rounded-xl border border-[#26282A]"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <span className="font-heading font-bold text-white tracking-wide">ASCENT</span>
+          </div>
           <button
             type="button"
-            onClick={() => setMobileMenuOpen(true)}
+            onClick={() => setIsSearchModalOpen(true)}
             className="text-[#8E9296] hover:text-white p-1.5 rounded-xl border border-[#26282A]"
           >
-            <Menu className="w-5 h-5" />
+            <Search className="w-5 h-5" />
           </button>
         </div>
 
@@ -883,6 +999,22 @@ export function MemberPortal({
                     <button
                       type="button"
                       onClick={() => {
+                        setActiveNav('messages');
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
+                        activeNav === 'messages'
+                          ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
+                          : 'text-[#8E9296] hover:text-white'
+                      }`}
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                      <span>Messages</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
                         setActiveNav('projects');
                         setMobileMenuOpen(false);
                       }}
@@ -910,6 +1042,38 @@ export function MemberPortal({
                     >
                       <Award className="w-4 h-4" />
                       <span>Certificates ({certCount})</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveNav('events');
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
+                        activeNav === 'events'
+                          ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
+                          : 'text-[#8E9296] hover:text-white'
+                      }`}
+                    >
+                      <Calendar className="w-4 h-4" />
+                      <span>Events & Activities</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveNav('opportunities');
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
+                        activeNav === 'opportunities'
+                          ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
+                          : 'text-[#8E9296] hover:text-white'
+                      }`}
+                    >
+                      <Briefcase className="w-4 h-4" />
+                      <span>Placement Cell</span>
                     </button>
 
                     <button
@@ -987,6 +1151,39 @@ export function MemberPortal({
             />
           )}
 
+          {activeNav === 'events' && (
+            <EventsView />
+          )}
+
+          {activeNav === 'opportunities' && (
+            <OpportunitiesView />
+          )}
+
+          {activeNav === 'messages' && (
+            <div className="bg-[#0C0D0E] border border-[#26282A] rounded-2xl p-8 text-center shadow-2xl relative min-h-[400px] flex flex-col items-center justify-center">
+              <MessageSquare className="w-12 h-12 text-[#545454] mx-auto mb-4" />
+              <h2 className="text-xl font-heading font-bold text-white mb-2">Direct Messages</h2>
+              <p className="text-sm font-subheading text-[#8E9296] max-w-md mx-auto">
+                Your secure channel for connecting with other Ascent members. Direct messaging functionality is currently being provisioned.
+              </p>
+            </div>
+          )}
+
+          {activeNav === 'peer-profile' && peerProfile && (
+            <PublicProfileView 
+              profile={peerProfile} 
+              posts={posts} 
+              onMessageClick={() => setActiveNav('messages')}
+              onViewPeerProfile={(peerUsn) => {
+                const peerKey = Object.keys(SAMPLE_MEMBERS).find(k => k.includes(peerUsn) || SAMPLE_MEMBERS[k].usn?.includes(peerUsn));
+                if (peerKey) {
+                  setPeerProfile(SAMPLE_MEMBERS[peerKey]);
+                  setActiveNav('peer-profile');
+                }
+              }}
+            />
+          )}
+
           {activeNav === 'profile' && (
             <>
               {/* ===================================================================== */}
@@ -996,14 +1193,17 @@ export function MemberPortal({
           <div className="bg-[#0C0D0E] border border-[#26282A] rounded-2xl overflow-hidden shadow-2xl relative">
             {/* Panoramic Cover Banner */}
             <div
-              className={`h-28 sm:h-36 w-full relative overflow-hidden bg-gradient-to-r ${currentCover.gradientClass} transition-all duration-300`}
+              className={`h-28 sm:h-36 w-full relative overflow-hidden transition-all duration-300 ${!isCustomCover ? `bg-gradient-to-r ${currentCover.gradientClass}` : ''}`}
               style={{
-                backgroundImage: `${currentCover.accentGlow}, ${currentCover.bgPattern}`,
-                backgroundSize: `auto, ${currentCover.bgSize}`,
+                backgroundImage: isCustomCover 
+                  ? `url(${activeProfile.coverStyle})` 
+                  : `${currentCover.accentGlow}, ${currentCover.bgPattern}`,
+                backgroundSize: isCustomCover ? 'cover' : `auto, ${currentCover.bgSize}`,
+                backgroundPosition: isCustomCover ? 'center' : 'initial',
               }}
             >
               {/* Subtle tech gridlines overlay */}
-              <div className="absolute inset-0 bg-tech-grid opacity-30 pointer-events-none" />
+              {!isCustomCover && <div className="absolute inset-0 bg-tech-grid opacity-30 pointer-events-none" />}
 
               {/* Edit Cover Photo button (top right of banner - matching screenshot) */}
               <button
@@ -1023,12 +1223,31 @@ export function MemberPortal({
                 <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 -mt-10 sm:-mt-12">
                   {/* Circular Avatar with warm gold border ring (as seen in screenshot) */}
                   <div className="relative group">
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#000000] border-3 sm:border-4 border-[#0C0D0E] ring-2 ring-[#D4A373] shadow-xl flex items-center justify-center text-xl sm:text-2xl font-heading font-extrabold text-[#D4A373] overflow-hidden">
-                      {activeProfile.name
-                        .split(' ')
-                        .map((n) => n[0])
-                        .join('')
-                        .slice(0, 2)}
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#000000] border-3 sm:border-4 border-[#0C0D0E] ring-2 ring-[#D4A373] shadow-xl flex items-center justify-center text-xl sm:text-2xl font-heading font-extrabold text-[#D4A373] overflow-hidden relative">
+                      {activeProfile.avatar ? (
+                        <img src={activeProfile.avatar} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        activeProfile.name
+                          .split(' ')
+                          .map((n) => n[0])
+                          .join('')
+                          .slice(0, 2)
+                      )}
+                      
+                      {/* Avatar Upload Overlay */}
+                      <div 
+                        className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        onClick={() => avatarInputRef.current?.click()}
+                      >
+                        <Camera className="w-6 h-6 text-white" />
+                      </div>
+                      <input 
+                        type="file" 
+                        ref={avatarInputRef} 
+                        onChange={handleUploadAvatar}
+                        accept="image/*"
+                        className="hidden"
+                      />
                     </div>
                   </div>
 
@@ -1053,48 +1272,6 @@ export function MemberPortal({
                   >
                     <Edit3 className="w-3.5 h-3.5 text-[#D4A373]" />
                     <span>Edit Profile</span>
-                  </button>
-
-                  {/* Follow / Connect Button */}
-                  <button
-                    type="button"
-                    onClick={() => setIsFollowing(!isFollowing)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-heading font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                      isFollowing
-                        ? 'bg-[#141517] text-[#D4A373] border border-[#D4A373]/40'
-                        : 'bg-[#D4A373] hover:bg-[#c49363] text-black shadow-md shadow-[#D4A373]/20'
-                    }`}
-                  >
-                    {isFollowing ? (
-                      <>
-                        <Check className="w-3.5 h-3.5" />
-                        <span>Following</span>
-                      </>
-                    ) : (
-                      <>
-                        <Plus className="w-3.5 h-3.5" />
-                        <span>Follow</span>
-                      </>
-                    )}
-                  </button>
-
-                  {/* Message Button */}
-                  <button
-                    type="button"
-                    onClick={() => alert(`Direct message channel opened with ${activeProfile.name}`)}
-                    className="p-1.5 rounded-full bg-[#000000] hover:bg-[#141517] text-[#D4A373] border border-[#26282A] hover:border-[#D4A373]/40 transition-colors cursor-pointer"
-                    title="Send Message"
-                  >
-                    <MessageSquare className="w-4 h-4" />
-                  </button>
-
-                  {/* Schedule Meeting / Book Workstation Button */}
-                  <button
-                    type="button"
-                    onClick={() => setIsBookHardwareOpen(true)}
-                    className="px-3 py-1.5 rounded-full bg-[#000000] hover:bg-[#141517] text-[#D1D5DB] hover:text-white border border-[#26282A] text-xs font-subheading transition-colors cursor-pointer hidden xl:inline-flex"
-                  >
-                    Book Workstation
                   </button>
                 </div>
               </div>
@@ -1327,12 +1504,45 @@ export function MemberPortal({
                             </div>
                           </div>
 
-                          <button
-                            type="button"
-                            className="text-[#8E9296] hover:text-white p-1 rounded-lg"
-                          >
-                            <MoreHorizontal className="w-4 h-4" />
-                          </button>
+                          <div className="relative">
+                            <button
+                              type="button"
+                              onClick={() => setActiveDropdown(activeDropdown === post.id ? null : post.id)}
+                              className="text-[#8E9296] hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
+                            >
+                              <MoreHorizontal className="w-4 h-4" />
+                            </button>
+                            
+                            {activeDropdown === post.id && (
+                              <div className="absolute right-0 mt-2 w-36 bg-[#141517] border border-[#26282A] rounded-xl shadow-lg z-10 overflow-hidden text-sm text-[#D1D5DB] font-subheading">
+                                <button 
+                                  className="w-full text-left px-4 py-2 hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
+                                  onClick={() => { alert('Edit post functionality coming soon!'); setActiveDropdown(null); }}
+                                >
+                                  Edit
+                                </button>
+                                <button 
+                                  className="w-full text-left px-4 py-2 hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
+                                  onClick={() => { alert('Save post functionality coming soon!'); setActiveDropdown(null); }}
+                                >
+                                  Save
+                                </button>
+                                <button 
+                                  className="w-full text-left px-4 py-2 hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
+                                  onClick={() => { alert('Archive post functionality coming soon!'); setActiveDropdown(null); }}
+                                >
+                                  Archive
+                                </button>
+                                <div className="h-px w-full bg-[#26282A]" />
+                                <button 
+                                  className="w-full text-left px-4 py-2 hover:bg-red-950/40 text-red-400 transition-colors cursor-pointer"
+                                  onClick={() => { alert('Delete post functionality coming soon!'); setActiveDropdown(null); }}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
 
                         {/* Post Body */}
@@ -1427,8 +1637,16 @@ export function MemberPortal({
                           <button
                             type="button"
                             onClick={() => {
-                              navigator.clipboard?.writeText(window.location.href);
-                              alert('Post link copied to clipboard!');
+                              if (navigator.share) {
+                                navigator.share({
+                                  title: `Ascent Post by ${post.authorName}`,
+                                  text: post.content,
+                                  url: window.location.href,
+                                }).catch(console.error);
+                              } else {
+                                navigator.clipboard?.writeText(window.location.href);
+                                alert('Post link copied to clipboard!');
+                              }
                             }}
                             className="flex items-center gap-1 hover:text-[#D4A373] transition-colors cursor-pointer"
                           >
@@ -1529,6 +1747,35 @@ export function MemberPortal({
                             {proj.description}
                           </p>
 
+                          {proj.mediaUrl && (
+                            <div className="mb-4">
+                              {proj.mediaType?.startsWith('image/') ? (
+                                <div className="rounded-xl overflow-hidden border border-[#26282A] max-h-64 flex items-center justify-center bg-[#000000]">
+                                  <img src={proj.mediaUrl} alt={proj.title} className="max-w-full max-h-64 object-contain" />
+                                </div>
+                              ) : proj.mediaType?.startsWith('video/') ? (
+                                <div className="rounded-xl overflow-hidden border border-[#26282A] bg-[#000000]">
+                                  <video src={proj.mediaUrl} controls className="w-full max-h-64 object-contain" />
+                                </div>
+                              ) : (
+                                <a 
+                                  href={proj.mediaUrl} 
+                                  download={proj.mediaName}
+                                  className="flex items-center gap-3 p-3 rounded-xl border border-[#26282A] bg-[#000000] hover:border-[#D4A373]/40 transition-colors group"
+                                >
+                                  <div className="w-10 h-10 rounded-lg bg-[#141517] flex items-center justify-center">
+                                    <FileText className="w-5 h-5 text-[#D4A373]" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-heading text-white truncate">{proj.mediaName || 'Attached File'}</p>
+                                    <p className="text-xs font-subheading text-[#8E9296]">Click to download</p>
+                                  </div>
+                                  <Download className="w-4 h-4 text-[#8E9296] group-hover:text-white transition-colors" />
+                                </a>
+                              )}
+                            </div>
+                          )}
+
                           <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#26282A]">
                             <div className="flex items-center gap-1.5 flex-wrap">
                               <span className="text-[11px] font-subheading text-[#717579]">Stack:</span>
@@ -1566,6 +1813,25 @@ export function MemberPortal({
                                   <ExternalLink className="w-3.5 h-3.5" />
                                 </a>
                               )}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (navigator.share) {
+                                    navigator.share({
+                                      title: `Ascent Project: ${proj.title}`,
+                                      text: proj.description,
+                                      url: window.location.href,
+                                    }).catch(console.error);
+                                  } else {
+                                    navigator.clipboard?.writeText(window.location.href);
+                                    alert('Project link copied to clipboard!');
+                                  }
+                                }}
+                                className="p-1.5 text-[#8E9296] hover:text-[#D4A373] transition-colors cursor-pointer"
+                                title="Share project"
+                              >
+                                <Share2 className="w-3.5 h-3.5" />
+                              </button>
                               <button
                                 type="button"
                                 onClick={() => handleDeleteProject(proj.id)}

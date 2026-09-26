@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Image as ImageIcon, Check } from 'lucide-react';
+import { X, Image as ImageIcon, Check, Upload } from 'lucide-react';
 
 interface EditCoverModalProps {
   isOpen: boolean;
@@ -55,6 +55,7 @@ export function EditCoverModal({
   onSelectCover,
 }: EditCoverModalProps) {
   const [selectedPreset, setSelectedPreset] = useState(currentCoverStyle);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -73,6 +74,18 @@ export function EditCoverModal({
   const handleApply = () => {
     onSelectCover(selectedPreset);
     onClose();
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result as string;
+      setSelectedPreset(result);
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -108,7 +121,31 @@ export function EditCoverModal({
             </button>
           </div>
 
+          {/* Upload Section */}
+          <div className="mb-6">
+            <h4 className="text-xs font-heading font-bold text-[#8E9296] mb-3 uppercase tracking-wider">
+              Upload Custom
+            </h4>
+            <div 
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full p-4 rounded-2xl border-2 border-dashed border-[#26282A] hover:border-[#D4A373]/50 bg-[#000000] hover:bg-[#141517] transition-all cursor-pointer flex flex-col items-center justify-center gap-2"
+            >
+              <Upload className="w-5 h-5 text-[#8E9296]" />
+              <span className="text-sm font-subheading text-[#8E9296]">Click to upload from your computer</span>
+            </div>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleFileUpload}
+              accept="image/*"
+              className="hidden"
+            />
+          </div>
+
           {/* Preset list */}
+          <h4 className="text-xs font-heading font-bold text-[#8E9296] mb-3 uppercase tracking-wider">
+            Or Choose Preset
+          </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-6">
             {COVER_PRESETS.map((preset) => {
               const isSelected = selectedPreset === preset.id;

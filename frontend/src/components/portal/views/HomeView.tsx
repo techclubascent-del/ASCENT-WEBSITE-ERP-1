@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   FolderGit2,
   Award,
@@ -12,8 +12,9 @@ import {
   Share2,
   ExternalLink,
   Code2,
+  MoreHorizontal,
 } from 'lucide-react';
-import { MemberProfile, MemberPost } from '../../types';
+import { MemberProfile, MemberPost, PostComment } from '../../types';
 
 interface HomeViewProps {
   profile: MemberProfile;
@@ -48,9 +49,36 @@ const CLUB_ANNOUNCEMENTS = [
 
 export function HomeView({ profile, posts, onNavigate, onOpenUpload }: HomeViewProps) {
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({});
+  const [expandedComments, setExpandedComments] = useState<Record<string, boolean>>({});
+  const [newComments, setNewComments] = useState<Record<string, PostComment[]>>({});
+  const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const toggleLike = (postId: string) => {
     setLikedPosts((prev) => ({ ...prev, [postId]: !prev[postId] }));
+  };
+
+  const toggleComments = (postId: string) => {
+    setExpandedComments((prev) => ({ ...prev, [postId]: !prev[postId] }));
+  };
+
+  const handleAddComment = (postId: string) => {
+    const content = commentInputs[postId]?.trim();
+    if (!content) return;
+    
+    const comment: PostComment = {
+      id: `comment-${Date.now()}`,
+      authorName: profile.name,
+      content,
+      timeAgo: 'Just now'
+    };
+
+    setNewComments(prev => ({
+      ...prev,
+      [postId]: [...(prev[postId] || []), comment]
+    }));
+    
+    setCommentInputs(prev => ({ ...prev, [postId]: '' }));
   };
 
   return (
@@ -160,6 +188,45 @@ export function HomeView({ profile, posts, onNavigate, onOpenUpload }: HomeViewP
                         </p>
                       </div>
                     </div>
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setActiveDropdown(activeDropdown === post.id ? null : post.id)}
+                        className="text-[#8E9296] hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <MoreHorizontal className="w-4 h-4" />
+                      </button>
+                      
+                      {activeDropdown === post.id && (
+                        <div className="absolute right-0 mt-2 w-36 bg-[#141517] border border-[#26282A] rounded-xl shadow-lg z-10 overflow-hidden text-sm text-[#D1D5DB] font-subheading">
+                          <button 
+                            className="w-full text-left px-4 py-2 hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
+                            onClick={() => { alert('Edit post functionality coming soon!'); setActiveDropdown(null); }}
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            className="w-full text-left px-4 py-2 hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
+                            onClick={() => { alert('Save post functionality coming soon!'); setActiveDropdown(null); }}
+                          >
+                            Save
+                          </button>
+                          <button 
+                            className="w-full text-left px-4 py-2 hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
+                            onClick={() => { alert('Archive post functionality coming soon!'); setActiveDropdown(null); }}
+                          >
+                            Archive
+                          </button>
+                          <div className="h-px w-full bg-[#26282A]" />
+                          <button 
+                            className="w-full text-left px-4 py-2 hover:bg-red-950/40 text-red-400 transition-colors cursor-pointer"
+                            onClick={() => { alert('Delete post functionality coming soon!'); setActiveDropdown(null); }}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <p className="text-xs sm:text-sm text-[#D1D5DB] font-subheading leading-relaxed">
@@ -199,10 +266,30 @@ export function HomeView({ profile, posts, onNavigate, onOpenUpload }: HomeViewP
                       </button>
                       <button
                         type="button"
+                        onClick={() => toggleComments(post.id)}
                         className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
                       >
                         <MessageSquare className="w-3.5 h-3.5" />
-                        <span>{post.commentsCount || 3}</span>
+                        <span>{(post.commentsCount || 3) + (newComments[post.id]?.length || 0)}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (navigator.share) {
+                            navigator.share({
+                              title: `Ascent Post by ${post.authorName}`,
+                              text: post.content,
+                              url: window.location.href,
+                            }).catch(console.error);
+                          } else {
+                            navigator.clipboard?.writeText(window.location.href);
+                            alert('Post link copied to clipboard!');
+                          }
+                        }}
+                        className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
+                      >
+                        <Share2 className="w-3.5 h-3.5" />
+                        <span>Share</span>
                       </button>
                     </div>
 
@@ -218,6 +305,57 @@ export function HomeView({ profile, posts, onNavigate, onOpenUpload }: HomeViewP
                       </a>
                     )}
                   </div>
+                  
+                  <AnimatePresence>
+                    {expandedComments[post.id] && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden mt-3"
+                      >
+                        <div className="pt-3 border-t border-[#26282A] space-y-3">
+                          {/* Existing & New Comments */}
+                          {(post.comments || []).concat(newComments[post.id] || []).map((comment) => (
+                            <div key={comment.id} className="flex gap-2">
+                              <div className="w-6 h-6 rounded-full bg-[#141517] border border-[#26282A] flex items-center justify-center text-[10px] font-heading font-bold text-[#D4A373] shrink-0">
+                                {comment.authorName.charAt(0)}
+                              </div>
+                              <div className="flex-1">
+                                <div className="bg-[#141517] rounded-xl rounded-tl-none px-3 py-2">
+                                  <p className="text-xs font-heading font-bold text-white mb-0.5">{comment.authorName}</p>
+                                  <p className="text-[11px] text-[#D1D5DB] font-subheading leading-relaxed">{comment.content}</p>
+                                </div>
+                                <p className="text-[9px] text-[#8E9296] mt-1 ml-1 font-mono-tech">{comment.timeAgo}</p>
+                              </div>
+                            </div>
+                          ))}
+
+                          {/* Comment Input */}
+                          <div className="flex gap-2 mt-3 relative">
+                            <input
+                              type="text"
+                              placeholder="Write a comment..."
+                              value={commentInputs[post.id] || ''}
+                              onChange={(e) => setCommentInputs(prev => ({ ...prev, [post.id]: e.target.value }))}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleAddComment(post.id);
+                              }}
+                              className="w-full bg-[#141517] border border-[#26282A] rounded-full pl-4 pr-10 py-1.5 text-xs text-white placeholder-[#8E9296] focus:outline-none focus:border-[#D4A373]/50 transition-colors"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleAddComment(post.id)}
+                              disabled={!commentInputs[post.id]?.trim()}
+                              className="absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-[#D4A373] flex items-center justify-center text-black disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#e4b585] transition-colors"
+                            >
+                              <ArrowRight className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               );
             })}

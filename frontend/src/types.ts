@@ -117,10 +117,21 @@ export interface UploadedProject {
   techStack: string[];
   githubUrl?: string;
   demoUrl?: string;
+  mediaUrl?: string;
+  mediaType?: string;
+  mediaName?: string;
   category: string;
   uploadedAt: string;
   status: 'Approved' | 'Under Review' | 'Featured';
   version?: string;
+}
+
+export interface PostComment {
+  id: string;
+  authorName: string;
+  authorAvatar?: string;
+  content: string;
+  timeAgo: string;
 }
 
 export interface MemberPost {
@@ -138,6 +149,7 @@ export interface MemberPost {
   viewsCount: number;
   commentsCount: number;
   isLiked?: boolean;
+  comments?: PostComment[];
 }
 
 export interface MemberCertificate {
@@ -169,6 +181,7 @@ export interface MemberProfile {
   location?: string;
   phone?: string;
   birthDate?: string;
+  avatar?: string;
   coverStyle?: string;
   followersCount?: number;
   followingCount?: number;

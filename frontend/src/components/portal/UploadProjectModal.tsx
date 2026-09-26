@@ -1,7 +1,7 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { UploadedProject } from '../types';
-import { X, UploadCloud, FolderGit2, Plus, AlertCircle, CheckCircle2, Link2 } from 'lucide-react';
+import { X, UploadCloud, FolderGit2, Plus, AlertCircle, CheckCircle2, Link2, Paperclip, FileText, Image as ImageIcon, Video } from 'lucide-react';
 
 interface UploadProjectModalProps {
   isOpen: boolean;
@@ -34,6 +34,23 @@ export function UploadProjectModal({
   const [demoUrl, setDemoUrl] = useState('');
   const [version, setVersion] = useState('v1.0.0');
   const [error, setError] = useState('');
+  
+  const [media, setMedia] = useState<{ url: string; type: string; name: string } | null>(null);
+
+  const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setMedia({
+          url: reader.result as string,
+          type: file.type,
+          name: file.name
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     if (!isOpen) return;
@@ -92,6 +109,9 @@ export function UploadProjectModal({
       }),
       status: 'Under Review',
       version: version.trim() || 'v1.0.0',
+      mediaUrl: media?.url,
+      mediaType: media?.type,
+      mediaName: media?.name,
     };
 
     onUpload(newProject);
@@ -186,6 +206,37 @@ export function UploadProjectModal({
                   </option>
                 ))}
               </select>
+            </div>
+
+            {/* Media/File Upload */}
+            <div className="space-y-1">
+              <label className="block text-[#D1D5DB] uppercase tracking-wider text-[11px]">
+                Project Media & Files
+              </label>
+              <div className="flex items-center gap-4">
+                {media && (
+                  <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-[#26282A] bg-[#000000] flex items-center justify-center">
+                    {media.type.startsWith('image/') ? (
+                      <img src={media.url} alt="Preview" className="w-full h-full object-cover" />
+                    ) : media.type.startsWith('video/') ? (
+                      <Video className="w-6 h-6 text-[#D4A373]" />
+                    ) : (
+                      <FileText className="w-6 h-6 text-[#D4A373]" />
+                    )}
+                  </div>
+                )}
+                <label className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-[#26282A] hover:border-[#D4A373]/50 bg-[#000000] rounded-xl px-4 py-3 cursor-pointer transition-colors group">
+                  <input
+                    type="file"
+                    onChange={handleMediaUpload}
+                    className="hidden"
+                  />
+                  <Paperclip className="w-5 h-5 text-[#8E9296] group-hover:text-[#D4A373] transition-colors mb-1" />
+                  <span className="text-[11px] text-[#8E9296] font-medium group-hover:text-white transition-colors text-center line-clamp-1">
+                    {media ? media.name : 'Click to upload file (image, video, or doc)'}
+                  </span>
+                </label>
+              </div>
             </div>
 
             {/* Description */}
