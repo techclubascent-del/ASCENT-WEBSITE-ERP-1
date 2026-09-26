@@ -77,6 +77,18 @@ async def get_current_user(
     return UserResponse(id=user_id, email=email, role=role)
 
 
+async def get_optional_user(
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Security(bearer_scheme)],
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> UserResponse | None:
+    if not credentials:
+        return None
+    try:
+        return await get_current_user(credentials, settings)
+    except UnauthorizedError:
+        return None
+
+
 # ── Role-restricted dependencies ───────────────────────────────────────────
 
 
