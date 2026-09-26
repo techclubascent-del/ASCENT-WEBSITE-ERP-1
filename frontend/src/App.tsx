@@ -96,38 +96,46 @@ export default function App() {
   useEffect(() => {
     if (currentView !== 'landing') return;
 
-    const handleScroll = () => {
-      const sections: NavSection[] = [
-        'home',
-        'about',
-        'initiatives',
-        'projects',
-        'events',
-        'team',
-        'achievements',
-        'contacts',
-      ];
-      const scrollPosition = window.scrollY + 200;
+    const sections: NavSection[] = [
+      'home',
+      'about',
+      'initiatives',
+      'projects',
+      'events',
+      'team',
+      'achievements',
+      'contacts',
+    ];
 
-      for (const section of sections) {
-        const el = document.getElementById(section);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            let mappedSection = section;
-            if (['initiatives', 'projects', 'events', 'team', 'achievements'].includes(section)) {
-              mappedSection = 'about';
-            }
-            setActiveSection(mappedSection);
-            break;
-          }
-        }
-      }
+    const observerOptions = {
+      root: null,
+      rootMargin: '-50% 0px -50% 0px', // Trigger when section crosses the middle of the screen
+      threshold: 0
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const observerCallback: IntersectionObserverCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.id as NavSection;
+          let mappedSection = sectionId;
+          if (['initiatives', 'projects', 'events', 'team', 'achievements'].includes(sectionId)) {
+            mappedSection = 'about';
+          }
+          setActiveSection(mappedSection);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    sections.forEach((section) => {
+      const el = document.getElementById(section);
+      if (el) {
+        observer.observe(el);
+      }
+    });
+
+    return () => observer.disconnect();
   }, [currentView]);
 
   // Auth flow handlers

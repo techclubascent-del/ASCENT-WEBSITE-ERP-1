@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { UploadedProject } from '../types';
@@ -120,22 +121,22 @@ export function UploadProjectModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-sm overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-gray-100 dark:bg-black/80 backdrop-blur-sm overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-[#0C0D0E] border border-[#26282A] rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden my-auto"
+          className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden my-auto"
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[#26282A] bg-[#000000]/60">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#26282A] bg-[#f8f9fa] dark:bg-[#000000]/60">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#141517] border border-[#D4A373]/50 flex items-center justify-center text-[#D4A373]">
+              <div className="w-8 h-8 rounded-lg bg-gray-50 dark:bg-[#141517] border border-[#D4A373]/50 flex items-center justify-center text-[#D4A373]">
                 <UploadCloud className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="font-heading text-sm font-bold text-white">Upload Member Project</h3>
-                <span className="text-[11px] font-subheading text-[#8E9296]">
+                <h3 className="font-heading text-sm font-bold text-gray-900 dark:text-white">Upload Member Project</h3>
+                <span className="text-[11px] font-subheading text-gray-500 dark:text-[#8E9296]">
                   Publish your codebase to the Ascent registry
                 </span>
               </div>
@@ -143,7 +144,7 @@ export function UploadProjectModal({
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-xl bg-[#141517] hover:bg-[#1E2022] text-[#8E9296] hover:text-white border border-[#26282A] transition-colors"
+              className="p-1.5 rounded-xl bg-gray-50 dark:bg-[#141517] hover:bg-gray-100 dark:hover:bg-[#1E2022] text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white border border-gray-200 dark:border-[#26282A] transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -161,7 +162,7 @@ export function UploadProjectModal({
             {/* Title & Version */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="sm:col-span-2 space-y-1">
-                <label className="block text-[#D1D5DB] uppercase tracking-wider text-[11px]">
+                <label className="block text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider text-[11px]">
                   Project Name <span className="text-[#D4A373]">*</span>
                 </label>
                 <input
@@ -172,12 +173,12 @@ export function UploadProjectModal({
                     setError('');
                   }}
                   placeholder="e.g. Autonomous Edge Drone Pipeline"
-                  className="w-full px-3 py-2 bg-[#000000] border border-[#26282A] rounded-xl text-white text-sm focus:outline-none focus:border-[#D4A373]"
+                  className="w-full px-3 py-2 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#D4A373]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="block text-[#D1D5DB] uppercase tracking-wider text-[11px]">
+                <label className="block text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider text-[11px]">
                   Release Version
                 </label>
                 <input
@@ -185,23 +186,23 @@ export function UploadProjectModal({
                   value={version}
                   onChange={(e) => setVersion(e.target.value)}
                   placeholder="v1.0.0"
-                  className="w-full px-3 py-2 bg-[#000000] border border-[#26282A] rounded-xl text-white text-sm font-mono-tech focus:outline-none focus:border-[#D4A373]"
+                  className="w-full px-3 py-2 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl text-gray-900 dark:text-white text-sm font-mono-tech focus:outline-none focus:border-[#D4A373]"
                 />
               </div>
             </div>
 
             {/* Category */}
             <div className="space-y-1">
-              <label className="block text-[#D1D5DB] uppercase tracking-wider text-[11px]">
+              <label className="block text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider text-[11px]">
                 Domain / Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2 bg-[#000000] border border-[#26282A] rounded-xl text-white text-sm focus:outline-none focus:border-[#D4A373] cursor-pointer"
+                className="w-full px-3 py-2 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#D4A373] cursor-pointer"
               >
                 {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat} className="bg-[#0C0D0E] text-white">
+                  <option key={cat} value={cat} className="bg-white dark:bg-[#0C0D0E] text-gray-900 dark:text-white">
                     {cat}
                   </option>
                 ))}
@@ -210,12 +211,12 @@ export function UploadProjectModal({
 
             {/* Media/File Upload */}
             <div className="space-y-1">
-              <label className="block text-[#D1D5DB] uppercase tracking-wider text-[11px]">
+              <label className="block text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider text-[11px]">
                 Project Media & Files
               </label>
               <div className="flex items-center gap-4">
                 {media && (
-                  <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-[#26282A] bg-[#000000] flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-gray-200 dark:border-[#26282A] bg-[#f8f9fa] dark:bg-[#000000] flex items-center justify-center">
                     {media.type.startsWith('image/') ? (
                       <img src={media.url} alt="Preview" className="w-full h-full object-cover" />
                     ) : media.type.startsWith('video/') ? (
@@ -225,14 +226,14 @@ export function UploadProjectModal({
                     )}
                   </div>
                 )}
-                <label className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-[#26282A] hover:border-[#D4A373]/50 bg-[#000000] rounded-xl px-4 py-3 cursor-pointer transition-colors group">
+                <label className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-[#26282A] hover:border-[#D4A373]/50 bg-[#f8f9fa] dark:bg-[#000000] rounded-xl px-4 py-3 cursor-pointer transition-colors group">
                   <input
                     type="file"
                     onChange={handleMediaUpload}
                     className="hidden"
                   />
-                  <Paperclip className="w-5 h-5 text-[#8E9296] group-hover:text-[#D4A373] transition-colors mb-1" />
-                  <span className="text-[11px] text-[#8E9296] font-medium group-hover:text-white transition-colors text-center line-clamp-1">
+                  <Paperclip className="w-5 h-5 text-gray-500 dark:text-[#8E9296] group-hover:text-[#D4A373] transition-colors mb-1" />
+                  <span className="text-[11px] text-gray-500 dark:text-[#8E9296] font-medium group-hover:text-gray-900 dark:text-white transition-colors text-center line-clamp-1">
                     {media ? media.name : 'Click to upload file (image, video, or doc)'}
                   </span>
                 </label>
@@ -241,7 +242,7 @@ export function UploadProjectModal({
 
             {/* Description */}
             <div className="space-y-1">
-              <label className="block text-[#D1D5DB] uppercase tracking-wider text-[11px]">
+              <label className="block text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider text-[11px]">
                 Technical Summary <span className="text-[#D4A373]">*</span>
               </label>
               <textarea
@@ -252,13 +253,13 @@ export function UploadProjectModal({
                   setError('');
                 }}
                 placeholder="Explain the problem solved, architecture patterns used, and performance highlights..."
-                className="w-full px-3 py-2 bg-[#000000] border border-[#26282A] rounded-xl text-white text-sm focus:outline-none focus:border-[#D4A373] resize-none"
+                className="w-full px-3 py-2 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#D4A373] resize-none"
               />
             </div>
 
             {/* Tech Stack Tags */}
             <div className="space-y-1.5">
-              <label className="block text-[#D1D5DB] uppercase tracking-wider text-[11px]">
+              <label className="block text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider text-[11px]">
                 Tech Stack & Libraries <span className="text-[#D4A373]">*</span>
               </label>
               <div className="flex gap-2">
@@ -273,12 +274,12 @@ export function UploadProjectModal({
                     }
                   }}
                   placeholder="e.g. PyTorch, CUDA, FastAPI, Docker"
-                  className="flex-1 px-3 py-2 bg-[#000000] border border-[#26282A] rounded-xl text-white text-xs focus:outline-none focus:border-[#D4A373]"
+                  className="flex-1 px-3 py-2 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl text-gray-900 dark:text-white text-xs focus:outline-none focus:border-[#D4A373]"
                 />
                 <button
                   type="button"
                   onClick={handleAddTag}
-                  className="px-3.5 py-2 bg-[#141517] hover:bg-[#1E2022] text-[#D4A373] border border-[#D4A373]/40 rounded-xl text-xs font-semibold cursor-pointer"
+                  className="px-3.5 py-2 bg-gray-50 dark:bg-[#141517] hover:bg-gray-100 dark:hover:bg-[#1E2022] text-[#D4A373] border border-[#D4A373]/40 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                 </button>
@@ -289,13 +290,13 @@ export function UploadProjectModal({
                 {techStack.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#141517] border border-[#26282A] text-[11px] text-[#D1D5DB]"
+                    className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-gray-50 dark:bg-[#141517] border border-gray-200 dark:border-[#26282A] text-[11px] text-gray-700 dark:text-[#D1D5DB]"
                   >
                     <span>{tag}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveTag(tag)}
-                      className="text-[#8E9296] hover:text-white"
+                      className="text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white"
                     >
                       ×
                     </button>
@@ -307,8 +308,8 @@ export function UploadProjectModal({
             {/* URLs */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               <div className="space-y-1">
-                <label className="block text-[#D1D5DB] uppercase tracking-wider text-[11px] flex items-center gap-1">
-                  <FolderGit2 className="w-3 h-3 text-[#8E9296]" />
+                <label className="block text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider text-[11px] flex items-center gap-1">
+                  <FolderGit2 className="w-3 h-3 text-gray-500 dark:text-[#8E9296]" />
                   <span>GitHub Repository URL</span>
                 </label>
                 <input
@@ -316,13 +317,13 @@ export function UploadProjectModal({
                   value={githubUrl}
                   onChange={(e) => setGithubUrl(e.target.value)}
                   placeholder="https://github.com/..."
-                  className="w-full px-3 py-2 bg-[#000000] border border-[#26282A] rounded-xl text-white text-xs focus:outline-none focus:border-[#D4A373]"
+                  className="w-full px-3 py-2 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl text-gray-900 dark:text-white text-xs focus:outline-none focus:border-[#D4A373]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="block text-[#D1D5DB] uppercase tracking-wider text-[11px] flex items-center gap-1">
-                  <Link2 className="w-3 h-3 text-[#8E9296]" />
+                <label className="block text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider text-[11px] flex items-center gap-1">
+                  <Link2 className="w-3 h-3 text-gray-500 dark:text-[#8E9296]" />
                   <span>Live Demo / Artifact URL</span>
                 </label>
                 <input
@@ -330,23 +331,23 @@ export function UploadProjectModal({
                   value={demoUrl}
                   onChange={(e) => setDemoUrl(e.target.value)}
                   placeholder="https://demo.domain.com"
-                  className="w-full px-3 py-2 bg-[#000000] border border-[#26282A] rounded-xl text-white text-xs focus:outline-none focus:border-[#D4A373]"
+                  className="w-full px-3 py-2 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl text-gray-900 dark:text-white text-xs focus:outline-none focus:border-[#D4A373]"
                 />
               </div>
             </div>
 
             {/* Actions */}
-            <div className="pt-4 border-t border-[#26282A] flex items-center justify-end gap-2.5">
+            <div className="pt-4 border-t border-gray-200 dark:border-[#26282A] flex items-center justify-end gap-2.5">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl bg-[#000000] hover:bg-[#141517] text-[#D1D5DB] border border-[#26282A] text-xs transition-colors"
+                className="px-4 py-2 rounded-xl bg-[#f8f9fa] dark:bg-[#000000] hover:bg-gray-50 dark:bg-[#141517] text-gray-700 dark:text-[#D1D5DB] border border-gray-200 dark:border-[#26282A] text-xs transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 rounded-xl bg-[#D4A373] hover:bg-[#c49363] text-black font-heading font-bold text-xs shadow-md shadow-[#D4A373]/20 transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-5 py-2 rounded-xl bg-[#D4A373] hover:bg-[#c49363] text-white dark:text-black font-heading font-bold text-xs shadow-md shadow-[#D4A373]/20 transition-all cursor-pointer flex items-center gap-1.5"
               >
                 <UploadCloud className="w-3.5 h-3.5" />
                 <span>Upload Project</span>

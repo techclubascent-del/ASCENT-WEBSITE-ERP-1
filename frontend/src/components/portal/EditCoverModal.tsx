@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Image as ImageIcon, Check, Upload } from 'lucide-react';
@@ -90,24 +91,24 @@ export function EditCoverModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-100 dark:bg-black/80 backdrop-blur-sm">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
-          className="bg-[#0C0D0E] border border-[#26282A] w-full max-w-xl rounded-3xl p-6 shadow-2xl relative overflow-hidden"
+          className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] w-full max-w-xl rounded-3xl p-6 shadow-2xl relative overflow-hidden"
         >
           {/* Accent border top */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#D4A373] to-transparent" />
 
           {/* Header */}
-          <div className="flex items-center justify-between pb-4 border-b border-[#26282A] mb-5">
+          <div className="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-[#26282A] mb-5">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[#141517] border border-[#D4A373]/30 flex items-center justify-center text-[#D4A373]">
+              <div className="w-8 h-8 rounded-xl bg-gray-50 dark:bg-[#141517] border border-[#D4A373]/30 flex items-center justify-center text-[#D4A373]">
                 <ImageIcon className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-base font-heading font-bold text-white">
+                <h3 className="text-base font-heading font-bold text-gray-900 dark:text-white">
                   Update Cover Banner
                 </h3>
               </div>
@@ -115,7 +116,7 @@ export function EditCoverModal({
             <button
               type="button"
               onClick={onClose}
-              className="text-[#8E9296] hover:text-white p-1.5 rounded-lg transition-colors cursor-pointer"
+              className="text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white p-1.5 rounded-lg transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -123,15 +124,15 @@ export function EditCoverModal({
 
           {/* Upload Section */}
           <div className="mb-6">
-            <h4 className="text-xs font-heading font-bold text-[#8E9296] mb-3 uppercase tracking-wider">
+            <h4 className="text-xs font-heading font-bold text-gray-500 dark:text-[#8E9296] mb-3 uppercase tracking-wider">
               Upload Custom
             </h4>
             <div 
               onClick={() => fileInputRef.current?.click()}
-              className="w-full p-4 rounded-2xl border-2 border-dashed border-[#26282A] hover:border-[#D4A373]/50 bg-[#000000] hover:bg-[#141517] transition-all cursor-pointer flex flex-col items-center justify-center gap-2"
+              className="w-full p-4 rounded-2xl border-2 border-dashed border-gray-200 dark:border-[#26282A] hover:border-[#D4A373]/50 bg-[#f8f9fa] dark:bg-[#000000] hover:bg-gray-50 dark:bg-[#141517] transition-all cursor-pointer flex flex-col items-center justify-center gap-2"
             >
-              <Upload className="w-5 h-5 text-[#8E9296]" />
-              <span className="text-sm font-subheading text-[#8E9296]">Click to upload from your computer</span>
+              <Upload className="w-5 h-5 text-gray-500 dark:text-[#8E9296]" />
+              <span className="text-sm font-subheading text-gray-500 dark:text-[#8E9296]">Click to upload from your computer</span>
             </div>
             <input 
               type="file" 
@@ -143,7 +144,7 @@ export function EditCoverModal({
           </div>
 
           {/* Preset list */}
-          <h4 className="text-xs font-heading font-bold text-[#8E9296] mb-3 uppercase tracking-wider">
+          <h4 className="text-xs font-heading font-bold text-gray-500 dark:text-[#8E9296] mb-3 uppercase tracking-wider">
             Or Choose Preset
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-6">
@@ -155,30 +156,30 @@ export function EditCoverModal({
                   onClick={() => setSelectedPreset(preset.id)}
                   className={`p-3 rounded-2xl border cursor-pointer transition-all relative overflow-hidden flex flex-col justify-between ${
                     isSelected
-                      ? 'border-[#D4A373] ring-1 ring-[#D4A373]/40 bg-[#141517]'
-                      : 'border-[#26282A] bg-[#000000] hover:border-[#3D4042]'
+                      ? 'border-[#D4A373] ring-1 ring-[#D4A373]/40 bg-gray-50 dark:bg-[#141517]'
+                      : 'border-gray-200 dark:border-[#26282A] bg-[#f8f9fa] dark:bg-[#000000] hover:border-gray-300 dark:hover:border-[#3D4042]'
                   }`}
                 >
                   {/* Miniature preview */}
                   <div
-                    className={`h-16 w-full rounded-xl mb-3 relative overflow-hidden bg-gradient-to-br ${preset.gradientClass} border border-[#26282A]`}
+                    className={`h-16 w-full rounded-xl mb-3 relative overflow-hidden bg-gradient-to-br ${preset.gradientClass} border border-gray-200 dark:border-[#26282A]`}
                     style={{
                       backgroundImage: `${preset.accentGlow}, ${preset.bgPattern}`,
                       backgroundSize: `auto, ${preset.bgSize}`,
                     }}
                   >
                     {isSelected && (
-                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[#D4A373] text-black flex items-center justify-center shadow">
+                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[#D4A373] text-white dark:text-black flex items-center justify-center shadow">
                         <Check className="w-3 h-3 stroke-[3]" />
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <h4 className="text-xs font-heading font-bold text-white mb-0.5">
+                    <h4 className="text-xs font-heading font-bold text-gray-900 dark:text-white mb-0.5">
                       {preset.name}
                     </h4>
-                    <p className="text-[11px] font-subheading text-[#8E9296] line-clamp-2">
+                    <p className="text-[11px] font-subheading text-gray-500 dark:text-[#8E9296] line-clamp-2">
                       {preset.description}
                     </p>
                   </div>
@@ -188,18 +189,18 @@ export function EditCoverModal({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#26282A]">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200 dark:border-[#26282A]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-xs font-subheading text-[#D1D5DB] hover:text-white border border-[#26282A] hover:bg-[#141517] transition-all cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-subheading text-gray-700 dark:text-[#D1D5DB] hover:text-gray-900 dark:text-white border border-gray-200 dark:border-[#26282A] hover:bg-gray-50 dark:bg-[#141517] transition-all cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={handleApply}
-              className="px-5 py-2 rounded-xl bg-[#D4A373] hover:bg-[#c49363] text-black text-xs font-heading font-bold transition-all shadow-md shadow-[#D4A373]/20 cursor-pointer"
+              className="px-5 py-2 rounded-xl bg-[#D4A373] hover:bg-[#c49363] text-white dark:text-black text-xs font-heading font-bold transition-all shadow-md shadow-[#D4A373]/20 cursor-pointer"
             >
               Apply Cover
             </button>

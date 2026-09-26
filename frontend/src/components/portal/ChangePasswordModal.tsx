@@ -87,22 +87,22 @@ export function ChangePasswordModal({ isOpen, onClose, memberName }: ChangePassw
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-sm overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-gray-100 dark:bg-black/80 backdrop-blur-sm overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-[#0C0D0E] border border-[#26282A] rounded-3xl w-full max-w-md shadow-2xl overflow-hidden my-auto"
+          className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-3xl w-full max-w-md shadow-2xl overflow-hidden my-auto"
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[#26282A] bg-[#000000]/60">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#26282A] bg-[#f8f9fa] dark:bg-[#000000]/60">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#141517] border border-[#D4A373]/50 flex items-center justify-center text-[#D4A373]">
+              <div className="w-8 h-8 rounded-lg bg-gray-50 dark:bg-[#141517] border border-[#D4A373]/50 flex items-center justify-center text-[#D4A373]">
                 <KeyRound className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="font-heading text-sm font-bold text-white">Change Password</h3>
-                <span className="text-[11px] font-subheading text-[#8E9296]">
+                <h3 className="font-heading text-sm font-bold text-gray-900 dark:text-white">Change Password</h3>
+                <span className="text-[11px] font-subheading text-gray-500 dark:text-[#8E9296]">
                   Update security passcode for {memberName}
                 </span>
               </div>
@@ -110,7 +110,7 @@ export function ChangePasswordModal({ isOpen, onClose, memberName }: ChangePassw
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-xl bg-[#141517] hover:bg-[#1E2022] text-[#8E9296] hover:text-white border border-[#26282A] transition-colors"
+              className="p-1.5 rounded-xl bg-gray-50 dark:bg-[#141517] hover:bg-gray-100 dark:hover:bg-[#1E2022] text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white border border-gray-200 dark:border-[#26282A] transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -121,7 +121,7 @@ export function ChangePasswordModal({ isOpen, onClose, memberName }: ChangePassw
             {success ? (
               <div className="p-4 bg-emerald-950/40 border border-emerald-500/50 rounded-2xl text-center space-y-2">
                 <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
-                <h4 className="font-heading text-sm font-bold text-white">
+                <h4 className="font-heading text-sm font-bold text-gray-900 dark:text-white">
                   Password Updated Successfully
                 </h4>
                 <p className="text-emerald-300 text-xs">
@@ -139,7 +139,7 @@ export function ChangePasswordModal({ isOpen, onClose, memberName }: ChangePassw
 
                 {/* Current Password */}
                 <div className="space-y-1">
-                  <label className="block text-[#D1D5DB] uppercase tracking-wider text-[11px]">
+                  <label className="block text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider text-[11px]">
                     Current Password <span className="text-[#D4A373]">*</span>
                   </label>
                   <div className="relative">
@@ -151,12 +151,12 @@ export function ChangePasswordModal({ isOpen, onClose, memberName }: ChangePassw
                         setError('');
                       }}
                       placeholder="Enter current password"
-                      className="w-full pl-3 pr-10 py-2 bg-[#000000] border border-[#26282A] rounded-xl text-white text-sm focus:outline-none focus:border-[#D4A373]"
+                      className="w-full pl-3 pr-10 py-2 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#D4A373]"
                     />
                     <button
                       type="button"
                       onClick={() => setShowCurrent(!showCurrent)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#8E9296] hover:text-white"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white"
                     >
                       {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -166,12 +166,12 @@ export function ChangePasswordModal({ isOpen, onClose, memberName }: ChangePassw
                 {/* New Password */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <label className="block text-[#D1D5DB] uppercase tracking-wider text-[11px]">
+                    <label className="block text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider text-[11px]">
                       New Password <span className="text-[#D4A373]">*</span>
                     </label>
                     {newPassword && (
-                      <span className="text-[10px] text-[#8E9296]">
-                        Strength: <strong className="text-white">{strength.label}</strong>
+                      <span className="text-[10px] text-gray-500 dark:text-[#8E9296]">
+                        Strength: <strong className="text-gray-900 dark:text-white">{strength.label}</strong>
                       </span>
                     )}
                   </div>
@@ -184,12 +184,12 @@ export function ChangePasswordModal({ isOpen, onClose, memberName }: ChangePassw
                         setError('');
                       }}
                       placeholder="Minimum 6 characters"
-                      className="w-full pl-3 pr-10 py-2 bg-[#000000] border border-[#26282A] rounded-xl text-white text-sm focus:outline-none focus:border-[#D4A373]"
+                      className="w-full pl-3 pr-10 py-2 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#D4A373]"
                     />
                     <button
                       type="button"
                       onClick={() => setShowNew(!showNew)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#8E9296] hover:text-white"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white"
                     >
                       {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -202,7 +202,7 @@ export function ChangePasswordModal({ isOpen, onClose, memberName }: ChangePassw
                         <div
                           key={step}
                           className={`h-1 flex-1 rounded-full transition-colors ${
-                            strength.score >= step ? strength.color : 'bg-[#26282A]'
+                            strength.score >= step ? strength.color : 'bg-gray-200 dark:bg-[#26282A]'
                           }`}
                         />
                       ))}
@@ -212,7 +212,7 @@ export function ChangePasswordModal({ isOpen, onClose, memberName }: ChangePassw
 
                 {/* Confirm Password */}
                 <div className="space-y-1">
-                  <label className="block text-[#D1D5DB] uppercase tracking-wider text-[11px]">
+                  <label className="block text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider text-[11px]">
                     Confirm New Password <span className="text-[#D4A373]">*</span>
                   </label>
                   <div className="relative">
@@ -224,12 +224,12 @@ export function ChangePasswordModal({ isOpen, onClose, memberName }: ChangePassw
                         setError('');
                       }}
                       placeholder="Re-enter new password"
-                      className="w-full pl-3 pr-10 py-2 bg-[#000000] border border-[#26282A] rounded-xl text-white text-sm focus:outline-none focus:border-[#D4A373]"
+                      className="w-full pl-3 pr-10 py-2 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#D4A373]"
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirm(!showConfirm)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#8E9296] hover:text-white"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white"
                     >
                       {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -237,7 +237,7 @@ export function ChangePasswordModal({ isOpen, onClose, memberName }: ChangePassw
                 </div>
 
                 {/* Policy note */}
-                <div className="p-3 bg-[#000000] border border-[#26282A] rounded-xl flex items-start gap-2 text-[11px] text-[#8E9296]">
+                <div className="p-3 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl flex items-start gap-2 text-[11px] text-gray-500 dark:text-[#8E9296]">
                   <ShieldCheck className="w-4 h-4 text-[#D4A373] shrink-0 mt-0.5" />
                   <span>
                     Passwords must contain at least 6 characters. Avoid using simple student USNs or
@@ -246,18 +246,18 @@ export function ChangePasswordModal({ isOpen, onClose, memberName }: ChangePassw
                 </div>
 
                 {/* Actions */}
-                <div className="pt-3 border-t border-[#26282A] flex items-center justify-end gap-2.5">
+                <div className="pt-3 border-t border-gray-200 dark:border-[#26282A] flex items-center justify-end gap-2.5">
                   <button
                     type="button"
                     onClick={onClose}
-                    className="px-4 py-2 rounded-xl bg-[#000000] hover:bg-[#141517] text-[#D1D5DB] border border-[#26282A] text-xs transition-colors"
+                    className="px-4 py-2 rounded-xl bg-[#f8f9fa] dark:bg-[#000000] hover:bg-gray-50 dark:bg-[#141517] text-gray-700 dark:text-[#D1D5DB] border border-gray-200 dark:border-[#26282A] text-xs transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-5 py-2 rounded-xl bg-[#D4A373] hover:bg-[#c49363] text-black font-heading font-bold text-xs shadow-md shadow-[#D4A373]/20 transition-all cursor-pointer flex items-center gap-1.5"
+                    className="px-5 py-2 rounded-xl bg-[#D4A373] hover:bg-[#c49363] text-white dark:text-black font-heading font-bold text-xs shadow-md shadow-[#D4A373]/20 transition-all cursor-pointer flex items-center gap-1.5"
                   >
                     <Lock className="w-3.5 h-3.5" />
                     <span>{loading ? 'Updating...' : 'Save New Password'}</span>

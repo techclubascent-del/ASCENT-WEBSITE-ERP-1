@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 
 export const Panther2D: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,31 +17,39 @@ export const Panther2D: React.FC = () => {
     const width = container.clientWidth || 450;
     const height = container.clientHeight || 450;
 
-    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
-    camera.position.set(0, 0.3, 7.2);
+    const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 1000);
+    camera.position.set(0, 0.5, 9.0);
     camera.lookAt(0, 0.1, 0);
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
       alpha: true,
       antialias: true,
+      powerPreference: 'high-performance',
     });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
+    renderer.toneMappingExposure = 1.0;
 
-    // --- LIGHTING ---
-    const ambientLight = new THREE.AmbientLight(0x222533, 1.6);
+    // --- ENVIRONMENT & LIGHTING ---
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
-    keyLight.position.set(4, 6, 5);
+    const keyLight = new THREE.DirectionalLight(0xffeedd, 1.2);
+    keyLight.position.set(5, 5, 5);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x00e5ff, 2.8);
-    rimLight.position.set(-5, 4, -4);
-    scene.add(rimLight);
+    const fillLight = new THREE.DirectionalLight(0x00e5ff, 1.5);
+    fillLight.position.set(-5, 3, -3);
+    scene.add(fillLight);
+
+    const backLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    backLight.position.set(0, 5, -8);
+    scene.add(backLight);
 
     let mixer: THREE.AnimationMixer | null = null;
     let pantherModel: THREE.Object3D | null = null;
@@ -52,10 +61,22 @@ export const Panther2D: React.FC = () => {
       (gltf) => {
         pantherModel = gltf.scene;
 
-        // Position & Scale
-        pantherModel.scale.set(1.95, 1.95, 1.95);
-        pantherModel.position.set(0.3, -0.55, 0);
-        pantherModel.rotation.y = Math.PI * 0.12;
+        // Enhance Materials for Realism
+        pantherModel.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            const material = mesh.material as THREE.MeshStandardMaterial;
+            if (material) {
+              material.envMapIntensity = 1.5;
+              material.needsUpdate = true;
+            }
+          }
+        });
+
+        // Position & Scale - Larger and Adjusted
+        pantherModel.scale.set(3.0, 3.0, 3.0);
+        pantherModel.position.set(0.3, -1.2, 0);
+        pantherModel.rotation.y = Math.PI * 0.15;
 
         scene.add(pantherModel);
 
@@ -77,9 +98,23 @@ export const Panther2D: React.FC = () => {
     // Animation Loop (Updates only the real GLB AnimationMixer clip)
     let animId: number;
     const clock = new THREE.Clock();
+    let isVisible = true;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting;
+        });
+      },
+      { threshold: 0 }
+    );
+    observer.observe(container);
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
+      
+      if (!isVisible) return;
+
       const delta = clock.getDelta();
 
       if (mixer) {
@@ -106,6 +141,7 @@ export const Panther2D: React.FC = () => {
     window.addEventListener('resize', handleResize);
 
     return () => {
+      observer.disconnect();
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
       renderer.dispose();

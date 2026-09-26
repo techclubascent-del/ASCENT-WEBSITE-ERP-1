@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect, useMemo, useRef, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -48,8 +49,11 @@ import {
   UserCheck,
   Bell,
   Code2,
-  Briefcase
+  Briefcase,
+  Sun,
+  Moon
 } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 import { CertificateModal } from './CertificateModal';
 import { UploadProjectModal } from './UploadProjectModal';
 import { ChangePasswordModal } from './ChangePasswordModal';
@@ -63,6 +67,7 @@ import { PublicProfileView } from './views/PublicProfileView';
 import { EventsView } from './views/EventsView';
 import { OpportunitiesView } from './views/OpportunitiesView';
 import { UniversalSearchModal } from '../shared/UniversalSearchModal';
+import { PostMediaGallery } from './PostMediaGallery';
 import { api } from '../../lib/api';
 
 interface MemberPortalProps {
@@ -108,58 +113,6 @@ const INITIAL_POSTS: MemberPost[] = [
   },
 ];
 
-// "You might know" peers matching the screenshot
-const PEER_SUGGESTIONS = [
-  {
-    id: 'peer-1',
-    name: 'Eddie Lemonsky',
-    role: 'Autonomous Robotics',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-    department: 'Robotics & Automation',
-  },
-  {
-    id: 'peer-2',
-    name: 'Alexy Spev',
-    role: 'ML Research Lead',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
-    department: 'AI & Data Science',
-  },
-  {
-    id: 'peer-3',
-    name: 'Anton Nichevo',
-    role: 'Firmware Engineer',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
-    department: 'Electronics & Comm.',
-  },
-];
-
-// "Active" peers matching the screenshot
-const ACTIVE_PEERS = [
-  {
-    id: 'act-1',
-    name: 'Shelby Goode',
-    status: 'Online',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80',
-  },
-  {
-    id: 'act-2',
-    name: 'Robert Bains',
-    status: 'Busy in Lab 4',
-    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&q=80',
-  },
-  {
-    id: 'act-3',
-    name: 'John Carlo',
-    status: 'Online',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80',
-  },
-  {
-    id: 'act-4',
-    name: 'Adriana Watson',
-    status: 'In HackSprint',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
-  },
-];
 
 export function MemberPortal({
   memberIdentifier = '1MS22CS042',
@@ -269,6 +222,7 @@ export function MemberPortal({
   const [copiedId, setCopiedId] = useState(false);
   const [activeNav, setActiveNav] = useState<'home' | 'profile' | 'peer-profile' | 'messages' | 'projects' | 'certificates' | 'gallery' | 'settings' | 'events' | 'opportunities'>(initialNav || 'home');
   const avatarInputRef = useRef<HTMLInputElement>(null);
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     if (initialNav) {
@@ -409,12 +363,9 @@ export function MemberPortal({
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [posts, setPosts] = useState<MemberPost[]>(INITIAL_POSTS);
-  const [connectedPeers, setConnectedPeers] = useState<Record<string, boolean>>({});
+
   const [isFollowing, setIsFollowing] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-
-  // New post composer
-  const [composerText, setComposerText] = useState('');
 
   // Modals state
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -567,33 +518,9 @@ export function MemberPortal({
     );
   };
 
-  // Toggle Connect on Peer
-  const handleToggleConnect = (peerId: string) => {
-    setConnectedPeers((prev) => ({
-      ...prev,
-      [peerId]: !prev[peerId],
-    }));
-  };
-
-  // Handle composer submission
-  const handlePublishPost = (e: FormEvent) => {
-    e.preventDefault();
-    if (!composerText.trim()) return;
-
-    const newPost: MemberPost = {
-      id: `post-${Date.now()}`,
-      authorName: activeProfile.name,
-      authorRole: activeProfile.role,
-      timeAgo: 'Just now',
-      content: composerText.trim(),
-      likesCount: 0,
-      viewsCount: 1,
-      commentsCount: 0,
-      isLiked: false,
-    };
-
+  // Handle adding new post
+  const handleAddPost = (newPost: MemberPost) => {
     setPosts([newPost, ...posts]);
-    setComposerText('');
   };
 
   // Direct certificate download using HTML5 Canvas to PNG
@@ -746,7 +673,7 @@ export function MemberPortal({
     COVER_PRESETS.find((c) => c.id === (activeProfile.coverStyle || 'circuit')) || COVER_PRESETS[0];
 
   return (
-    <div className="min-h-screen bg-[#000000] text-[#F3F4F6] flex">
+    <div className="min-h-screen bg-[#f8f9fa] dark:bg-[#000000] text-[#F3F4F6] flex">
       <UniversalSearchModal 
         isOpen={isSearchModalOpen}
         onClose={() => setIsSearchModalOpen(false)}
@@ -761,20 +688,20 @@ export function MemberPortal({
         }}
       />
       
-      <aside className="hidden md:flex flex-col w-64 bg-[#0C0D0E] border-r border-[#26282A] min-h-screen shrink-0 sticky top-0 z-30 justify-between">
+      <aside className="hidden md:flex flex-col w-64 bg-white dark:bg-[#0C0D0E] border-r border-gray-200 dark:border-[#26282A] min-h-screen shrink-0 sticky top-0 z-30 justify-between">
         <div>
           <div className="p-4 pt-6">
             <button
               onClick={() => setIsSearchModalOpen(true)}
-              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-[#141517] border border-[#26282A] text-[#8E9296] hover:text-white hover:border-[#D4A373]/50 transition-colors cursor-pointer group"
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-gray-50 dark:bg-[#141517] border border-gray-200 dark:border-[#26282A] text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white hover:border-[#D4A373]/50 transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-2 text-sm font-subheading">
                 <Search className="w-4 h-4 group-hover:text-[#D4A373] transition-colors" />
                 <span>Search...</span>
               </div>
               <div className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-[#1E2022] border border-[#26282A] rounded">⌘</kbd>
-                <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-[#1E2022] border border-[#26282A] rounded">K</kbd>
+                <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-[#1E2022] border border-gray-200 dark:border-[#26282A] rounded">⌘</kbd>
+                <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-[#1E2022] border border-gray-200 dark:border-[#26282A] rounded">K</kbd>
               </div>
             </button>
           </div>
@@ -784,8 +711,8 @@ export function MemberPortal({
               onClick={() => setActiveNav('home')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all cursor-pointer ${
                 activeNav === 'home'
-                  ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
-                  : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+                  ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
+                  : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517]'
               }`}
             >
               <Home className="w-4 h-4" />
@@ -797,8 +724,8 @@ export function MemberPortal({
               onClick={() => setActiveNav('profile')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all cursor-pointer ${
                 activeNav === 'profile'
-                  ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
-                  : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+                  ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
+                  : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517]'
               }`}
             >
               <User className="w-4 h-4" />
@@ -811,8 +738,8 @@ export function MemberPortal({
               onClick={() => setActiveNav('messages')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all cursor-pointer ${
                 activeNav === 'messages'
-                  ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
-                  : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+                  ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
+                  : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517]'
               }`}
             >
               <MessageSquare className="w-4 h-4" />
@@ -824,14 +751,14 @@ export function MemberPortal({
               onClick={() => setActiveNav('projects')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all cursor-pointer ${
                 activeNav === 'projects'
-                  ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
-                  : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+                  ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
+                  : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517]'
               }`}
             >
               <FolderGit2 className="w-4 h-4" />
               <span>Projects</span>
               {uploadedCount > 0 && (
-                <span className="ml-auto px-2 py-0.5 rounded-full bg-[#1E2022] text-[#D4A373] text-[10px] border border-[#26282A]">
+                <span className="ml-auto px-2 py-0.5 rounded-full bg-[#1E2022] text-[#D4A373] text-[10px] border border-gray-200 dark:border-[#26282A]">
                   {uploadedCount}
                 </span>
               )}
@@ -842,13 +769,13 @@ export function MemberPortal({
               onClick={() => setActiveNav('certificates')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all cursor-pointer ${
                 activeNav === 'certificates'
-                  ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
-                  : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+                  ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
+                  : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517]'
               }`}
             >
               <Award className="w-4 h-4" />
               <span>Certificates</span>
-              <span className="ml-auto px-2 py-0.5 rounded-full bg-[#1E2022] text-[#D4A373] text-[10px] border border-[#26282A]">
+              <span className="ml-auto px-2 py-0.5 rounded-full bg-[#1E2022] text-[#D4A373] text-[10px] border border-gray-200 dark:border-[#26282A]">
                 {certCount}
               </span>
             </button>
@@ -858,8 +785,8 @@ export function MemberPortal({
               onClick={() => setActiveNav('events')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all cursor-pointer ${
                 activeNav === 'events'
-                  ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
-                  : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+                  ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
+                  : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517]'
               }`}
             >
               <Calendar className="w-4 h-4" />
@@ -871,8 +798,8 @@ export function MemberPortal({
               onClick={() => setActiveNav('opportunities')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all cursor-pointer ${
                 activeNav === 'opportunities'
-                  ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
-                  : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+                  ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
+                  : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517]'
               }`}
             >
               <Briefcase className="w-4 h-4" />
@@ -884,8 +811,8 @@ export function MemberPortal({
               onClick={() => setActiveNav('settings')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all cursor-pointer ${
                 activeNav === 'settings'
-                  ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
-                  : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+                  ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/40 shadow-sm'
+                  : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517]'
               }`}
             >
               <Settings className="w-4 h-4" />
@@ -894,11 +821,11 @@ export function MemberPortal({
           </nav>
         </div>
 
-        <div className="p-4 border-t border-[#26282A] space-y-2">
+        <div className="p-4 border-t border-gray-200 dark:border-[#26282A] space-y-2">
           <button
             type="button"
             onClick={onNavigateToRegistration}
-            className="w-full py-2 px-3 rounded-xl bg-[#000000] hover:bg-[#141517] text-[#D1D5DB] hover:text-[#D4A373] border border-[#26282A] text-xs font-subheading flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            className="w-full py-2 px-3 rounded-xl bg-[#f8f9fa] dark:bg-[#000000] hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517] text-gray-700 dark:text-[#D1D5DB] hover:text-[#D4A373] border border-gray-200 dark:border-[#26282A] text-xs font-subheading flex items-center justify-center gap-2 transition-colors cursor-pointer"
           >
             <UserPlus className="w-3.5 h-3.5" />
             <span>Register New Member</span>
@@ -907,7 +834,7 @@ export function MemberPortal({
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full py-2 px-3 rounded-xl bg-[#000000] hover:bg-[#141517] text-[#D4A373] border border-[#D4A373]/30 text-xs font-subheading flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            className="w-full py-2 px-3 rounded-xl bg-[#f8f9fa] dark:bg-[#000000] hover:bg-gray-100 dark:hover:bg-orange-50 dark:bg-[#141517] text-[#D4A373] border border-[#D4A373]/30 text-xs font-subheading flex items-center justify-center gap-2 transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Sign Out</span>
@@ -916,21 +843,21 @@ export function MemberPortal({
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <div className="md:hidden px-4 py-3 bg-[#0C0D0E] border-b border-[#26282A] flex items-center justify-between sticky top-0 z-20">
+        <div className="md:hidden px-4 py-3 bg-white dark:bg-[#0C0D0E] border-b border-gray-200 dark:border-[#26282A] flex items-center justify-between sticky top-0 z-20">
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="text-[#8E9296] hover:text-white p-1.5 rounded-xl border border-[#26282A]"
+              className="text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white p-1.5 rounded-xl border border-gray-200 dark:border-[#26282A]"
             >
               <Menu className="w-5 h-5" />
             </button>
-            <span className="font-heading font-bold text-white tracking-wide">ASCENT</span>
+            <span className="font-heading font-bold text-gray-900 dark:text-white tracking-wide">ASCENT</span>
           </div>
           <button
             type="button"
             onClick={() => setIsSearchModalOpen(true)}
-            className="text-[#8E9296] hover:text-white p-1.5 rounded-xl border border-[#26282A]"
+            className="text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white p-1.5 rounded-xl border border-gray-200 dark:border-[#26282A]"
           >
             <Search className="w-5 h-5" />
           </button>
@@ -942,22 +869,22 @@ export function MemberPortal({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 md:hidden bg-black/80 backdrop-blur-sm"
+              className="fixed inset-0 z-50 md:hidden bg-white/80 dark:bg-black/80 backdrop-blur-sm"
               onClick={() => setMobileMenuOpen(false)}
             >
               <motion.div
                 initial={{ x: -280 }}
                 animate={{ x: 0 }}
                 exit={{ x: -280 }}
-                className="w-72 bg-[#0C0D0E] border-r border-[#26282A] h-full p-5 flex flex-col justify-between"
+                className="w-72 bg-white dark:bg-[#0C0D0E] border-r border-gray-200 dark:border-[#26282A] h-full p-5 flex flex-col justify-between"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div>
-                  <div className="flex items-center justify-end pb-4 border-b border-[#26282A] mb-4">
+                  <div className="flex items-center justify-end pb-4 border-b border-gray-200 dark:border-[#26282A] mb-4">
                     <button
                       type="button"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="text-[#8E9296] hover:text-white p-1 rounded-lg"
+                      className="text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white p-1 rounded-lg"
                     >
                       <X className="w-5 h-5" />
                     </button>
@@ -972,8 +899,8 @@ export function MemberPortal({
                       }}
                       className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                         activeNav === 'home'
-                          ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
-                          : 'text-[#8E9296] hover:text-white'
+                          ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
+                          : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white'
                       }`}
                     >
                       <Home className="w-4 h-4" />
@@ -988,8 +915,8 @@ export function MemberPortal({
                       }}
                       className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                         activeNav === 'profile'
-                          ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
-                          : 'text-[#8E9296] hover:text-white'
+                          ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
+                          : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white'
                       }`}
                     >
                       <User className="w-4 h-4" />
@@ -1004,8 +931,8 @@ export function MemberPortal({
                       }}
                       className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                         activeNav === 'messages'
-                          ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
-                          : 'text-[#8E9296] hover:text-white'
+                          ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
+                          : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white'
                       }`}
                     >
                       <MessageSquare className="w-4 h-4" />
@@ -1020,8 +947,8 @@ export function MemberPortal({
                       }}
                       className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                         activeNav === 'projects'
-                          ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
-                          : 'text-[#8E9296] hover:text-white'
+                          ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
+                          : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white'
                       }`}
                     >
                       <FolderGit2 className="w-4 h-4" />
@@ -1036,8 +963,8 @@ export function MemberPortal({
                       }}
                       className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                         activeNav === 'certificates'
-                          ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
-                          : 'text-[#8E9296] hover:text-white'
+                          ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
+                          : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white'
                       }`}
                     >
                       <Award className="w-4 h-4" />
@@ -1052,8 +979,8 @@ export function MemberPortal({
                       }}
                       className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                         activeNav === 'events'
-                          ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
-                          : 'text-[#8E9296] hover:text-white'
+                          ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
+                          : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white'
                       }`}
                     >
                       <Calendar className="w-4 h-4" />
@@ -1068,8 +995,8 @@ export function MemberPortal({
                       }}
                       className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                         activeNav === 'opportunities'
-                          ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
-                          : 'text-[#8E9296] hover:text-white'
+                          ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
+                          : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white'
                       }`}
                     >
                       <Briefcase className="w-4 h-4" />
@@ -1084,8 +1011,8 @@ export function MemberPortal({
                       }}
                       className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                         activeNav === 'settings'
-                          ? 'bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
-                          : 'text-[#8E9296] hover:text-white'
+                          ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] font-bold border border-[#D4A373]/30'
+                          : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white'
                       }`}
                     >
                       <Settings className="w-4 h-4" />
@@ -1094,11 +1021,11 @@ export function MemberPortal({
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-[#26282A] space-y-2">
+                <div className="pt-4 border-t border-gray-200 dark:border-[#26282A] space-y-2">
                   <button
                     type="button"
                     onClick={onNavigateToRegistration}
-                    className="w-full py-2 px-3 rounded-xl bg-[#000000] text-[#D1D5DB] border border-[#26282A] text-xs font-subheading flex items-center justify-center gap-2"
+                    className="w-full py-2 px-3 rounded-xl bg-[#f8f9fa] dark:bg-[#000000] text-gray-700 dark:text-[#D1D5DB] border border-gray-200 dark:border-[#26282A] text-xs font-subheading flex items-center justify-center gap-2"
                   >
                     <UserPlus className="w-3.5 h-3.5" />
                     <span>Register New Member</span>
@@ -1106,7 +1033,7 @@ export function MemberPortal({
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="w-full py-2 px-3 rounded-xl bg-[#000000] text-[#D4A373] border border-[#D4A373]/30 text-xs font-subheading flex items-center justify-center gap-2"
+                    className="w-full py-2 px-3 rounded-xl bg-[#f8f9fa] dark:bg-[#000000] text-[#D4A373] border border-[#D4A373]/30 text-xs font-subheading flex items-center justify-center gap-2"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     <span>Sign Out</span>
@@ -1125,6 +1052,7 @@ export function MemberPortal({
               posts={filteredPosts}
               onNavigate={(view) => setActiveNav(view)}
               onOpenUpload={() => setIsUploadModalOpen(true)}
+              onAddPost={handleAddPost}
             />
           )}
 
@@ -1160,10 +1088,10 @@ export function MemberPortal({
           )}
 
           {activeNav === 'messages' && (
-            <div className="bg-[#0C0D0E] border border-[#26282A] rounded-2xl p-8 text-center shadow-2xl relative min-h-[400px] flex flex-col items-center justify-center">
+            <div className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-2xl p-8 text-center shadow-2xl relative min-h-[400px] flex flex-col items-center justify-center">
               <MessageSquare className="w-12 h-12 text-[#545454] mx-auto mb-4" />
-              <h2 className="text-xl font-heading font-bold text-white mb-2">Direct Messages</h2>
-              <p className="text-sm font-subheading text-[#8E9296] max-w-md mx-auto">
+              <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white mb-2">Direct Messages</h2>
+              <p className="text-sm font-subheading text-gray-500 dark:text-[#8E9296] max-w-md mx-auto">
                 Your secure channel for connecting with other Ascent members. Direct messaging functionality is currently being provisioned.
               </p>
             </div>
@@ -1190,7 +1118,7 @@ export function MemberPortal({
               {/* 3. HERO COVER BANNER & PROFILE HEADER                                 */}
               {/*    (Directly mirrors the panoramic cover & overlapping circular badge) */}
               {/* ===================================================================== */}
-          <div className="bg-[#0C0D0E] border border-[#26282A] rounded-2xl overflow-hidden shadow-2xl relative">
+          <div className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-2xl overflow-hidden shadow-2xl relative">
             {/* Panoramic Cover Banner */}
             <div
               className={`h-28 sm:h-36 w-full relative overflow-hidden transition-all duration-300 ${!isCustomCover ? `bg-gradient-to-r ${currentCover.gradientClass}` : ''}`}
@@ -1205,14 +1133,14 @@ export function MemberPortal({
               {/* Subtle tech gridlines overlay */}
               {!isCustomCover && <div className="absolute inset-0 bg-tech-grid opacity-30 pointer-events-none" />}
 
-              {/* Edit Cover Photo button (top right of banner - matching screenshot) */}
+              {/* Edit Cover Photo button */}
               <button
                 type="button"
                 onClick={() => setIsEditCoverOpen(true)}
-                className="absolute top-3 right-3 px-3 py-1 rounded-full bg-black/60 hover:bg-black/85 backdrop-blur-md border border-[#26282A] text-white text-[11px] font-subheading flex items-center gap-1.5 transition-all cursor-pointer shadow-lg"
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/60 dark:bg-black/60 hover:bg-white dark:bg-black/85 backdrop-blur-md border border-gray-200 dark:border-[#26282A] text-gray-900 dark:text-white flex items-center justify-center transition-all cursor-pointer shadow-lg"
+                title="Edit Cover Photo"
               >
-                <Camera className="w-3 h-3 text-[#D4A373]" />
-                <span className="font-medium">Edit Cover Photo</span>
+                <Camera className="w-4 h-4 text-[#D4A373]" />
               </button>
             </div>
 
@@ -1223,7 +1151,7 @@ export function MemberPortal({
                 <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 -mt-10 sm:-mt-12">
                   {/* Circular Avatar with warm gold border ring (as seen in screenshot) */}
                   <div className="relative group">
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#000000] border-3 sm:border-4 border-[#0C0D0E] ring-2 ring-[#D4A373] shadow-xl flex items-center justify-center text-xl sm:text-2xl font-heading font-extrabold text-[#D4A373] overflow-hidden relative">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#f8f9fa] dark:bg-[#000000] border-3 sm:border-4 border-white dark:border-[#0C0D0E] ring-2 ring-[#D4A373] shadow-xl flex items-center justify-center text-xl sm:text-2xl font-heading font-extrabold text-[#D4A373] overflow-hidden relative">
                       {activeProfile.avatar ? (
                         <img src={activeProfile.avatar} alt="Profile" className="w-full h-full object-cover" />
                       ) : (
@@ -1236,10 +1164,10 @@ export function MemberPortal({
                       
                       {/* Avatar Upload Overlay */}
                       <div 
-                        className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        className="absolute inset-0 bg-white/60 dark:bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                         onClick={() => avatarInputRef.current?.click()}
                       >
-                        <Camera className="w-6 h-6 text-white" />
+                        <Camera className="w-6 h-6 text-gray-900 dark:text-white" />
                       </div>
                       <input 
                         type="file" 
@@ -1253,7 +1181,7 @@ export function MemberPortal({
 
                   {/* Name & Title */}
                   <div className="text-center sm:text-left mb-0.5">
-                    <h1 className="font-heading text-xl sm:text-2xl font-extrabold text-white tracking-tight leading-tight">
+                    <h1 className="font-heading text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
                       {activeProfile.name}
                     </h1>
                     <p className="font-subheading text-xs sm:text-sm text-[#D4A373] font-medium">
@@ -1268,7 +1196,7 @@ export function MemberPortal({
                   <button
                     type="button"
                     onClick={() => setIsEditProfileOpen(true)}
-                    className="px-3.5 py-1.5 rounded-full bg-[#000000] hover:bg-[#141517] text-white border border-[#26282A] hover:border-[#D4A373]/50 text-xs font-subheading font-medium flex items-center gap-1.5 transition-all cursor-pointer"
+                    className="px-3.5 py-1.5 rounded-full bg-[#f8f9fa] dark:bg-[#000000] hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517] text-gray-900 dark:text-white border border-gray-200 dark:border-[#26282A] hover:border-[#D4A373]/50 text-xs font-subheading font-medium flex items-center gap-1.5 transition-all cursor-pointer"
                   >
                     <Edit3 className="w-3.5 h-3.5 text-[#D4A373]" />
                     <span>Edit Profile</span>
@@ -1290,16 +1218,9 @@ export function MemberPortal({
             {/* ----------------------------------------------------------------- */}
             <div className="lg:col-span-3 space-y-6">
               {/* "About" Card */}
-              <div className="bg-[#0C0D0E] border border-[#26282A] rounded-3xl p-5 shadow-xl space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-[#26282A]">
-                  <h3 className="font-heading text-base font-bold text-white">About</h3>
-                  <button
-                    type="button"
-                    onClick={() => setIsEditProfileOpen(true)}
-                    className="text-[#8E9296] hover:text-[#D4A373] text-xs font-subheading transition-colors"
-                  >
-                    Edit
-                  </button>
+              <div className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-3xl p-5 shadow-xl space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-[#26282A]">
+                  <h3 className="font-heading text-base font-bold text-gray-900 dark:text-white">About</h3>
                 </div>
 
                 {/* Bio text if provided */}
@@ -1310,7 +1231,7 @@ export function MemberPortal({
                 )}
 
                 {/* Icon list (mirrors the reference screenshot's About list) */}
-                <div className="space-y-3 font-subheading text-xs text-[#D1D5DB]">
+                <div className="space-y-3 font-subheading text-xs text-gray-700 dark:text-[#D1D5DB]">
                   {/* Gender / Designation */}
                   <div className="flex items-center gap-3">
                     <User className="w-4 h-4 text-[#D4A373] shrink-0" />
@@ -1332,7 +1253,7 @@ export function MemberPortal({
                   {/* Email */}
                   <div className="flex items-center gap-3">
                     <Mail className="w-4 h-4 text-[#D4A373] shrink-0" />
-                    <span className="truncate text-white font-mono-tech text-[11px]">{activeProfile.email}</span>
+                    <span className="truncate text-gray-900 dark:text-white font-mono-tech text-[11px]">{activeProfile.email}</span>
                   </div>
 
                   {/* Phone */}
@@ -1342,17 +1263,17 @@ export function MemberPortal({
                   </div>
 
                   {/* Member ID with Copy Button */}
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#000000] border border-[#26282A]">
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A]">
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="w-3.5 h-3.5 text-[#D4A373]" />
-                      <span className="font-mono-tech font-bold text-white text-[11px]">
+                      <span className="font-mono-tech font-bold text-gray-900 dark:text-white text-[11px]">
                         {activeProfile.id}
                       </span>
                     </div>
                     <button
                       type="button"
                       onClick={handleCopyId}
-                      className="text-[#8E9296] hover:text-[#D4A373] p-1 rounded transition-colors"
+                      className="text-gray-500 dark:text-[#8E9296] hover:text-[#D4A373] p-1 rounded transition-colors"
                       title="Copy Member ID"
                     >
                       {copiedId ? (
@@ -1368,13 +1289,13 @@ export function MemberPortal({
             </div>
 
             {/* ----------------------------------------------------------------- */}
-            {/* CENTER COLUMN: MAIN WORKSPACE FEED (Cols: 6 on lg/xl)             */}
+            {/* CENTER COLUMN: MAIN WORKSPACE FEED (Cols: 9 on lg/xl)             */}
             {/*    Tabs (Followers, Following, Posts, Uploaded Projects, Certs)    */}
             {/*    Post Composer & Rich Feed Cards                                */}
             {/* ----------------------------------------------------------------- */}
-            <div className="lg:col-span-6 space-y-6">
+            <div className="lg:col-span-9 space-y-6">
               {/* Tab Navigation Header (Directly inspired by screenshot tabs) */}
-              <div className="bg-[#0C0D0E] border border-[#26282A] rounded-2xl p-2 flex items-center justify-between gap-1 overflow-x-auto">
+              <div className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-2xl p-2 flex items-center justify-between gap-1 overflow-x-auto">
                 <div className="flex items-center gap-1">
                   {/* Posts Tab */}
                   <button
@@ -1382,8 +1303,8 @@ export function MemberPortal({
                     onClick={() => setActiveTab('posts')}
                     className={`px-4 py-2 rounded-xl text-xs font-subheading font-medium transition-all cursor-pointer ${
                       activeTab === 'posts'
-                        ? 'bg-[#D4A373] text-black font-bold shadow-md shadow-[#D4A373]/20'
-                        : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+                        ? 'bg-[#D4A373] text-white dark:text-black font-bold shadow-md shadow-[#D4A373]/20'
+                        : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517]'
                     }`}
                   >
                     Posts
@@ -1395,12 +1316,12 @@ export function MemberPortal({
                     onClick={() => setActiveTab('projects')}
                     className={`px-4 py-2 rounded-xl text-xs font-subheading font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
                       activeTab === 'projects'
-                        ? 'bg-[#D4A373] text-black font-bold shadow-md shadow-[#D4A373]/20'
-                        : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+                        ? 'bg-[#D4A373] text-white dark:text-black font-bold shadow-md shadow-[#D4A373]/20'
+                        : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517]'
                     }`}
                   >
                     <span>Projects</span>
-                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-[#000000]/20 font-bold">
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-[#f8f9fa] dark:bg-[#000000]/20 font-bold">
                       {uploadedCount}
                     </span>
                   </button>
@@ -1411,12 +1332,12 @@ export function MemberPortal({
                     onClick={() => setActiveTab('certificates')}
                     className={`px-4 py-2 rounded-xl text-xs font-subheading font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
                       activeTab === 'certificates'
-                        ? 'bg-[#D4A373] text-black font-bold shadow-md shadow-[#D4A373]/20'
-                        : 'text-[#8E9296] hover:text-white hover:bg-[#141517]'
+                        ? 'bg-[#D4A373] text-white dark:text-black font-bold shadow-md shadow-[#D4A373]/20'
+                        : 'text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517]'
                     }`}
                   >
                     <span>Certificates</span>
-                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-[#000000]/20 font-bold">
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-[#f8f9fa] dark:bg-[#000000]/20 font-bold">
                       {certCount}
                     </span>
                   </button>
@@ -1426,55 +1347,11 @@ export function MemberPortal({
               {/* POSTS TAB CONTENT */}
               {activeTab === 'posts' && (
                 <div className="space-y-6">
-                  {/* Share an Update / Project Composer */}
-                  <form
-                    onSubmit={handlePublishPost}
-                    className="bg-[#0C0D0E] border border-[#26282A] rounded-3xl p-5 shadow-xl space-y-3"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-[#141517] border border-[#D4A373]/40 flex items-center justify-center text-xs font-heading font-bold text-[#D4A373] shrink-0">
-                        {activeProfile.name
-                          .split(' ')
-                          .map((n) => n[0])
-                          .join('')
-                          .slice(0, 2)}
-                      </div>
-                      <input
-                        type="text"
-                        value={composerText}
-                        onChange={(e) => setComposerText(e.target.value)}
-                        placeholder={`Share a project milestone, research discovery, or hardware benchmark...`}
-                        className="flex-1 bg-[#000000] border border-[#26282A] rounded-full px-4 py-2 text-xs font-subheading text-white focus:outline-none focus:border-[#D4A373] transition-colors"
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between pt-2 border-t border-[#26282A]">
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setIsUploadModalOpen(true)}
-                          className="text-xs font-subheading text-[#8E9296] hover:text-[#D4A373] flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-[#141517] transition-colors cursor-pointer"
-                        >
-                          <UploadCloud className="w-3.5 h-3.5 text-[#D4A373]" />
-                          <span>Attach Project</span>
-                        </button>
-                      </div>
-
-                      <button
-                        type="submit"
-                        disabled={!composerText.trim()}
-                        className="px-4 py-1.5 rounded-full bg-[#D4A373] disabled:opacity-40 hover:bg-[#c49363] text-black text-xs font-heading font-bold transition-all shadow-md shadow-[#D4A373]/20 cursor-pointer"
-                      >
-                        Publish
-                      </button>
-                    </div>
-                  </form>
-
                   {/* Feed Posts List (Matching the rich post card in the screenshot) */}
                   {filteredPosts.length === 0 ? (
-                    <div className="p-8 bg-[#0C0D0E] border border-[#26282A] rounded-3xl text-center space-y-2">
+                    <div className="p-8 bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-3xl text-center space-y-2">
                       <MessageSquare className="w-8 h-8 text-[#545454] mx-auto" />
-                      <p className="text-xs font-subheading text-[#8E9296]">
+                      <p className="text-xs font-subheading text-gray-500 dark:text-[#8E9296]">
                         No posts matched your search. Clear filter or publish a new update.
                       </p>
                     </div>
@@ -1482,12 +1359,12 @@ export function MemberPortal({
                     filteredPosts.map((post) => (
                       <div
                         key={post.id}
-                        className="bg-[#0C0D0E] border border-[#26282A] rounded-3xl p-5 shadow-xl hover:border-[#3D4042] transition-all space-y-4"
+                        className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-3xl p-5 shadow-xl hover:border-gray-300 dark:border-[#3D4042] transition-all space-y-4"
                       >
                         {/* Post Author Row (Avatar, Name, Timestamp, 3-dots) */}
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-[#141517] border border-[#D4A373]/40 flex items-center justify-center text-xs font-heading font-bold text-[#D4A373] shrink-0">
+                            <div className="w-10 h-10 rounded-full bg-gray-50 dark:bg-[#141517] border border-[#D4A373]/40 flex items-center justify-center text-xs font-heading font-bold text-[#D4A373] shrink-0">
                               {post.authorName
                                 .split(' ')
                                 .map((n) => n[0])
@@ -1495,10 +1372,10 @@ export function MemberPortal({
                                 .slice(0, 2)}
                             </div>
                             <div>
-                              <h4 className="font-heading text-sm font-bold text-white leading-tight">
+                              <h4 className="font-heading text-sm font-bold text-gray-900 dark:text-white leading-tight">
                                 {post.authorName}
                               </h4>
-                              <p className="font-subheading text-[11px] text-[#8E9296]">
+                              <p className="font-subheading text-[11px] text-gray-500 dark:text-[#8E9296]">
                                 {post.timeAgo} • <span className="text-[#D4A373]">{post.authorRole}</span>
                               </p>
                             </div>
@@ -1508,32 +1385,32 @@ export function MemberPortal({
                             <button
                               type="button"
                               onClick={() => setActiveDropdown(activeDropdown === post.id ? null : post.id)}
-                              className="text-[#8E9296] hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
+                              className="text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white p-1 rounded-lg transition-colors cursor-pointer"
                             >
                               <MoreHorizontal className="w-4 h-4" />
                             </button>
                             
                             {activeDropdown === post.id && (
-                              <div className="absolute right-0 mt-2 w-36 bg-[#141517] border border-[#26282A] rounded-xl shadow-lg z-10 overflow-hidden text-sm text-[#D1D5DB] font-subheading">
+                              <div className="absolute right-0 mt-2 w-36 bg-gray-50 dark:bg-[#141517] border border-gray-200 dark:border-[#26282A] rounded-xl shadow-lg z-10 overflow-hidden text-sm text-gray-700 dark:text-[#D1D5DB] font-subheading">
                                 <button 
-                                  className="w-full text-left px-4 py-2 hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
+                                  className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
                                   onClick={() => { alert('Edit post functionality coming soon!'); setActiveDropdown(null); }}
                                 >
                                   Edit
                                 </button>
                                 <button 
-                                  className="w-full text-left px-4 py-2 hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
+                                  className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
                                   onClick={() => { alert('Save post functionality coming soon!'); setActiveDropdown(null); }}
                                 >
                                   Save
                                 </button>
                                 <button 
-                                  className="w-full text-left px-4 py-2 hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
+                                  className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
                                   onClick={() => { alert('Archive post functionality coming soon!'); setActiveDropdown(null); }}
                                 >
                                   Archive
                                 </button>
-                                <div className="h-px w-full bg-[#26282A]" />
+                                <div className="h-px w-full bg-gray-200 dark:bg-[#26282A]" />
                                 <button 
                                   className="w-full text-left px-4 py-2 hover:bg-red-950/40 text-red-400 transition-colors cursor-pointer"
                                   onClick={() => { alert('Delete post functionality coming soon!'); setActiveDropdown(null); }}
@@ -1546,20 +1423,12 @@ export function MemberPortal({
                         </div>
 
                         {/* Post Body */}
-                        <p className="font-subheading text-xs sm:text-sm text-[#D1D5DB] leading-relaxed">
+                        <p className="font-subheading text-xs sm:text-sm text-gray-700 dark:text-[#D1D5DB] leading-relaxed">
                           {post.content}
                         </p>
 
-                        {/* Post Media Image (as in the screenshot's post card) */}
-                        {post.imageUrl && (
-                          <div className="rounded-2xl overflow-hidden border border-[#26282A] max-h-72 w-full bg-[#000000]">
-                            <img
-                              src={post.imageUrl}
-                              alt="Post preview"
-                              className="w-full h-full object-cover object-center hover:scale-102 transition-transform duration-500"
-                            />
-                          </div>
-                        )}
+                        {/* Post Media Gallery */}
+                        <PostMediaGallery media={post.media} imageUrl={post.imageUrl} videoUrl={post.videoUrl} />
 
                         {/* Tech Stack Chips if available */}
                         {post.techStack && post.techStack.length > 0 && (
@@ -1567,7 +1436,7 @@ export function MemberPortal({
                             {post.techStack.map((tech) => (
                               <span
                                 key={tech}
-                                className="text-[11px] font-mono-tech px-2.5 py-0.5 rounded-md bg-[#000000] text-[#D4A373] border border-[#26282A]"
+                                className="text-[11px] font-mono-tech px-2.5 py-0.5 rounded-md bg-[#f8f9fa] dark:bg-[#000000] text-[#D4A373] border border-gray-200 dark:border-[#26282A]"
                               >
                                 {tech}
                               </span>
@@ -1583,7 +1452,7 @@ export function MemberPortal({
                                 href={post.githubUrl}
                                 target="_blank"
                                 rel="noreferrer noopener"
-                                className="text-[#D1D5DB] hover:text-[#D4A373] flex items-center gap-1 transition-colors"
+                                className="text-gray-700 dark:text-[#D1D5DB] hover:text-[#D4A373] flex items-center gap-1 transition-colors"
                               >
                                 <FolderGit2 className="w-3.5 h-3.5" />
                                 <span>GitHub Repository</span>
@@ -1605,14 +1474,14 @@ export function MemberPortal({
                         )}
 
                         {/* Interaction Bar: Heart / Likes, Comments, Share (mirrors screenshot) */}
-                        <div className="flex items-center justify-between pt-3 border-t border-[#26282A] text-xs font-subheading text-[#8E9296]">
+                        <div className="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-[#26282A] text-xs font-subheading text-gray-500 dark:text-[#8E9296]">
                           <div className="flex items-center gap-5">
                             {/* Like Button */}
                             <button
                               type="button"
                               onClick={() => handleToggleLike(post.id)}
                               className={`flex items-center gap-1.5 transition-colors cursor-pointer ${
-                                post.isLiked ? 'text-[#D4A373] font-bold' : 'hover:text-white'
+                                post.isLiked ? 'text-[#D4A373] font-bold' : 'hover:text-gray-900 dark:text-white'
                               }`}
                             >
                               <Heart
@@ -1626,7 +1495,7 @@ export function MemberPortal({
                             {/* Comments */}
                             <button
                               type="button"
-                              className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
+                              className="flex items-center gap-1.5 hover:text-gray-900 dark:text-white transition-colors cursor-pointer"
                             >
                               <MessageCircle className="w-4 h-4" />
                               <span>{post.viewsCount.toLocaleString()}</span>
@@ -1663,13 +1532,13 @@ export function MemberPortal({
               {/* UPLOADED PROJECTS TAB */}
               {activeTab === 'projects' && (
                 <div className="space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-[#0C0D0E] border border-[#26282A] rounded-2xl">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-2xl">
                     <div>
-                      <h3 className="font-heading text-base font-bold text-white flex items-center gap-2">
+                      <h3 className="font-heading text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <FolderGit2 className="w-4 h-4 text-[#D4A373]" />
                         <span>Uploaded Projects</span>
                       </h3>
-                      <p className="text-xs font-subheading text-[#8E9296]">
+                      <p className="text-xs font-subheading text-gray-500 dark:text-[#8E9296]">
                         Repositories, prototypes, and engineering codebases deployed by {activeProfile.name}.
                       </p>
                     </div>
@@ -1677,7 +1546,7 @@ export function MemberPortal({
                     <button
                       type="button"
                       onClick={() => setIsUploadModalOpen(true)}
-                      className="px-4 py-2 rounded-xl bg-[#D4A373] hover:bg-[#c49363] text-black font-heading font-bold text-xs shadow-md shadow-[#D4A373]/20 flex items-center justify-center gap-1.5 transition-all cursor-pointer shrink-0"
+                      className="px-4 py-2 rounded-xl bg-[#D4A373] hover:bg-[#c49363] text-white dark:text-black font-heading font-bold text-xs shadow-md shadow-[#D4A373]/20 flex items-center justify-center gap-1.5 transition-all cursor-pointer shrink-0"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Upload New Project</span>
@@ -1685,18 +1554,18 @@ export function MemberPortal({
                   </div>
 
                   {uploadedCount === 0 ? (
-                    <div className="p-8 bg-[#0C0D0E] border border-[#26282A] rounded-3xl text-center space-y-3">
+                    <div className="p-8 bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-3xl text-center space-y-3">
                       <FolderGit2 className="w-10 h-10 text-[#545454] mx-auto" />
-                      <h4 className="font-heading text-sm font-bold text-white">
+                      <h4 className="font-heading text-sm font-bold text-gray-900 dark:text-white">
                         No Projects Uploaded Yet
                       </h4>
-                      <p className="text-xs font-subheading text-[#8E9296] max-w-sm mx-auto">
+                      <p className="text-xs font-subheading text-gray-500 dark:text-[#8E9296] max-w-sm mx-auto">
                         Publish your first engineering codebase, prototype, or research repo to the Ascent Intranet.
                       </p>
                       <button
                         type="button"
                         onClick={() => setIsUploadModalOpen(true)}
-                        className="px-4 py-2 rounded-xl bg-[#141517] hover:bg-[#1E2022] text-[#D4A373] border border-[#D4A373]/40 text-xs font-subheading font-medium inline-flex items-center gap-1.5"
+                        className="px-4 py-2 rounded-xl bg-gray-50 dark:bg-[#141517] hover:bg-gray-100 dark:hover:bg-[#1E2022] text-[#D4A373] border border-[#D4A373]/40 text-xs font-subheading font-medium inline-flex items-center gap-1.5"
                       >
                         <Plus className="w-3.5 h-3.5" />
                         <span>Upload Project Now</span>
@@ -1707,23 +1576,23 @@ export function MemberPortal({
                       {activeProfile.uploadedProjects.map((proj) => (
                         <div
                           key={proj.id}
-                          className="bg-[#0C0D0E] border border-[#26282A] rounded-3xl p-6 relative overflow-hidden shadow-xl hover:border-[#D4A373]/40 transition-all duration-200"
+                          className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-3xl p-6 relative overflow-hidden shadow-xl hover:border-[#D4A373]/40 transition-all duration-200"
                         >
                           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
                             <div>
                               <div className="flex flex-wrap items-center gap-2.5">
-                                <h3 className="font-heading text-lg font-bold text-white">
+                                <h3 className="font-heading text-lg font-bold text-gray-900 dark:text-white">
                                   {proj.title}
                                 </h3>
                                 {proj.version && (
-                                  <span className="text-[10px] font-mono-tech px-2 py-0.5 rounded-full bg-[#141517] text-[#8E9296] border border-[#26282A]">
+                                  <span className="text-[10px] font-mono-tech px-2 py-0.5 rounded-full bg-gray-50 dark:bg-[#141517] text-gray-500 dark:text-[#8E9296] border border-gray-200 dark:border-[#26282A]">
                                     {proj.version}
                                   </span>
                                 )}
                                 <span
                                   className={`text-xs font-subheading px-2.5 py-0.5 rounded-full border ${
                                     proj.status === 'Featured'
-                                      ? 'bg-[#141517] text-[#D4A373] border-[#D4A373]/40 font-semibold'
+                                      ? 'bg-orange-50 dark:bg-[#141517] text-[#D4A373] border-[#D4A373]/40 font-semibold'
                                       : 'bg-emerald-950/30 text-emerald-400 border-emerald-500/30'
                                   }`}
                                 >
@@ -1731,13 +1600,13 @@ export function MemberPortal({
                                 </span>
                               </div>
 
-                              <p className="font-subheading text-xs text-[#8E9296] mt-1 flex items-center gap-2">
+                              <p className="font-subheading text-xs text-gray-500 dark:text-[#8E9296] mt-1 flex items-center gap-2">
                                 <span>
-                                  Category: <strong className="text-white">{proj.category}</strong>
+                                  Category: <strong className="text-gray-900 dark:text-white">{proj.category}</strong>
                                 </span>
                                 <span>•</span>
                                 <span>
-                                  Uploaded: <span className="text-[#D1D5DB]">{proj.uploadedAt}</span>
+                                  Uploaded: <span className="text-gray-700 dark:text-[#D1D5DB]">{proj.uploadedAt}</span>
                                 </span>
                               </p>
                             </div>
@@ -1750,39 +1619,39 @@ export function MemberPortal({
                           {proj.mediaUrl && (
                             <div className="mb-4">
                               {proj.mediaType?.startsWith('image/') ? (
-                                <div className="rounded-xl overflow-hidden border border-[#26282A] max-h-64 flex items-center justify-center bg-[#000000]">
+                                <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-[#26282A] max-h-64 flex items-center justify-center bg-[#f8f9fa] dark:bg-[#000000]">
                                   <img src={proj.mediaUrl} alt={proj.title} className="max-w-full max-h-64 object-contain" />
                                 </div>
                               ) : proj.mediaType?.startsWith('video/') ? (
-                                <div className="rounded-xl overflow-hidden border border-[#26282A] bg-[#000000]">
+                                <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-[#26282A] bg-[#f8f9fa] dark:bg-[#000000]">
                                   <video src={proj.mediaUrl} controls className="w-full max-h-64 object-contain" />
                                 </div>
                               ) : (
                                 <a 
                                   href={proj.mediaUrl} 
                                   download={proj.mediaName}
-                                  className="flex items-center gap-3 p-3 rounded-xl border border-[#26282A] bg-[#000000] hover:border-[#D4A373]/40 transition-colors group"
+                                  className="flex items-center gap-3 p-3 rounded-xl border border-gray-200 dark:border-[#26282A] bg-[#f8f9fa] dark:bg-[#000000] hover:border-[#D4A373]/40 transition-colors group"
                                 >
-                                  <div className="w-10 h-10 rounded-lg bg-[#141517] flex items-center justify-center">
+                                  <div className="w-10 h-10 rounded-lg bg-gray-50 dark:bg-[#141517] flex items-center justify-center">
                                     <FileText className="w-5 h-5 text-[#D4A373]" />
                                   </div>
                                   <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-heading text-white truncate">{proj.mediaName || 'Attached File'}</p>
-                                    <p className="text-xs font-subheading text-[#8E9296]">Click to download</p>
+                                    <p className="text-sm font-heading text-gray-900 dark:text-white truncate">{proj.mediaName || 'Attached File'}</p>
+                                    <p className="text-xs font-subheading text-gray-500 dark:text-[#8E9296]">Click to download</p>
                                   </div>
-                                  <Download className="w-4 h-4 text-[#8E9296] group-hover:text-white transition-colors" />
+                                  <Download className="w-4 h-4 text-gray-500 dark:text-[#8E9296] group-hover:text-gray-900 dark:text-white transition-colors" />
                                 </a>
                               )}
                             </div>
                           )}
 
-                          <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#26282A]">
+                          <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-gray-200 dark:border-[#26282A]">
                             <div className="flex items-center gap-1.5 flex-wrap">
                               <span className="text-[11px] font-subheading text-[#717579]">Stack:</span>
                               {proj.techStack.map((tech) => (
                                 <span
                                   key={tech}
-                                  className="text-xs font-mono-tech px-2.5 py-0.5 rounded-md bg-[#000000] text-[#D1D5DB] border border-[#26282A]"
+                                  className="text-xs font-mono-tech px-2.5 py-0.5 rounded-md bg-[#f8f9fa] dark:bg-[#000000] text-gray-700 dark:text-[#D1D5DB] border border-gray-200 dark:border-[#26282A]"
                                 >
                                   {tech}
                                 </span>
@@ -1795,7 +1664,7 @@ export function MemberPortal({
                                   href={proj.githubUrl}
                                   target="_blank"
                                   rel="noreferrer noopener"
-                                  className="text-xs font-subheading text-[#D1D5DB] hover:text-[#D4A373] flex items-center gap-1 transition-colors"
+                                  className="text-xs font-subheading text-gray-700 dark:text-[#D1D5DB] hover:text-[#D4A373] flex items-center gap-1 transition-colors"
                                 >
                                   <FolderGit2 className="w-3.5 h-3.5" />
                                   <span>GitHub</span>
@@ -1827,7 +1696,7 @@ export function MemberPortal({
                                     alert('Project link copied to clipboard!');
                                   }
                                 }}
-                                className="p-1.5 text-[#8E9296] hover:text-[#D4A373] transition-colors cursor-pointer"
+                                className="p-1.5 text-gray-500 dark:text-[#8E9296] hover:text-[#D4A373] transition-colors cursor-pointer"
                                 title="Share project"
                               >
                                 <Share2 className="w-3.5 h-3.5" />
@@ -1835,7 +1704,7 @@ export function MemberPortal({
                               <button
                                 type="button"
                                 onClick={() => handleDeleteProject(proj.id)}
-                                className="p-1.5 text-[#8E9296] hover:text-red-400 hover:bg-red-950/20 rounded-lg transition-colors cursor-pointer"
+                                className="p-1.5 text-gray-500 dark:text-[#8E9296] hover:text-red-400 hover:bg-red-950/20 rounded-lg transition-colors cursor-pointer"
                                 title="Remove uploaded project"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -1852,28 +1721,28 @@ export function MemberPortal({
               {/* CERTIFICATES TAB */}
               {activeTab === 'certificates' && (
                 <div className="space-y-4">
-                  <div className="p-4 bg-[#0C0D0E] border border-[#26282A] rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="p-4 bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h3 className="font-heading text-base font-bold text-white flex items-center gap-2">
+                      <h3 className="font-heading text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <Award className="w-4 h-4 text-[#D4A373]" />
                         <span>Downloadable Member Certificates</span>
                       </h3>
-                      <p className="text-xs font-subheading text-[#8E9296]">
+                      <p className="text-xs font-subheading text-gray-500 dark:text-[#8E9296]">
                         Authentic digital credentials issued to {activeProfile.name} (Member ID: {activeProfile.id}).
                       </p>
                     </div>
-                    <span className="text-xs font-subheading text-[#D4A373] bg-[#141517] border border-[#D4A373]/30 px-3 py-1 rounded-full self-start sm:self-auto font-mono-tech">
+                    <span className="text-xs font-subheading text-[#D4A373] bg-gray-50 dark:bg-[#141517] border border-[#D4A373]/30 px-3 py-1 rounded-full self-start sm:self-auto font-mono-tech">
                       {certCount} Verified Credentials
                     </span>
                   </div>
 
                   {certCount === 0 ? (
-                    <div className="p-8 bg-[#0C0D0E] border border-[#26282A] rounded-3xl text-center space-y-2">
+                    <div className="p-8 bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-3xl text-center space-y-2">
                       <Award className="w-10 h-10 text-[#545454] mx-auto" />
-                      <h4 className="font-heading text-sm font-bold text-white">
+                      <h4 className="font-heading text-sm font-bold text-gray-900 dark:text-white">
                         No Certificates Issued Yet
                       </h4>
-                      <p className="text-xs font-subheading text-[#8E9296]">
+                      <p className="text-xs font-subheading text-gray-500 dark:text-[#8E9296]">
                         Certificates will automatically appear here upon completing club hackathons, sprints, or annual membership milestones.
                       </p>
                     </div>
@@ -1886,28 +1755,28 @@ export function MemberPortal({
                         return (
                           <div
                             key={cert.id}
-                            className="bg-[#0C0D0E] border border-[#26282A] rounded-3xl p-6 relative overflow-hidden shadow-xl hover:border-[#D4A373]/40 transition-all duration-200 group"
+                            className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-3xl p-6 relative overflow-hidden shadow-xl hover:border-[#D4A373]/40 transition-all duration-200 group"
                           >
                             <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#D4A373] to-transparent opacity-60" />
 
                             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
                               <div className="space-y-1">
                                 <div className="flex flex-wrap items-center gap-2">
-                                  <span className="text-xs font-subheading px-2.5 py-0.5 rounded-full bg-[#141517] text-[#D4A373] border border-[#D4A373]/30">
+                                  <span className="text-xs font-subheading px-2.5 py-0.5 rounded-full bg-orange-50 dark:bg-[#141517] text-[#D4A373] border border-[#D4A373]/30">
                                     {cert.category}
                                   </span>
-                                  <span className="text-[11px] font-mono-tech text-[#8E9296]">
+                                  <span className="text-[11px] font-mono-tech text-gray-500 dark:text-[#8E9296]">
                                     ID: {cert.verificationCode}
                                   </span>
                                 </div>
 
-                                <h3 className="font-heading text-lg font-bold text-white pt-1">
+                                <h3 className="font-heading text-lg font-bold text-gray-900 dark:text-white pt-1">
                                   {cert.title}
                                 </h3>
 
-                                <p className="font-subheading text-xs text-[#8E9296]">
-                                  Issued by <strong className="text-[#D1D5DB]">{cert.issuer}</strong> on{' '}
-                                  <span className="text-white font-medium">{cert.issueDate}</span>
+                                <p className="font-subheading text-xs text-gray-500 dark:text-[#8E9296]">
+                                  Issued by <strong className="text-gray-700 dark:text-[#D1D5DB]">{cert.issuer}</strong> on{' '}
+                                  <span className="text-gray-900 dark:text-white font-medium">{cert.issueDate}</span>
                                 </p>
                               </div>
 
@@ -1915,7 +1784,7 @@ export function MemberPortal({
                                 <button
                                   type="button"
                                   onClick={() => setSelectedCertForPreview(cert)}
-                                  className="px-3 py-1.5 rounded-xl bg-[#000000] hover:bg-[#141517] text-[#D1D5DB] hover:text-white border border-[#26282A] text-xs font-subheading transition-colors cursor-pointer"
+                                  className="px-3 py-1.5 rounded-xl bg-[#f8f9fa] dark:bg-[#000000] hover:bg-gray-100 dark:hover:bg-gray-50 dark:bg-[#141517] text-gray-700 dark:text-[#D1D5DB] hover:text-gray-900 dark:text-white border border-gray-200 dark:border-[#26282A] text-xs font-subheading transition-colors cursor-pointer"
                                 >
                                   Preview
                                 </button>
@@ -1924,7 +1793,7 @@ export function MemberPortal({
                                   type="button"
                                   onClick={() => triggerCertificateDownload(cert)}
                                   disabled={isDownloading}
-                                  className="px-4 py-1.5 rounded-xl bg-[#D4A373] hover:bg-[#c49363] text-black font-heading font-bold text-xs shadow-md shadow-[#D4A373]/20 flex items-center gap-1.5 transition-all cursor-pointer"
+                                  className="px-4 py-1.5 rounded-xl bg-[#D4A373] hover:bg-[#c49363] text-white dark:text-black font-heading font-bold text-xs shadow-md shadow-[#D4A373]/20 flex items-center gap-1.5 transition-all cursor-pointer"
                                 >
                                   {isSuccess ? (
                                     <>
@@ -1945,12 +1814,12 @@ export function MemberPortal({
                               {cert.description}
                             </p>
 
-                            <div className="flex items-center justify-between pt-3 border-t border-[#26282A] text-[11px] font-subheading text-[#717579]">
+                            <div className="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-[#26282A] text-[11px] font-subheading text-[#717579]">
                               <span className="flex items-center gap-1.5">
                                 <ShieldCheck className="w-3.5 h-3.5 text-[#D4A373]" />
                                 <span>Digital Signature Valid</span>
                               </span>
-                              <span className="font-mono-tech text-[#8E9296]">
+                              <span className="font-mono-tech text-gray-500 dark:text-[#8E9296]">
                                 ISSUED TO: {activeProfile.usn}
                               </span>
                             </div>
@@ -1963,57 +1832,6 @@ export function MemberPortal({
               )}
             </div>
 
-            {/* ----------------------------------------------------------------- */}
-            {/* RIGHT COLUMN: "YOU MIGHT KNOW" & "ACTIVE" (Cols: 3 on lg/xl)      */}
-            {/* ----------------------------------------------------------------- */}
-            <div className="lg:col-span-3 space-y-6">
-              {/* "You might know" Card (Matching top right widget in reference screenshot) */}
-              <div className="bg-[#0C0D0E] border border-[#26282A] rounded-3xl p-5 shadow-xl space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-[#26282A]">
-                  <h3 className="font-heading text-sm font-bold text-white">You might know</h3>
-                  <span className="text-[10px] font-subheading text-[#8E9296]">Ascent Members</span>
-                </div>
-
-                <div className="space-y-3.5">
-                  {PEER_SUGGESTIONS.map((peer) => {
-                    const isConnected = connectedPeers[peer.id];
-                    return (
-                      <div key={peer.id} className="flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <img
-                            src={peer.avatar}
-                            alt={peer.name}
-                            className="w-9 h-9 rounded-full object-cover border border-[#26282A] shrink-0"
-                          />
-                          <div className="min-w-0">
-                            <h4 className="font-heading text-xs font-bold text-white truncate">
-                              {peer.name}
-                            </h4>
-                            <p className="font-subheading text-[11px] text-[#8E9296] truncate">
-                              {peer.role}
-                            </p>
-                          </div>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => handleToggleConnect(peer.id)}
-                          className={`px-2.5 py-1 rounded-full text-[11px] font-subheading font-medium transition-all shrink-0 cursor-pointer ${
-                            isConnected
-                              ? 'bg-[#141517] text-[#D4A373] border border-[#D4A373]/30'
-                              : 'bg-[#000000] text-white hover:text-[#D4A373] border border-[#26282A] hover:border-[#D4A373]/40'
-                          }`}
-                        >
-                          {isConnected ? 'Connected' : '+ Connect'}
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-
-            </div>
           </div>
             </>
           )}

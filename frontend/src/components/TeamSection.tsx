@@ -15,8 +15,8 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
   const [isPaused, setIsPaused] = useState(false);
   const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
 
-  // Replicated cards list for continuous seamless marquee loop
-  const marqueeList = [...TEAM, ...TEAM, ...TEAM, ...TEAM];
+  // Use original team list without replicating
+  const teamList = TEAM;
 
   const handleToggleFlip = (index: number, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -37,7 +37,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col items-start gap-2"
         >
-          <h2 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-slate-900 dark:text-white">
+          <h2 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-slate-900 dark:text-gray-900 dark:text-white">
             The Team
           </h2>
           <p className="font-body text-xs sm:text-sm text-slate-500 dark:text-[#A6A6A6]">
@@ -46,40 +46,27 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
         </motion.div>
       </div>
 
-      {/* Infinite Leftward Running Marquee Track with 3D Flip Cards */}
+      {/* User-Scrollable Horizontal List with 3D Flip Cards */}
       <motion.div
         initial={{ opacity: 0, y: 25 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-30px' }}
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-        className="relative w-full overflow-hidden py-6"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
+        className="relative w-full py-6"
       >
         {/* Left & Right Edge Fade Masks */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-[#FAF8F5] dark:from-[#000000] to-transparent z-20 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-[#FAF8F5] dark:from-[#000000] to-transparent z-20 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-[#FAF8F5] dark:from-[#000000] to-transparent z-20 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-[#FAF8F5] dark:from-[#000000] to-transparent z-20 pointer-events-none" />
 
-        {/* Continuous Left-Running Track */}
-        <motion.div
-          className="flex items-stretch gap-6 w-max"
-          animate={isPaused ? {} : { x: ['0%', '-50%'] }}
-          transition={{
-            x: {
-              repeat: Infinity,
-              repeatType: 'loop',
-              duration: 35,
-              ease: 'linear',
-            },
-          }}
-        >
-          {marqueeList.map((member, idx) => {
+        {/* Scrollable Track */}
+        <div className="flex items-stretch gap-6 overflow-x-auto snap-x snap-mandatory px-4 sm:px-16 pb-8 pt-4 custom-scrollbar">
+          {teamList.map((member, idx) => {
             const isFlipped = !!flippedCards[idx];
 
             return (
               <div
                 key={idx}
-                className="w-[280px] sm:w-[320px] h-[400px] sm:h-[440px] shrink-0 select-none cursor-pointer [perspective:1200px]"
+                className="w-[280px] sm:w-[320px] h-[400px] sm:h-[440px] shrink-0 snap-center select-none cursor-pointer [perspective:1200px]"
                 onDoubleClick={(e) => handleToggleFlip(idx, e)}
               >
                 {/* 3D Flippable Container */}
@@ -107,20 +94,20 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
 
                     {/* Top Watermark & Initials Badge */}
                     <div className="relative z-10 p-5 flex justify-between items-start">
-                      <div className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white font-mono text-[10px] uppercase tracking-widest">
+                      <div className="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-black/60 backdrop-blur-md border border-white/20 text-gray-900 dark:text-white font-mono text-[10px] uppercase tracking-widest">
                         ASCENT // TEAM
                       </div>
-                      <div className="w-8 h-8 rounded-xl bg-white/20 dark:bg-black/60 backdrop-blur-md border border-white/30 text-white font-heading font-bold text-xs flex items-center justify-center shadow-sm">
+                      <div className="w-8 h-8 rounded-xl bg-white/20 dark:bg-black/60 backdrop-blur-md border border-white/30 text-gray-900 dark:text-white font-heading font-bold text-xs flex items-center justify-center shadow-sm">
                         {member.initials}
                       </div>
                     </div>
 
                     {/* Bottom Info Bar */}
-                    <div className="relative z-10 p-5 text-white">
+                    <div className="relative z-10 p-5 text-gray-900 dark:text-white">
                       <h3 className="font-heading text-lg sm:text-xl font-bold uppercase tracking-wide drop-shadow-md">
                         {member.name}
                       </h3>
-                      <p className="font-body text-xs text-white/80 line-clamp-1 mt-0.5">
+                      <p className="font-body text-xs text-gray-900 dark:text-white/80 line-clamp-1 mt-0.5">
                         {member.role}
                       </p>
                     </div>
@@ -150,7 +137,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
 
                       {/* Name & Role */}
                       <div className="mt-4 space-y-1">
-                        <h3 className="font-heading text-xl font-bold uppercase text-slate-900 dark:text-white leading-tight">
+                        <h3 className="font-heading text-xl font-bold uppercase text-slate-900 dark:text-gray-900 dark:text-white leading-tight">
                           {member.name}
                         </h3>
                         <p
@@ -169,7 +156,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
                       </div>
 
                       {/* Bio */}
-                      <p className="font-body text-xs sm:text-[13px] text-slate-600 dark:text-[#a0a0a0] leading-relaxed mt-4 line-clamp-4">
+                      <p className="font-body text-xs sm:text-[13px] text-slate-600 dark:text-[#a0a0a0] leading-relaxed mt-4 overflow-y-auto max-h-[120px] custom-scrollbar pr-2">
                         {member.bio}
                       </p>
                     </div>
@@ -184,7 +171,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
                             onClick={(e) => e.stopPropagation()}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 rounded-lg bg-slate-100 dark:bg-[#181818] border border-slate-200 dark:border-[#545454]/40 text-slate-700 dark:text-slate-300 hover:text-white hover:bg-blue-600 dark:hover:bg-blue-600 transition-colors"
+                            className="p-2 rounded-lg bg-slate-100 dark:bg-[#181818] border border-slate-200 dark:border-[#545454]/40 text-slate-700 dark:text-slate-300 hover:text-gray-900 dark:text-white hover:bg-blue-600 dark:hover:bg-blue-600 transition-colors"
                             aria-label="LinkedIn"
                           >
                             <Linkedin size={14} />
@@ -196,7 +183,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
                             onClick={(e) => e.stopPropagation()}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 rounded-lg bg-slate-100 dark:bg-[#181818] border border-slate-200 dark:border-[#545454]/40 text-slate-700 dark:text-slate-300 hover:text-white hover:bg-black dark:hover:bg-black transition-colors"
+                            className="p-2 rounded-lg bg-slate-100 dark:bg-[#181818] border border-slate-200 dark:border-[#545454]/40 text-slate-700 dark:text-slate-300 hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:bg-black dark:hover:bg-gray-100 dark:bg-black transition-colors"
                             aria-label="GitHub"
                           >
                             <Github size={14} />
@@ -208,7 +195,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
                             onClick={(e) => e.stopPropagation()}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 rounded-lg bg-slate-100 dark:bg-[#181818] border border-slate-200 dark:border-[#545454]/40 text-slate-700 dark:text-slate-300 hover:text-white hover:bg-black dark:hover:bg-black transition-colors"
+                            className="p-2 rounded-lg bg-slate-100 dark:bg-[#181818] border border-slate-200 dark:border-[#545454]/40 text-slate-700 dark:text-slate-300 hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:bg-black dark:hover:bg-gray-100 dark:bg-black transition-colors"
                             aria-label="X (Twitter)"
                           >
                             <Twitter size={14} />
@@ -229,7 +216,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
               </div>
             );
           })}
-        </motion.div>
+        </div>
       </motion.div>
     </section>
   );

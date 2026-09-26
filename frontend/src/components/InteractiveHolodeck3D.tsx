@@ -217,8 +217,22 @@ export const InteractiveHolodeck3D: React.FC<InteractiveHolodeck3DProps> = ({
     resizeObserver.observe(container);
 
     let animationId: number;
+    let isVisible = true;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting;
+        });
+      },
+      { threshold: 0 }
+    );
+    observer.observe(container);
+
     const animate = () => {
       animationId = requestAnimationFrame(animate);
+      
+      if (!isVisible) return;
 
       if (autoRotate && !isDragging) {
         meshGroup.rotation.y += 0.008;
@@ -229,6 +243,7 @@ export const InteractiveHolodeck3D: React.FC<InteractiveHolodeck3DProps> = ({
     animate();
 
     return () => {
+      observer.disconnect();
       cancelAnimationFrame(animationId);
       resizeObserver.disconnect();
       container.removeEventListener('pointerdown', onPointerDown);

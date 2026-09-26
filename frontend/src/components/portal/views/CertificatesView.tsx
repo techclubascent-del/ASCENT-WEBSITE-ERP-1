@@ -37,15 +37,15 @@ export function CertificatesView({ profile, onPreviewCertificate }: Certificates
       className="space-y-6"
     >
       {/* Header Bar */}
-      <div className="bg-[#0C0D0E] border border-[#26282A] rounded-2xl p-6 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-2xl p-6 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-heading text-2xl font-bold text-white">Certifications</h1>
+          <h1 className="font-heading text-2xl font-bold text-gray-900 dark:text-white">Certifications</h1>
         </div>
 
-        <div className="flex items-center gap-3 bg-[#000000] border border-[#26282A] rounded-xl px-4 py-2.5 shrink-0">
+        <div className="flex items-center gap-3 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl px-4 py-2.5 shrink-0">
           <Award className="w-5 h-5 text-[#D4A373]" />
           <div>
-            <div className="font-heading text-base font-bold text-white">{certificates.length} Total</div>
+            <div className="font-heading text-base font-bold text-gray-900 dark:text-white">{certificates.length} Total</div>
             <div className="text-[10px] text-emerald-400 font-subheading">All Credentials Verified</div>
           </div>
         </div>
@@ -60,42 +60,42 @@ export function CertificatesView({ profile, onPreviewCertificate }: Certificates
           return (
             <div
               key={cert.id}
-              className="bg-[#0C0D0E] border border-[#26282A] hover:border-[#D4A373]/40 rounded-2xl p-5 shadow-xl flex flex-col justify-between space-y-4 transition-all group"
+              className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] hover:border-[#D4A373]/40 rounded-2xl p-5 shadow-xl flex flex-col justify-between space-y-4 transition-all group"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-end">
-                  <div className="flex items-center gap-1 text-[11px] text-[#8E9296] font-mono-tech">
+                  <div className="flex items-center gap-1 text-[11px] text-gray-500 dark:text-[#8E9296] font-mono-tech">
                     <Calendar className="w-3 h-3" />
                     <span>{cert.issueDate}</span>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="font-heading text-base font-bold text-white group-hover:text-[#D4A373] transition-colors">
+                  <h3 className="font-heading text-base font-bold text-gray-900 dark:text-white group-hover:text-[#D4A373] transition-colors">
                     {cert.title}
                   </h3>
-                  <p className="font-subheading text-xs text-[#8E9296] mt-1.5 leading-relaxed">
+                  <p className="font-subheading text-xs text-gray-500 dark:text-[#8E9296] mt-1.5 leading-relaxed">
                     {cert.description}
                   </p>
                 </div>
 
-                <div className="p-2.5 rounded-xl bg-[#000000] border border-[#26282A] space-y-1 font-mono-tech text-[11px]">
-                  <div className="flex justify-between text-[#8E9296]">
+                <div className="p-2.5 rounded-xl bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] space-y-1 font-mono-tech text-[11px]">
+                  <div className="flex justify-between text-gray-500 dark:text-[#8E9296]">
                     <span>Issuer:</span>
-                    <span className="text-white truncate max-w-[140px]">{cert.issuer}</span>
+                    <span className="text-gray-900 dark:text-white truncate max-w-[140px]">{cert.issuer}</span>
                   </div>
-                  <div className="flex justify-between text-[#8E9296]">
+                  <div className="flex justify-between text-gray-500 dark:text-[#8E9296]">
                     <span>Verification Code:</span>
                     <span className="text-[#D4A373]">{cert.verificationCode}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-[#26282A] flex items-center gap-2">
+              <div className="pt-3 border-t border-gray-200 dark:border-[#26282A] flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => onPreviewCertificate(cert)}
-                  className="flex-1 py-2 px-3 rounded-xl bg-[#141517] hover:bg-[#1E2022] text-white border border-[#26282A] hover:border-[#D4A373]/40 text-xs font-subheading flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                  className="flex-1 py-2 px-3 rounded-xl bg-gray-50 dark:bg-[#141517] hover:bg-gray-100 dark:hover:bg-[#1E2022] text-gray-900 dark:text-white border border-gray-200 dark:border-[#26282A] hover:border-[#D4A373]/40 text-xs font-subheading flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <Eye className="w-3.5 h-3.5 text-[#D4A373]" />
                   <span>Preview</span>
@@ -108,7 +108,7 @@ export function CertificatesView({ profile, onPreviewCertificate }: Certificates
                   className={`py-2 px-3 rounded-xl text-xs font-subheading flex items-center justify-center gap-1.5 transition-colors cursor-pointer border ${
                     isSuccess
                       ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                      : 'bg-[#000000] hover:bg-[#141517] text-[#D1D5DB] border-[#26282A]'
+                      : 'bg-[#f8f9fa] dark:bg-[#000000] hover:bg-gray-50 dark:bg-[#141517] text-gray-700 dark:text-[#D1D5DB] border-gray-200 dark:border-[#26282A]'
                   }`}
                 >
                   <Download className="w-3.5 h-3.5" />

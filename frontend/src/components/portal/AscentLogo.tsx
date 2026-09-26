@@ -21,7 +21,7 @@ export function AscentLogo({ size = 'md', showMotto = false, className = '' }: A
     <div className={`flex items-center gap-3 select-none ${className}`}>
       {/* Sleek rounded square brand mark inspired by the reference image logo */}
       <div
-        className={`relative flex items-center justify-center rounded-xl p-2 bg-[#0C0D0E] border border-[#26282A] shadow-md group hover:border-[#D4A373]/60 transition-colors duration-300 ${iconSizes[size]}`}
+        className={`relative flex items-center justify-center rounded-xl p-2 bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] shadow-md group hover:border-[#D4A373]/60 transition-colors duration-300 ${iconSizes[size]}`}
       >
         <svg
           viewBox="0 0 48 48"
@@ -61,16 +61,16 @@ export function AscentLogo({ size = 'md', showMotto = false, className = '' }: A
       <div>
         <div className="flex items-center gap-2">
           <span
-            className={`font-heading font-extrabold tracking-tight text-white ${textSizes[size]}`}
+            className={`font-heading font-extrabold tracking-tight text-gray-900 dark:text-white ${textSizes[size]}`}
           >
             Ascent
           </span>
-          <span className="text-[10px] font-subheading font-medium tracking-wider px-2 py-0.5 rounded-full bg-[#141517] text-[#D4A373] border border-[#D4A373]/30">
+          <span className="text-[10px] font-subheading font-medium tracking-wider px-2 py-0.5 rounded-full bg-gray-50 dark:bg-[#141517] text-[#D4A373] border border-[#D4A373]/30">
             TECH CLUB
           </span>
         </div>
         {showMotto && (
-          <p className="text-xs font-subheading text-[#8E9296] tracking-normal mt-0.5">
+          <p className="text-xs font-subheading text-gray-500 dark:text-[#8E9296] tracking-normal mt-0.5">
             Fueling ideas, shaping futures
           </p>
         )}

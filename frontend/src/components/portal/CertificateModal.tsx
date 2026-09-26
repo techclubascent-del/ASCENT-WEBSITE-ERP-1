@@ -210,24 +210,24 @@ export function CertificateModal({ certificate, member, onClose }: CertificateMo
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-gray-100 dark:bg-black/80 backdrop-blur-md overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-[#0C0D0E] border border-[#26282A] rounded-3xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden my-auto"
+          className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-3xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden my-auto"
         >
           {/* Modal Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[#26282A] bg-[#000000]/60">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#26282A] bg-[#f8f9fa] dark:bg-[#000000]/60">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#141517] border border-[#D4A373]/50 flex items-center justify-center text-[#D4A373]">
+              <div className="w-8 h-8 rounded-lg bg-gray-50 dark:bg-[#141517] border border-[#D4A373]/50 flex items-center justify-center text-[#D4A373]">
                 <Award className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="font-heading text-sm font-bold text-white">
+                <h3 className="font-heading text-sm font-bold text-gray-900 dark:text-white">
                   Official Credential Preview
                 </h3>
-                <span className="text-[11px] font-mono-tech text-[#8E9296]">
+                <span className="text-[11px] font-mono-tech text-gray-500 dark:text-[#8E9296]">
                   {certificate.verificationCode}
                 </span>
               </div>
@@ -237,7 +237,7 @@ export function CertificateModal({ certificate, member, onClose }: CertificateMo
               <button
                 type="button"
                 onClick={handlePrint}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#141517] hover:bg-[#1E2022] text-[#D1D5DB] hover:text-white border border-[#26282A] text-xs font-subheading transition-colors"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-50 dark:bg-[#141517] hover:bg-gray-100 dark:hover:bg-[#1E2022] text-gray-700 dark:text-[#D1D5DB] hover:text-gray-900 dark:text-white border border-gray-200 dark:border-[#26282A] text-xs font-subheading transition-colors"
                 title="Print or Save PDF"
               >
                 <Printer className="w-3.5 h-3.5" />
@@ -248,7 +248,7 @@ export function CertificateModal({ certificate, member, onClose }: CertificateMo
                 type="button"
                 onClick={handleDownload}
                 disabled={downloading}
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#D4A373] hover:bg-[#c49363] text-black text-xs font-heading font-bold transition-all shadow-md shadow-[#D4A373]/20 cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#D4A373] hover:bg-[#c49363] text-white dark:text-black text-xs font-heading font-bold transition-all shadow-md shadow-[#D4A373]/20 cursor-pointer"
               >
                 {downloadSuccess ? (
                   <>
@@ -266,7 +266,7 @@ export function CertificateModal({ certificate, member, onClose }: CertificateMo
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1.5 rounded-xl bg-[#141517] hover:bg-[#1E2022] text-[#8E9296] hover:text-white border border-[#26282A] transition-colors ml-1"
+                className="p-1.5 rounded-xl bg-gray-50 dark:bg-[#141517] hover:bg-gray-100 dark:hover:bg-[#1E2022] text-gray-500 dark:text-[#8E9296] hover:text-gray-900 dark:text-white border border-gray-200 dark:border-[#26282A] transition-colors ml-1"
                 aria-label="Close preview"
               >
                 <X className="w-4 h-4" />
@@ -289,12 +289,12 @@ export function CertificateModal({ certificate, member, onClose }: CertificateMo
 
               {/* Certificate Header */}
               <div className="text-center relative z-10 space-y-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#141517] border border-[#D4A373]/30 text-[#D4A373] text-[11px] font-subheading tracking-widest uppercase">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-50 dark:bg-[#141517] border border-[#D4A373]/30 text-[#D4A373] text-[11px] font-subheading tracking-widest uppercase">
                   <Sparkles className="w-3 h-3" />
                   <span>ASCENT TECH CLUB • EXCELLENCE IN ENGINEERING</span>
                 </div>
 
-                <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-white tracking-tight pt-2">
+                <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight pt-2">
                   {certificate.title}
                 </h1>
 
@@ -310,7 +310,7 @@ export function CertificateModal({ certificate, member, onClose }: CertificateMo
                     {member.name}
                   </span>
                   <span className="font-mono-tech text-xs text-[#E5E7EB] block mt-1">
-                    MEMBER ID: <strong className="text-white">{member.id}</strong> • USN: {member.usn}
+                    MEMBER ID: <strong className="text-gray-900 dark:text-white">{member.id}</strong> • USN: {member.usn}
                   </span>
                   <span className="text-xs font-subheading text-[#9CA3AF] block">
                     {member.department} ({member.year})
@@ -318,12 +318,12 @@ export function CertificateModal({ certificate, member, onClose }: CertificateMo
                 </div>
 
                 {/* Citation Statement */}
-                <p className="font-subheading text-xs sm:text-sm text-[#D1D5DB] max-w-xl mx-auto py-2 leading-relaxed">
+                <p className="font-subheading text-xs sm:text-sm text-gray-700 dark:text-[#D1D5DB] max-w-xl mx-auto py-2 leading-relaxed">
                   {certificate.description}
                 </p>
 
                 {/* Security Verification Hash */}
-                <div className="py-2 flex items-center justify-center gap-2 text-[11px] font-mono-tech text-[#8E9296]">
+                <div className="py-2 flex items-center justify-center gap-2 text-[11px] font-mono-tech text-gray-500 dark:text-[#8E9296]">
                   <ShieldCheck className="w-3.5 h-3.5 text-[#D4A373]" />
                   <span>VERIFICATION: {certificate.verificationCode}</span>
                   <span>•</span>
@@ -331,14 +331,14 @@ export function CertificateModal({ certificate, member, onClose }: CertificateMo
                 </div>
 
                 {/* Signatures & Seal */}
-                <div className="pt-6 mt-6 border-t border-[#26282A] grid grid-cols-3 items-center gap-4 text-center">
+                <div className="pt-6 mt-6 border-t border-gray-200 dark:border-[#26282A] grid grid-cols-3 items-center gap-4 text-center">
                   <div>
                     <div className="border-b border-[#4B5563] pb-1 mx-auto max-w-[150px]">
                       <span className="font-subheading text-xs italic text-[#D4A373]">
                         Dr. S. K. Venkatesh
                       </span>
                     </div>
-                    <span className="text-[10px] font-subheading text-[#8E9296] uppercase tracking-wider block mt-1">
+                    <span className="text-[10px] font-subheading text-gray-500 dark:text-[#8E9296] uppercase tracking-wider block mt-1">
                       FACULTY ADVISOR
                     </span>
                   </div>
@@ -358,7 +358,7 @@ export function CertificateModal({ certificate, member, onClose }: CertificateMo
                         Rohit Sharma
                       </span>
                     </div>
-                    <span className="text-[10px] font-subheading text-[#8E9296] uppercase tracking-wider block mt-1">
+                    <span className="text-[10px] font-subheading text-gray-500 dark:text-[#8E9296] uppercase tracking-wider block mt-1">
                       CLUB PRESIDENT
                     </span>
                   </div>
@@ -368,7 +368,7 @@ export function CertificateModal({ certificate, member, onClose }: CertificateMo
           </div>
 
           {/* Modal Footer */}
-          <div className="px-6 py-3.5 border-t border-[#26282A] bg-[#000000]/60 flex items-center justify-between text-xs font-subheading text-[#8E9296]">
+          <div className="px-6 py-3.5 border-t border-gray-200 dark:border-[#26282A] bg-[#f8f9fa] dark:bg-[#000000]/60 flex items-center justify-between text-xs font-subheading text-gray-500 dark:text-[#8E9296]">
             <span>Authenticated document backed by Ascent Club Public Registry.</span>
             <button
               type="button"

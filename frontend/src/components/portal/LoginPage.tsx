@@ -36,7 +36,7 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration, onBackToHome
           <button
             type="button"
             onClick={onBackToHome}
-            className="inline-flex items-center gap-2 mb-4 px-3.5 py-1.5 rounded-full bg-[#0C0D0E] hover:bg-[#141517] text-[#D1D5DB] hover:text-white border border-[#26282A] text-xs font-subheading transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 mb-4 px-3.5 py-1.5 rounded-full bg-white dark:bg-[#0C0D0E] hover:bg-gray-50 dark:bg-[#141517] text-gray-700 dark:text-[#D1D5DB] hover:text-gray-900 dark:text-white border border-gray-200 dark:border-[#26282A] text-xs font-subheading transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5 text-[#D4A373]" />
             <span>← Back to Website</span>
@@ -49,7 +49,7 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration, onBackToHome
           className="w-full"
         >
           {/* Member Login Card */}
-          <div className="bg-[#0C0D0E] border border-[#26282A] rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden group hover:border-[#3D4042] transition-colors">
+          <div className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden group hover:border-gray-300 dark:hover:border-[#3D4042] transition-colors">
             {/* Subtle top accent bar */}
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4A373] to-transparent opacity-80" />
 
@@ -57,7 +57,7 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration, onBackToHome
             <div className="w-12 h-1 bg-[#D4A373] rounded-full mb-3 shadow-sm shadow-[#D4A373]/30" />
 
             <div className="mb-5">
-              <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
                 Member Login
               </h2>
             </div>
@@ -68,7 +68,7 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration, onBackToHome
               <div className="space-y-1.5">
                 <label
                   htmlFor="login-identifier"
-                  className="block text-xs font-subheading font-medium text-[#D1D5DB] uppercase tracking-wider"
+                  className="block text-xs font-subheading font-medium text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider"
                 >
                   Member ID
                 </label>
@@ -82,7 +82,7 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration, onBackToHome
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
                     placeholder="Enter your Member ID or USN"
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#000000] border border-[#26282A] rounded-xl text-white text-sm placeholder-[#555A5E] focus:outline-none focus:border-[#D4A373] focus:ring-1 focus:ring-[#D4A373] transition-all duration-200 font-subheading"
+                    className="w-full pl-10 pr-4 py-2.5 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl text-gray-900 dark:text-white text-sm placeholder-[#555A5E] focus:outline-none focus:border-[#D4A373] focus:ring-1 focus:ring-[#D4A373] transition-all duration-200 font-subheading"
                   />
                 </div>
               </div>
@@ -92,14 +92,14 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration, onBackToHome
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="login-password"
-                    className="block text-xs font-subheading font-medium text-[#D1D5DB] uppercase tracking-wider"
+                    className="block text-xs font-subheading font-medium text-gray-700 dark:text-[#D1D5DB] uppercase tracking-wider"
                   >
                     Password
                   </label>
                   <button
                     type="button"
                     onClick={() => {}}
-                    className="text-xs font-subheading text-[#8E9296] hover:text-[#D4A373] transition-colors focus:outline-none"
+                    className="text-xs font-subheading text-gray-500 dark:text-[#8E9296] hover:text-[#D4A373] transition-colors focus:outline-none"
                   >
                     Forgot password?
                   </button>
@@ -114,12 +114,12 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration, onBackToHome
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="w-full pl-10 pr-10 py-2.5 bg-[#000000] border border-[#26282A] rounded-xl text-white text-sm placeholder-[#555A5E] focus:outline-none focus:border-[#D4A373] focus:ring-1 focus:ring-[#D4A373] transition-all duration-200 font-subheading"
+                    className="w-full pl-10 pr-10 py-2.5 bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] rounded-xl text-gray-900 dark:text-white text-sm placeholder-[#555A5E] focus:outline-none focus:border-[#D4A373] focus:ring-1 focus:ring-[#D4A373] transition-all duration-200 font-subheading"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#555A5E] hover:text-white transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#555A5E] hover:text-gray-900 dark:text-white transition-colors"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -134,7 +134,7 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration, onBackToHome
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="rounded border-[#26282A] bg-[#000000] text-[#D4A373] focus:ring-[#D4A373] w-4 h-4 accent-[#D4A373]"
+                    className="rounded border-gray-200 dark:border-[#26282A] bg-[#f8f9fa] dark:bg-[#000000] text-[#D4A373] focus:ring-[#D4A373] w-4 h-4 accent-[#D4A373]"
                   />
                   <span>Remember terminal session</span>
                 </label>
@@ -156,8 +156,8 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration, onBackToHome
             </form>
 
             {/* Direct Link to Member Registration */}
-            <div className="mt-5 pt-4 border-t border-[#26282A] text-center">
-              <p className="text-xs font-subheading text-[#8E9296]">
+            <div className="mt-5 pt-4 border-t border-gray-200 dark:border-[#26282A] text-center">
+              <p className="text-xs font-subheading text-gray-500 dark:text-[#8E9296]">
                 New applicant? Complete your candidate profile:
               </p>
               <button

@@ -341,9 +341,23 @@ export const HeroThreeCanvas: React.FC<HeroThreeCanvasProps> = ({
     // Animation Loop
     let animationFrameId: number;
     const clock = new THREE.Clock();
+    let isVisible = true;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting;
+        });
+      },
+      { threshold: 0 }
+    );
+    observer.observe(container);
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
+      
+      if (!isVisible) return; // Skip rendering and calculations when out of view
+
       const delta = clock.getDelta();
       const elapsed = clock.getElapsedTime();
 
@@ -382,6 +396,7 @@ export const HeroThreeCanvas: React.FC<HeroThreeCanvasProps> = ({
     animate();
 
     return () => {
+      observer.disconnect();
       cancelAnimationFrame(animationFrameId);
       dom.removeEventListener('mousedown', onPointerDown);
       window.removeEventListener('mousemove', onPointerMove);

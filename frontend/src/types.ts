@@ -115,6 +115,7 @@ export interface UploadedProject {
   title: string;
   description: string;
   techStack: string[];
+  tags?: string[];
   githubUrl?: string;
   demoUrl?: string;
   mediaUrl?: string;
@@ -134,14 +135,24 @@ export interface PostComment {
   timeAgo: string;
 }
 
+export interface PostMediaItem {
+  id: string;
+  type: 'image' | 'video';
+  url: string;
+  name?: string;
+}
+
 export interface MemberPost {
   id: string;
   authorName: string;
+  authorUsn?: string;
   authorAvatar?: string;
   authorRole: string;
   timeAgo: string;
   content: string;
   imageUrl?: string;
+  videoUrl?: string;
+  media?: PostMediaItem[];
   techStack?: string[];
   githubUrl?: string;
   demoUrl?: string;
@@ -189,7 +200,7 @@ export interface MemberProfile {
   uploadedProjects: UploadedProject[];
   certificates: MemberCertificate[];
   events: ClubEvent[];
-  hardwarePass: {
+  hardwarePass?: {
     allocatedHours: number;
     assignedLab: string;
     activeQuota: string;
@@ -399,5 +410,57 @@ export const SAMPLE_MEMBERS: Record<string, MemberProfile> = {
       assignedLab: 'Robotics Bay // Bench 03',
       activeQuota: 'Jetson Orin Nano + LiDAR Scanner',
     },
+  },
+  '1MS21IS011': {
+    id: 'ASC-2026-IS011',
+    name: 'Sarah Chen',
+    usn: '1MS21IS011',
+    email: 'sarah.chen@college.edu',
+    department: 'Information Science & Engineering',
+    year: '4th Year (Senior)',
+    division: 'AI & Systems Architecture',
+    role: 'AI Researcher',
+    memberTier: 'Core Innovator',
+    joinDate: 'Aug 2023',
+    badgeLevel: 'Gold Reticle // Tier 1',
+    skills: ['Python', 'Deep Learning', 'NLP'],
+    bio: 'AI Researcher focusing on NLP and conversational models.',
+    gender: 'Female',
+    location: 'Advanced Computing Lab 1',
+    phone: '+91 98765 43210',
+    birthDate: 'July 10, 2002',
+    followersCount: 1205,
+    followingCount: 180,
+    coverStyle: 'circuit',
+    projects: [],
+    uploadedProjects: [],
+    certificates: [],
+    events: [],
+  },
+  '1MS23EC089': {
+    id: 'ASC-2026-EC089',
+    name: 'Jordan Smith',
+    usn: '1MS23EC089',
+    email: 'jordan.smith@college.edu',
+    department: 'Electronics & Communication Engineering',
+    year: '2nd Year (Sophomore)',
+    division: 'Embedded Systems',
+    role: 'Hardware Lead',
+    memberTier: 'Ascent Fellow',
+    joinDate: 'Jan 2025',
+    badgeLevel: 'Platinum Reticle // Tier 1',
+    skills: ['C++', 'Verilog', 'IoT'],
+    bio: 'Hardware lead working on next-gen embedded architectures.',
+    gender: 'Male',
+    location: 'Electronics Lab 2',
+    phone: '+91 99887 76655',
+    birthDate: 'Nov 05, 2004',
+    followersCount: 742,
+    followingCount: 95,
+    coverStyle: 'nebula',
+    projects: [],
+    uploadedProjects: [],
+    certificates: [],
+    events: [],
   },
 };

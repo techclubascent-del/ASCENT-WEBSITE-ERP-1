@@ -15,7 +15,7 @@ interface ThreeDVisualAreaProps {
 export function ThreeDVisualArea({ className = '' }: ThreeDVisualAreaProps) {
   return (
     <div
-      className={`relative w-full h-full min-h-[360px] md:min-h-[460px] lg:min-h-[580px] rounded-3xl bg-[#000000] border border-[#26282A] overflow-hidden flex flex-col justify-between p-6 sm:p-8 shadow-2xl transition-all duration-300 group hover:border-[#D4A373]/50 ${className}`}
+      className={`relative w-full h-full min-h-[360px] md:min-h-[460px] lg:min-h-[580px] rounded-3xl bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] overflow-hidden flex flex-col justify-between p-6 sm:p-8 shadow-2xl transition-all duration-300 group hover:border-[#D4A373]/50 ${className}`}
       data-testid="3d-visual-container"
     >
       {/* Background Precision Grid & Warm Radial Ambient Glow */}
@@ -47,7 +47,7 @@ export function ThreeDVisualArea({ className = '' }: ThreeDVisualAreaProps) {
       </div>
 
       {/* Top Header Bar */}
-      <div className="relative z-20 flex items-center justify-between border-b border-[#26282A] pb-3.5">
+      <div className="relative z-20 flex items-center justify-between border-b border-gray-200 dark:border-[#26282A] pb-3.5">
         <div className="flex items-center gap-2">
           <span className="flex h-2 w-2 relative">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D4A373] opacity-75" />
@@ -56,11 +56,11 @@ export function ThreeDVisualArea({ className = '' }: ThreeDVisualAreaProps) {
           <span className="font-heading text-xs font-semibold tracking-wide text-[#E5E7EB]">
             3D Visual Stage
           </span>
-          <span className="text-[10px] font-subheading text-[#8E9296] hidden sm:inline">
+          <span className="text-[10px] font-subheading text-gray-500 dark:text-[#8E9296] hidden sm:inline">
             // Dedicated WebGL Viewport
           </span>
         </div>
-        <div className="flex items-center gap-1.5 font-subheading text-[11px] text-[#D4A373] bg-[#0C0D0E] px-3 py-1 rounded-full border border-[#D4A373]/30">
+        <div className="flex items-center gap-1.5 font-subheading text-[11px] text-[#D4A373] bg-white dark:bg-[#0C0D0E] px-3 py-1 rounded-full border border-[#D4A373]/30">
           <Layers className="w-3 h-3 text-[#D4A373]" />
           <span>CANVAS READY</span>
         </div>
@@ -78,7 +78,7 @@ export function ThreeDVisualArea({ className = '' }: ThreeDVisualAreaProps) {
           {/* Ambient warm glow halo */}
           <div className="absolute -inset-4 rounded-full bg-[#D4A373]/10 blur-xl group-hover:bg-[#D4A373]/20 transition-all" />
 
-          <div className="relative w-24 h-24 rounded-3xl bg-[#0C0D0E] border border-[#26282A] flex items-center justify-center shadow-2xl group-hover:border-[#D4A373]/60 transition-colors">
+          <div className="relative w-24 h-24 rounded-3xl bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] flex items-center justify-center shadow-2xl group-hover:border-[#D4A373]/60 transition-colors">
             <Box className="w-10 h-10 text-[#D4A373] stroke-[1.5]" />
           </div>
 
@@ -87,7 +87,7 @@ export function ThreeDVisualArea({ className = '' }: ThreeDVisualAreaProps) {
         </div>
 
         {/* Headings in Inter, Subheadings in Century Gothic */}
-        <h3 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-white mb-2">
+        <h3 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">
           3D Visual Area
         </h3>
         <p className="font-subheading text-sm text-[#A3A3A3] max-w-sm mb-5 leading-relaxed">
@@ -97,20 +97,20 @@ export function ThreeDVisualArea({ className = '' }: ThreeDVisualAreaProps) {
 
         {/* Spec Pill Tags inspired by the reference image tags */}
         <div className="flex flex-wrap items-center justify-center gap-2">
-          <span className="font-subheading text-xs px-3 py-1 rounded-full bg-[#0C0D0E] text-[#D1D5DB] border border-[#26282A]">
+          <span className="font-subheading text-xs px-3 py-1 rounded-full bg-white dark:bg-[#0C0D0E] text-gray-700 dark:text-[#D1D5DB] border border-gray-200 dark:border-[#26282A]">
             Target: <code className="text-[#D4A373] font-mono-tech">#three-canvas-container</code>
           </span>
-          <span className="font-subheading text-xs px-3 py-1 rounded-full bg-[#0C0D0E] text-[#D1D5DB] border border-[#26282A]">
+          <span className="font-subheading text-xs px-3 py-1 rounded-full bg-white dark:bg-[#0C0D0E] text-gray-700 dark:text-[#D1D5DB] border border-gray-200 dark:border-[#26282A]">
             Engine: Three.js / WebGL
           </span>
-          <span className="font-subheading text-xs px-3 py-1 rounded-full bg-[#0C0D0E] text-[#D1D5DB] border border-[#26282A] flex items-center gap-1.5">
+          <span className="font-subheading text-xs px-3 py-1 rounded-full bg-white dark:bg-[#0C0D0E] text-gray-700 dark:text-[#D1D5DB] border border-gray-200 dark:border-[#26282A] flex items-center gap-1.5">
             <Sparkles className="w-3 h-3 text-[#D4A373]" /> Responsive 100% W/H
           </span>
         </div>
       </motion.div>
 
       {/* Bottom Footer Telemetry */}
-      <div className="relative z-20 pt-3.5 border-t border-[#26282A] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs font-subheading text-[#717579]">
+      <div className="relative z-20 pt-3.5 border-t border-gray-200 dark:border-[#26282A] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs font-subheading text-[#717579]">
         <span className="flex items-center gap-1.5">
           <Compass className="w-3.5 h-3.5 text-[#D4A373]" />
           Viewport Container: Active
