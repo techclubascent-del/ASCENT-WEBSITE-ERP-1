@@ -40,14 +40,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           className="relative my-auto flex flex-col items-center text-center z-10 space-y-5 select-none max-w-2xl mx-auto"
         >
           {/* Centered Large Vector Emblem */}
-          <div className="p-4 rounded-3xl bg-white/40 dark:bg-black/40 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg mb-2">
-            <AscentLogo size={80} showWordmark={false} variant="monochrome" />
+          <div className="mb-2 w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto flex justify-center drop-shadow-2xl">
+            <AscentLogo size="100%" />
           </div>
-
-          {/* ASCENT Title */}
-          <h1 className="font-heading text-5xl sm:text-7xl md:text-8xl font-black uppercase tracking-[0.22em] text-[#1E1E1E] dark:text-white leading-none pl-2">
-            ASCENT
-          </h1>
 
           {/* Tagline exactly below */}
           <p className="font-body text-base sm:text-xl md:text-2xl font-normal text-[#545454] dark:text-[#A6A6A6] tracking-wide">

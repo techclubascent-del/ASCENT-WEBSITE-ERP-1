@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="group flex items-center gap-3 transition-opacity hover:opacity-90 pl-1 sm:pl-0"
             id="navbar-brand-button"
           >
-            <AscentLogo size={32} showWordmark={true} variant="monochrome" />
+            <AscentLogo size={140} showWordmark={true} variant="monochrome" />
           </a>
         </div>
 
