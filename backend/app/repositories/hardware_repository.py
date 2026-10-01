@@ -4,6 +4,7 @@ from supabase import Client
 
 from app.schemas.hardware import HardwarePassCreate, HardwarePassResponse
 
+
 class HardwareRepository:
     """Handles database operations for the hardware passes domain."""
 

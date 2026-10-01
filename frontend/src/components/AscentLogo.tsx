@@ -51,9 +51,9 @@ export const AscentLogo: React.FC<AscentLogoProps> = ({
         style={{ width: size, height: size }}
       >
         <img
-          src="/assets/ascent-logo-exact.svg"
+          src="/assets/ascent-mark-exact.svg"
           alt="ASCENT Emblem"
-          className="w-full h-full object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]"
+          className="w-full h-full object-cover drop-shadow-[0_2px_12px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]"
         />
       </div>
 

@@ -66,6 +66,7 @@ import { SettingsView } from './views/SettingsView';
 import { PublicProfileView } from './views/PublicProfileView';
 import { EventsView } from './views/EventsView';
 import { OpportunitiesView } from './views/OpportunitiesView';
+import { MessagesView } from './views/MessagesView';
 import { UniversalSearchModal } from '../shared/UniversalSearchModal';
 import { PostMediaGallery } from './PostMediaGallery';
 import { api } from '../../lib/api';
@@ -79,39 +80,7 @@ interface MemberPortalProps {
 }
 
 // Initial sample activity posts matching the feed in the reference image
-const INITIAL_POSTS: MemberPost[] = [
-  {
-    id: 'post-1',
-    authorName: 'Alex Rivera',
-    authorRole: 'Lead Systems Architect',
-    timeAgo: '15 mins ago',
-    content:
-      'Sub-5ms edge LiDAR point cloud odometry pipeline finalized on Jetson Orin! Integrated with ROS2 for real-time 3D spatial mapping and autonomous rover obstacle avoidance. Check out the benchmark telemetry below.',
-    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
-    techStack: ['ROS2', 'CUDA', 'C++', 'PyTorch', 'TensorRT'],
-    githubUrl: 'https://github.com/ascent-club/lidar-odometry',
-    demoUrl: 'https://rover-telemetry.ascent.internal',
-    likesCount: 1498,
-    viewsCount: 3000,
-    commentsCount: 84,
-    isLiked: false,
-  },
-  {
-    id: 'post-2',
-    authorName: 'Alex Rivera',
-    authorRole: 'Lead Systems Architect',
-    timeAgo: 'Yesterday at 4:30 PM',
-    content:
-      'Officially published the Ascent Intranet Core UI/UX design system specifications. Pairing Inter display typography with Century Gothic sub-elements and deep copper obsidian gradients.',
-    imageUrl: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80',
-    techStack: ['React', 'TypeScript', 'Tailwind CSS', 'Figma'],
-    githubUrl: 'https://github.com/ascent-club/ascent-core-ui',
-    likesCount: 842,
-    viewsCount: 1950,
-    commentsCount: 36,
-    isLiked: true,
-  },
-];
+const INITIAL_POSTS: MemberPost[] = [];
 
 
 export function MemberPortal({
@@ -351,6 +320,37 @@ export function MemberPortal({
         }
       })
       .catch(console.error);
+
+    // Fetch Posts
+    api.posts
+      .list()
+      .then((backendPosts) => {
+        if (Array.isArray(backendPosts) && backendPosts.length > 0) {
+          const mappedPosts = backendPosts.map((p) => ({
+            id: p.id,
+            authorName: 'Ascent Member',
+            authorRole: 'Member',
+            authorUsn: p.author_id,
+            timeAgo: new Date(p.created_at).toLocaleDateString(),
+            content: p.content,
+            imageUrl: p.image_url || undefined,
+            videoUrl: p.video_url || undefined,
+            githubUrl: p.github_url || undefined,
+            demoUrl: p.demo_url || undefined,
+            techStack: p.tech_stack || [],
+            likesCount: 0,
+            viewsCount: 0,
+            commentsCount: 0,
+            isLiked: false,
+          }));
+          setPosts((prev) => {
+            // Avoid duplicates
+            const newPosts = mappedPosts.filter(mp => !prev.some(p => p.id === mp.id));
+            return [...newPosts, ...prev];
+          });
+        }
+      })
+      .catch(console.error);
   }, []);
 
   const handleLogout = () => {
@@ -363,6 +363,48 @@ export function MemberPortal({
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [posts, setPosts] = useState<MemberPost[]>(INITIAL_POSTS);
+  const [savedPostIds, setSavedPostIds] = useState<Set<string>>(new Set());
+  const [archivedPostIds, setArchivedPostIds] = useState<Set<string>>(new Set());
+
+  const handleEditPost = async (postId: string) => {
+    const newContent = window.prompt('Edit your post:');
+    if (newContent) {
+      try {
+        await api.posts.update(postId, { content: newContent });
+        setPosts(prev => prev.map(p => p.id === postId ? { ...p, content: newContent } : p));
+      } catch (err) {
+        console.error('Failed to update post:', err);
+      }
+    }
+  };
+
+  const handleDeletePost = async (postId: string) => {
+    if (window.confirm('Are you sure you want to delete this post?')) {
+      try {
+        await api.posts.delete(postId);
+        setPosts(prev => prev.filter(p => p.id !== postId));
+      } catch (err) {
+        console.error('Failed to delete post:', err);
+      }
+    }
+  };
+
+  const handleSavePost = (postId: string) => {
+    setSavedPostIds(prev => {
+      const next = new Set(prev);
+      if (next.has(postId)) next.delete(postId);
+      else next.add(postId);
+      return next;
+    });
+  };
+
+  const handleArchivePost = (postId: string) => {
+    setArchivedPostIds(prev => {
+      const next = new Set(prev);
+      next.add(postId);
+      return next;
+    });
+  };
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -519,8 +561,21 @@ export function MemberPortal({
   };
 
   // Handle adding new post
-  const handleAddPost = (newPost: MemberPost) => {
-    setPosts([newPost, ...posts]);
+  const handleAddPost = async (newPost: MemberPost) => {
+    try {
+      const created = await api.posts.create({
+        content: newPost.content,
+        image_url: newPost.imageUrl || null,
+        video_url: newPost.videoUrl || null,
+        github_url: newPost.githubUrl || null,
+        demo_url: newPost.demoUrl || null,
+        tech_stack: newPost.techStack || [],
+      });
+      newPost.id = created.id;
+    } catch (err) {
+      console.error('Failed to create post:', err);
+    }
+    setPosts((prev) => [newPost, ...prev]);
   };
 
   // Direct certificate download using HTML5 Canvas to PNG
@@ -1049,10 +1104,15 @@ export function MemberPortal({
           {activeNav === 'home' && (
             <HomeView
               profile={activeProfile}
-              posts={filteredPosts}
+              posts={filteredPosts.filter(p => !archivedPostIds.has(p.id))}
               onNavigate={(view) => setActiveNav(view)}
               onOpenUpload={() => setIsUploadModalOpen(true)}
               onAddPost={handleAddPost}
+              onEditPost={handleEditPost}
+              onDeletePost={handleDeletePost}
+              onSavePost={handleSavePost}
+              onArchivePost={handleArchivePost}
+              savedPostIds={savedPostIds}
             />
           )}
 
@@ -1088,13 +1148,7 @@ export function MemberPortal({
           )}
 
           {activeNav === 'messages' && (
-            <div className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-2xl p-8 text-center shadow-2xl relative min-h-[400px] flex flex-col items-center justify-center">
-              <MessageSquare className="w-12 h-12 text-[#545454] mx-auto mb-4" />
-              <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white mb-2">Direct Messages</h2>
-              <p className="text-sm font-subheading text-gray-500 dark:text-[#8E9296] max-w-md mx-auto">
-                Your secure channel for connecting with other Ascent members. Direct messaging functionality is currently being provisioned.
-              </p>
-            </div>
+            <MessagesView activeProfile={activeProfile} peerProfile={peerProfile} />
           )}
 
           {activeNav === 'peer-profile' && peerProfile && (
@@ -1394,26 +1448,26 @@ export function MemberPortal({
                               <div className="absolute right-0 mt-2 w-36 bg-gray-50 dark:bg-[#141517] border border-gray-200 dark:border-[#26282A] rounded-xl shadow-lg z-10 overflow-hidden text-sm text-gray-700 dark:text-[#D1D5DB] font-subheading">
                                 <button 
                                   className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
-                                  onClick={() => { alert('Edit post functionality coming soon!'); setActiveDropdown(null); }}
+                                  onClick={() => { handleEditPost(post.id); setActiveDropdown(null); }}
                                 >
                                   Edit
                                 </button>
                                 <button 
                                   className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
-                                  onClick={() => { alert('Save post functionality coming soon!'); setActiveDropdown(null); }}
+                                  onClick={() => { handleSavePost(post.id); setActiveDropdown(null); }}
                                 >
-                                  Save
+                                  {savedPostIds.has(post.id) ? 'Unsave' : 'Save'}
                                 </button>
                                 <button 
                                   className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
-                                  onClick={() => { alert('Archive post functionality coming soon!'); setActiveDropdown(null); }}
+                                  onClick={() => { handleArchivePost(post.id); setActiveDropdown(null); }}
                                 >
                                   Archive
                                 </button>
                                 <div className="h-px w-full bg-gray-200 dark:bg-[#26282A]" />
                                 <button 
                                   className="w-full text-left px-4 py-2 hover:bg-red-950/40 text-red-400 transition-colors cursor-pointer"
-                                  onClick={() => { alert('Delete post functionality coming soon!'); setActiveDropdown(null); }}
+                                  onClick={() => { handleDeletePost(post.id); setActiveDropdown(null); }}
                                 >
                                   Delete
                                 </button>
@@ -1498,7 +1552,7 @@ export function MemberPortal({
                               className="flex items-center gap-1.5 hover:text-gray-900 dark:text-white transition-colors cursor-pointer"
                             >
                               <MessageCircle className="w-4 h-4" />
-                              <span>{post.viewsCount.toLocaleString()}</span>
+                              <span>{post.commentsCount.toLocaleString()}</span>
                             </button>
                           </div>
 

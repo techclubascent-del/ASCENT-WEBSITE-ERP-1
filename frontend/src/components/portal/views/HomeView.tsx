@@ -24,33 +24,14 @@ interface HomeViewProps {
   onNavigate: (view: 'profile' | 'projects' | 'certificates' | 'settings') => void;
   onOpenUpload: () => void;
   onAddPost?: (post: MemberPost) => void;
+  onEditPost?: (postId: string) => void;
+  onDeletePost?: (postId: string) => void;
+  onSavePost?: (postId: string) => void;
+  onArchivePost?: (postId: string) => void;
+  savedPostIds?: Set<string>;
 }
 
-const CLUB_ANNOUNCEMENTS = [
-  {
-    id: 'ann-1',
-    title: 'Annual Hackathon 2026: Genesis Sprint',
-    date: 'Oct 14 - 16, 2026',
-    tag: 'Hackathon',
-    desc: 'Registration open for all active club divisions. Form teams up to 4 members to build autonomous systems.',
-  },
-  {
-    id: 'ann-2',
-    title: 'Distributed Systems & AI Architecture Workshop',
-    date: 'This Saturday, 10:00 AM',
-    tag: 'Workshop',
-    desc: 'Hands-on session with our alumni engineers on large-scale model serving and GPU cluster orchestration.',
-  },
-  {
-    id: 'ann-3',
-    title: 'Lab Workstation Cluster Upgrade',
-    date: 'Completed',
-    tag: 'Infrastructure',
-    desc: 'Upgraded 8 compute nodes in Advanced Computing Lab 4. Quota hours refreshed for current semester.',
-  },
-];
-
-export function HomeView({ profile, posts, onNavigate, onOpenUpload, onAddPost }: HomeViewProps) {
+export function HomeView({ profile, posts, onNavigate, onOpenUpload, onAddPost, onEditPost, onDeletePost, onSavePost, onArchivePost, savedPostIds = new Set() }: HomeViewProps) {
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({});
   const [expandedComments, setExpandedComments] = useState<Record<string, boolean>>({});
   const [newComments, setNewComments] = useState<Record<string, PostComment[]>>({});
@@ -314,10 +295,9 @@ export function HomeView({ profile, posts, onNavigate, onOpenUpload, onAddPost }
         </div>
       </div>
 
-      {/* Announcements & Club Feed Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left 2 Cols: Feed */}
-        <div className="lg:col-span-2 space-y-4">
+      {/* Club Feed */}
+      <div className="space-y-6">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-heading text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
               <Code2 className="w-4 h-4 text-[#D4A373]" />
@@ -360,31 +340,31 @@ export function HomeView({ profile, posts, onNavigate, onOpenUpload, onAddPost }
                       
                       {activeDropdown === post.id && (
                         <div className="absolute right-0 mt-2 w-36 bg-gray-50 dark:bg-[#141517] border border-gray-200 dark:border-[#26282A] rounded-xl shadow-lg z-10 overflow-hidden text-sm text-gray-700 dark:text-[#D1D5DB] font-subheading">
-                          <button 
-                            className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
-                            onClick={() => { alert('Edit post functionality coming soon!'); setActiveDropdown(null); }}
-                          >
-                            Edit
-                          </button>
-                          <button 
-                            className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
-                            onClick={() => { alert('Save post functionality coming soon!'); setActiveDropdown(null); }}
-                          >
-                            Save
-                          </button>
-                          <button 
-                            className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
-                            onClick={() => { alert('Archive post functionality coming soon!'); setActiveDropdown(null); }}
-                          >
-                            Archive
-                          </button>
-                          <div className="h-px w-full bg-gray-200 dark:bg-[#26282A]" />
-                          <button 
-                            className="w-full text-left px-4 py-2 hover:bg-red-950/40 text-red-400 transition-colors cursor-pointer"
-                            onClick={() => { alert('Delete post functionality coming soon!'); setActiveDropdown(null); }}
-                          >
-                            Delete
-                          </button>
+                                <button 
+                                  className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
+                                  onClick={() => { if(onEditPost) onEditPost(post.id); setActiveDropdown(null); }}
+                                >
+                                  Edit
+                                </button>
+                                <button 
+                                  className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
+                                  onClick={() => { if(onSavePost) onSavePost(post.id); setActiveDropdown(null); }}
+                                >
+                                  {savedPostIds.has(post.id) ? 'Unsave' : 'Save'}
+                                </button>
+                                <button 
+                                  className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#1A1C1F] hover:text-[#D4A373] transition-colors cursor-pointer"
+                                  onClick={() => { if(onArchivePost) onArchivePost(post.id); setActiveDropdown(null); }}
+                                >
+                                  Archive
+                                </button>
+                                <div className="h-px w-full bg-gray-200 dark:bg-[#26282A]" />
+                                <button 
+                                  className="w-full text-left px-4 py-2 hover:bg-red-950/40 text-red-400 transition-colors cursor-pointer"
+                                  onClick={() => { if(onDeletePost) onDeletePost(post.id); setActiveDropdown(null); }}
+                                >
+                                  Delete
+                                </button>
                         </div>
                       )}
                     </div>
@@ -420,7 +400,7 @@ export function HomeView({ profile, posts, onNavigate, onOpenUpload, onAddPost }
                         }`}
                       >
                         <Heart className={`w-3.5 h-3.5 ${isLiked ? 'fill-current' : ''}`} />
-                        <span>{(post.likesCount || 12) + (isLiked ? 1 : 0)}</span>
+                        <span>{(post.likesCount || 0) + (isLiked ? 1 : 0)}</span>
                       </button>
                       <button
                         type="button"
@@ -428,7 +408,7 @@ export function HomeView({ profile, posts, onNavigate, onOpenUpload, onAddPost }
                         className="flex items-center gap-1.5 hover:text-gray-900 dark:text-white transition-colors cursor-pointer"
                       >
                         <MessageSquare className="w-3.5 h-3.5" />
-                        <span>{(post.commentsCount || 3) + (newComments[post.id]?.length || 0)}</span>
+                        <span>{(post.commentsCount || 0) + (newComments[post.id]?.length || 0)}</span>
                       </button>
                       <button
                         type="button"
@@ -517,43 +497,6 @@ export function HomeView({ profile, posts, onNavigate, onOpenUpload, onAddPost }
                 </div>
               );
             })}
-          </div>
-        </div>
-
-        {/* Right Col: Announcements & Quick Access */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-heading text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-[#D4A373]" />
-              <span>Announcements</span>
-            </h2>
-          </div>
-
-          <div className="bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] rounded-2xl p-5 shadow-xl space-y-4">
-            {CLUB_ANNOUNCEMENTS.map((ann) => (
-              <div
-                key={ann.id}
-                className="p-3.5 rounded-xl bg-[#f8f9fa] dark:bg-[#000000] border border-gray-200 dark:border-[#26282A] space-y-2 hover:border-[#D4A373]/40 transition-colors"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="px-2 py-0.5 rounded-md bg-gray-50 dark:bg-[#141517] text-[#D4A373] text-[10px] font-subheading border border-[#D4A373]/30">
-                    {ann.tag}
-                  </span>
-                  <span className="text-[10px] text-gray-500 dark:text-[#8E9296] font-mono-tech">{ann.date}</span>
-                </div>
-                <h4 className="font-heading text-xs font-bold text-gray-900 dark:text-white">{ann.title}</h4>
-                <p className="text-[11px] text-gray-500 dark:text-[#8E9296] font-subheading leading-normal">{ann.desc}</p>
-              </div>
-            ))}
-
-            <button
-              type="button"
-              onClick={() => onNavigate('projects')}
-              className="w-full py-2.5 px-4 rounded-xl bg-gray-50 dark:bg-[#141517] hover:bg-gray-100 dark:hover:bg-[#1E2022] text-[#D4A373] border border-[#D4A373]/30 text-xs font-subheading flex items-center justify-center gap-2 transition-colors cursor-pointer"
-            >
-              <span>Explore Member Projects</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
           </div>
         </div>
       </div>

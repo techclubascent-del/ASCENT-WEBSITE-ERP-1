@@ -7,7 +7,19 @@ Adding a new feature domain: create its router and include it below.
 
 from fastapi import APIRouter
 
-from app.api.v1 import applications, attendance, certificates, events, health, opportunities, users, audit, system
+from app.api.v1 import (
+    applications,
+    attendance,
+    audit,
+    certificates,
+    events,
+    health,
+    messages,
+    opportunities,
+    posts,
+    system,
+    users,
+)
 
 router = APIRouter(prefix="/api/v1")
 
@@ -20,3 +32,5 @@ router.include_router(certificates.router)
 router.include_router(attendance.router)
 router.include_router(audit.router)
 router.include_router(system.router)
+router.include_router(posts.router)
+router.include_router(messages.router)

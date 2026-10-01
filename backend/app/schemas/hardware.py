@@ -1,5 +1,7 @@
 from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict, Field
+
 
 class HardwarePassBase(BaseModel):
     assigned_lab: str = Field(..., description="The lab or bay assigned")

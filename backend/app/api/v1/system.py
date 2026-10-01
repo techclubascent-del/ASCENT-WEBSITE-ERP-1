@@ -1,6 +1,6 @@
+import psutil
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
-import psutil
 
 from app.core.dependencies import require_super_admin
 from app.core.state import system_state

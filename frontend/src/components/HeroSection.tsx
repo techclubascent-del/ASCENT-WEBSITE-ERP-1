@@ -40,8 +40,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           className="relative my-auto flex flex-col items-center text-center z-10 space-y-5 select-none max-w-2xl mx-auto"
         >
           {/* Centered Large Vector Emblem */}
-          <div className="p-4 rounded-3xl bg-white/40 dark:bg-black/40 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg mb-2">
-            <AscentLogo size={80} showWordmark={false} variant="monochrome" />
+          <div className="w-[112px] h-[112px] rounded-[1.5rem] overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] mb-2 flex items-center justify-center bg-black">
+            <AscentLogo size={112} showWordmark={false} variant="monochrome" />
           </div>
 
           {/* ASCENT Title */}
@@ -51,7 +51,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           {/* Tagline exactly below */}
           <p className="font-body text-base sm:text-xl md:text-2xl font-normal text-[#545454] dark:text-[#A6A6A6] tracking-wide">
-            Fueling ideas,Shaping Futures
+            Fueling ideas, Shaping Futures
           </p>
 
           {/* Register Button Aligned in Center with Tagline */}

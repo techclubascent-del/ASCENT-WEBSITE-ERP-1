@@ -1,4 +1,5 @@
-from typing import Callable, Awaitable
+from collections.abc import Awaitable, Callable
+
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
 from jose import JWTError, jwt

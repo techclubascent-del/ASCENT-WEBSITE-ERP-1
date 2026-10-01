@@ -4,6 +4,7 @@ from app.repositories.hardware_repository import HardwareRepository
 from app.schemas.hardware import HardwarePassCreate, HardwarePassResponse
 from app.schemas.user import UserResponse
 
+
 class HardwareService:
     def __init__(self, repository: HardwareRepository) -> None:
         self._repo = repository

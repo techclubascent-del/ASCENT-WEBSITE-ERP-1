@@ -2,7 +2,7 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from supabase import Client
 
 from app.core.dependencies import AdminUser, CurrentUser, get_supabase_client

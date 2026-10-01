@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Request, Depends
-from pydantic import BaseModel
-import sqlite3
 import json
-from datetime import datetime
-from typing import Optional, List, Dict, Any
+import sqlite3
+from typing import Any
 
-from app.core.dependencies import require_super_admin, get_optional_user
+from fastapi import APIRouter, Depends, Request
+from pydantic import BaseModel
+
+from app.core.dependencies import get_optional_user, require_super_admin
 from app.schemas.user import UserResponse
 
 router = APIRouter(prefix="/audit", tags=["Audit"])
@@ -15,24 +15,24 @@ DB_PATH = "audit.db"
 class AuditLogCreate(BaseModel):
     action: str
     resource: str
-    metadata: Optional[Dict[str, Any]] = {}
+    metadata: dict[str, Any] | None = {}
 
 class AuditLogResponse(BaseModel):
     id: int
-    user_id: Optional[str]
+    user_id: str | None
     action: str
     resource: str
-    metadata: Dict[str, Any]
-    ip_address: Optional[str]
-    user_agent: Optional[str]
+    metadata: dict[str, Any]
+    ip_address: str | None
+    user_agent: str | None
     created_at: str
 
 @router.post("/log")
 async def create_audit_log(
     data: AuditLogCreate,
     request: Request,
-    current_user: Optional[UserResponse] = Depends(get_optional_user)
-) -> Dict[str, str]:
+    current_user: UserResponse | None = Depends(get_optional_user)
+) -> dict[str, str]:
     """Log an action or page visit from the frontend."""
     ip_address = request.client.host if request.client else None
     user_agent = request.headers.get("user-agent")
@@ -54,11 +54,11 @@ async def create_audit_log(
     conn.close()
     return {"status": "success"}
 
-@router.get("/logs", response_model=List[AuditLogResponse])
+@router.get("/logs", response_model=list[AuditLogResponse])
 async def get_audit_logs(
     limit: int = 100,
     current_user: UserResponse = Depends(require_super_admin)
-) -> List[AuditLogResponse]:
+) -> list[AuditLogResponse]:
     """Fetch recent audit logs for the live dashboard (Super Admin Only)."""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row

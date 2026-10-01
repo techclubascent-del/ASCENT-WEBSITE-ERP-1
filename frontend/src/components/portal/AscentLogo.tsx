@@ -24,9 +24,9 @@ export function AscentLogo({ size = 'md', showMotto = false, className = '' }: A
         className={`relative flex items-center justify-center rounded-xl p-2 bg-white dark:bg-[#0C0D0E] border border-gray-200 dark:border-[#26282A] shadow-md group hover:border-[#D4A373]/60 transition-colors duration-300 ${iconSizes[size]}`}
       >
         <img
-          src="/assets/ascent-logo-exact.svg"
+          src="/assets/ascent-mark-exact.svg"
           alt="ASCENT Emblem"
-          className="w-full h-full object-contain"
+          className="w-full h-full object-cover"
         />
       </div>
 

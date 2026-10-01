@@ -8,7 +8,6 @@ import {
   KeyRound,
   User,
 } from 'lucide-react';
-import { Panther2D } from './Panther2D/Panther2D';
 
 interface LoginPageProps {
   onLoginClick: (identifier: string) => void;
@@ -29,7 +28,7 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration, onBackToHome
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 my-auto flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12 min-h-[85vh]">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 my-auto flex flex-col items-center justify-center min-h-[85vh]">
       {/* LEFT SIDE: Member Login Card (Exact original layout & functionality) */}
       <div className="w-full max-w-md flex-shrink-0">
         {onBackToHome && (
@@ -171,11 +170,6 @@ export function LoginPage({ onLoginClick, onNavigateToRegistration, onBackToHome
             </div>
           </div>
         </motion.div>
-      </div>
-
-      {/* RIGHT SIDE: Interactive 2D Three.js Black Panther Scene */}
-      <div className="w-full flex-1 max-w-xl flex items-center justify-center">
-        <Panther2D />
       </div>
     </div>
   );

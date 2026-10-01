@@ -67,6 +67,28 @@ export interface ApiHardwarePass {
   created_at: string;
 }
 
+export interface ApiMessage {
+  id: string;
+  sender_id: string;
+  receiver_id: string;
+  content: string;
+  read_at: string | null;
+  created_at: string;
+}
+
+export interface ApiPost {
+  id: string;
+  author_id: string;
+  content: string;
+  image_url: string | null;
+  video_url: string | null;
+  github_url: string | null;
+  demo_url: string | null;
+  tech_stack: string[];
+  is_archived: boolean;
+  created_at: string;
+}
+
 export interface ApiUser {
   id: string;
   email: string;
@@ -222,6 +244,42 @@ class ApiClient {
       this.request<ApiHardwarePass>('/hardware', {
         method: 'POST',
         body: JSON.stringify(data),
+      }),
+  };
+
+  // Messages
+  messages = {
+    listRecent: () => this.request<ApiMessage[]>('/messages/recent'),
+    listConversation: (otherUserId: string) => this.request<ApiMessage[]>(`/messages/conversation/${otherUserId}`),
+    create: (data: { receiver_id: string; content: string }) => 
+      this.request<ApiMessage>('/messages', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }),
+    markRead: (id: string) => 
+      this.request<ApiMessage>(`/messages/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ read_at: new Date().toISOString() }),
+      }),
+  };
+
+  // Posts
+  posts = {
+    list: () => this.request<ApiPost[]>('/posts'),
+    listFeed: () => this.request<ApiPost[]>('/posts/feed'),
+    create: (data: Partial<ApiPost>) => 
+      this.request<ApiPost>('/posts', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }),
+    update: (id: string, data: Partial<ApiPost>) =>
+      this.request<ApiPost>(`/posts/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      }),
+    delete: (id: string) =>
+      this.request<void>(`/posts/${id}`, {
+        method: 'DELETE',
       }),
   };
 }
