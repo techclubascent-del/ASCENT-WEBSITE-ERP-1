@@ -117,7 +117,7 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        "flex h-full flex-col border-r bg-background transition-all duration-200",
+        "flex h-full flex-col border-r border-white/10 bg-black/40 backdrop-blur-xl transition-all duration-200 z-50 relative shadow-2xl",
         isSidebarOpen ? "w-60" : "w-14",
       )}
       aria-label="Application sidebar"

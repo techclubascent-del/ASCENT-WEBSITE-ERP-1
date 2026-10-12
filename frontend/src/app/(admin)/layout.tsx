@@ -7,6 +7,7 @@
 import { createClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
+import MinimalBackground from "@/components/MinimalBackground";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -18,22 +19,33 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // If not authenticated at all, the middleware already handled this.
-  // This is a belt-and-suspenders UX check only — NOT a security boundary.
   if (!user) {
     redirect("/auth/login");
   }
 
-  // TODO (Phase 1): Fetch user role from your DB and check for "admin".
-  // For Phase 0 the admin section is accessible to any authenticated user.
-  // Real role check: if (profile.role !== "admin") redirect("/dashboard");
-
   return (
-    <div>
-      <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-400">
-        Admin area — changes here affect all users.
+    <div className="relative min-h-screen">
+      <div className="absolute inset-0 z-0">
+        <MinimalBackground />
       </div>
-      {children}
+      
+      <div className="relative z-10 p-6 flex flex-col h-full">
+        <div className="mb-6 rounded-xl border border-white/10 bg-black/40 backdrop-blur-xl px-6 py-3 flex items-center justify-between shadow-2xl">
+          <div className="flex items-center gap-3">
+            <span className="h-2 w-2 rounded-full bg-purple-500 animate-pulse"></span>
+            <span className="text-sm font-semibold uppercase tracking-wider text-purple-200">
+              Admin & Super Admin Portal
+            </span>
+          </div>
+          <div className="text-xs text-muted-foreground bg-black/30 px-3 py-1 rounded-full border border-white/5">
+            Changes here affect the entire platform
+          </div>
+        </div>
+        
+        <div className="flex-1 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md overflow-hidden shadow-2xl flex flex-col">
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

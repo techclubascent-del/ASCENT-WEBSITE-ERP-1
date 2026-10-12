@@ -55,23 +55,46 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const hostname = request.headers.get("host") || "";
   const pathname = request.nextUrl.pathname;
+  
+  // Subdomain routing
+  let currentPathname = pathname;
+  if (hostname.startsWith("admin.")) {
+    if (pathname === "/") {
+       currentPathname = "/admin";
+    } else if (!pathname.startsWith("/admin")) {
+       currentPathname = `/admin${pathname}`;
+    }
+    
+    if (currentPathname !== pathname) {
+       return NextResponse.rewrite(new URL(currentPathname, request.url));
+    }
+  }
 
-  const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
-  const isAuthRoute = AUTH_PREFIXES.some((p) => pathname.startsWith(p));
+  const isProtected = PROTECTED_PREFIXES.some((p) => currentPathname.startsWith(p));
+  const isAuthRoute = AUTH_PREFIXES.some((p) => currentPathname.startsWith(p)) || currentPathname.startsWith("/admin/auth");
 
   // Unauthenticated user trying to access a protected route → redirect to login
-  if (!user && isProtected) {
+  if (!user && isProtected && !isAuthRoute) {
     const loginUrl = request.nextUrl.clone();
-    loginUrl.pathname = "/auth/login";
-    loginUrl.searchParams.set("redirectTo", pathname);
+    if (hostname.startsWith("admin.")) {
+      loginUrl.pathname = "/auth/login"; // the browser will navigate to admin.localhost/auth/login, which middleware then rewrites to /admin/auth/login
+    } else {
+      loginUrl.pathname = "/auth/login";
+    }
+    loginUrl.searchParams.set("redirectTo", currentPathname);
     return NextResponse.redirect(loginUrl);
   }
 
   // Authenticated user visiting an auth page → redirect to dashboard
   if (user && isAuthRoute) {
     const dashboardUrl = request.nextUrl.clone();
-    dashboardUrl.pathname = "/dashboard";
+    if (hostname.startsWith("admin.")) {
+      dashboardUrl.pathname = "/"; // becomes /admin
+    } else {
+      dashboardUrl.pathname = "/dashboard";
+    }
     return NextResponse.redirect(dashboardUrl);
   }
 

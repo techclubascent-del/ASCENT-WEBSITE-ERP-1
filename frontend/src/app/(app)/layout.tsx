@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/ui.store";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import type { ReactNode } from "react";
+import MinimalBackground from "@/components/MinimalBackground";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -21,14 +22,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const { isSidebarOpen, toggleSidebar } = useUIStore();
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="relative flex h-screen overflow-hidden bg-black text-white selection:bg-white/30">
+      <div className="absolute inset-0 z-0">
+        <MinimalBackground />
+      </div>
+      
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main content area */}
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="relative z-10 flex flex-1 flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="flex h-14 shrink-0 items-center justify-between border-b px-4 bg-background/50 backdrop-blur-md">
+        <header className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 bg-black/40 px-4 backdrop-blur-xl shadow-xl">
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
