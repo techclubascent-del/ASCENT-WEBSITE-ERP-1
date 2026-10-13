@@ -1,8 +1,6 @@
-name = "ascent-website-erp"
+name = "ascent-website-erp-1"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
-
-pages_build_output_dir = "frontend/dist"
 
 [assets]
 directory = "frontend/dist"
