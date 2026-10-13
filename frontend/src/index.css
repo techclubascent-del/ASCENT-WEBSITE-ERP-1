@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Century Gothic', CenturyGothic, 'Questrial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html.dark {
+    color-scheme: dark;
+    background-color: #000000;
+    color: #ffffff;
+  }
+
+  html.light {
+    color-scheme: light;
+    background-color: #f8f9fa;
+    color: #0f172a;
+  }
+
+  /* Custom Font Utility Classes as requested */
+  /* Primary Headings: Inter */
+  .font-heading,
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  /* Body: Century Gothic */
+  .font-body {
+    font-family: 'Century Gothic', CenturyGothic, 'Questrial', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.01em;
+  }
+
+  /* Buttons: Quicksand */
+  .font-button,
+  .font-quicksand {
+    font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #545454;
+  border-radius: 3px;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #A6A6A6;
+}
+
+html.light ::-webkit-scrollbar-track {
+  background: #f1f3f5;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Subtle animation keyframes */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 24s linear infinite;
+}
+
+/* Glass and border utilities */
+.border-ascent {
+  border-color: rgba(84, 84, 84, 0.45);
+}
+
+.border-ascent-hover:hover {
+  border-color: rgba(166, 166, 166, 0.8);
+}
