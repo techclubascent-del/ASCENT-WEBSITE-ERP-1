@@ -114,14 +114,22 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = () => {
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 whileHover={{ y: -6 }}
-                className="group relative flex flex-col justify-between p-8 rounded-2xl border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[300px] sm:min-h-[360px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden"
+                className="group relative flex flex-col justify-between p-8 rounded-2xl border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[320px] sm:min-h-[380px] lg:min-h-[420px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden"
               >
                 {project.image ? (
-                  <div className="absolute inset-0 w-full h-full">
+                  <div className="absolute inset-0 w-full h-full bg-[#080808] flex items-center justify-center overflow-hidden">
+                    {/* Ambient subtle glow backdrop to fill card with matching palette */}
+                    <img
+                      src={project.image}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-35 scale-110 pointer-events-none select-none"
+                    />
+                    {/* Perfectly fitted foreground image preserving natural aspect ratio and content */}
                     <img
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      className="relative max-h-full max-w-full object-contain p-2 sm:p-4 z-10 group-hover:scale-[1.03] transition-transform duration-500 select-none"
                     />
                   </div>
                 ) : (
