@@ -7,8 +7,18 @@ interface FoundersSectionProps {
 }
 
 export const FoundersSection: React.FC<FoundersSectionProps> = () => {
-  // 2 blank cards as requested
-  const founderCards = [1, 2];
+  const founderCards = [
+    {
+      id: 1,
+      image: '/assets/founders/founder-1.jpg',
+      tag: 'ASCENT // FOUNDER // 01',
+    },
+    {
+      id: 2,
+      image: '/assets/founders/founder-2.jpg',
+      tag: 'ASCENT // FOUNDER // 02',
+    },
+  ];
 
   return (
     <section id="founders" className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 border-t border-slate-200 dark:border-[#545454]/30">
@@ -26,11 +36,11 @@ export const FoundersSection: React.FC<FoundersSectionProps> = () => {
           </h2>
         </motion.div>
 
-        {/* 2 Blank Cards Grid with Staggered Scroll Animation */}
+        {/* 2 Cards Grid with Staggered Scroll Animation */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {founderCards.map((cardIndex, idx) => (
+          {founderCards.map((card, idx) => (
             <motion.div
-              key={cardIndex}
+              key={card.id}
               initial={{ opacity: 0, y: 35 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
@@ -40,20 +50,31 @@ export const FoundersSection: React.FC<FoundersSectionProps> = () => {
                 ease: [0.22, 1, 0.36, 1],
               }}
               whileHover={{ y: -6 }}
-              className="group relative flex flex-col justify-between p-8 rounded-2xl border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[380px] sm:min-h-[440px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)]"
+              className="group relative flex flex-col justify-between p-8 rounded-2xl border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[380px] sm:min-h-[440px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden"
             >
+              {card.image && (
+                <div className="absolute inset-0 w-full h-full">
+                  <img
+                    src={card.image}
+                    alt={`Founder ${card.id}`}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/25" />
+                </div>
+              )}
+
               {/* Clean Top Layout Watermark */}
-              <div className="flex justify-between items-start opacity-20 group-hover:opacity-60 transition-opacity">
-                <div className="w-2.5 h-2.5 rounded-full border border-slate-400 dark:border-[#A6A6A6]" />
-                <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-[#A6A6A6]">
-                  ASCENT // FOUNDERS // 0{cardIndex}
+              <div className="relative z-10 flex justify-between items-start text-white">
+                <div className="w-2.5 h-2.5 rounded-full border border-white/60 bg-white/20" />
+                <span className="font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white">
+                  {card.tag}
                 </span>
               </div>
 
               {/* Clean Bottom Subtle Corner Accent */}
-              <div className="flex justify-between items-end opacity-20 group-hover:opacity-40 transition-opacity">
-                <div className="h-[1px] w-12 bg-slate-400 dark:bg-white/30" />
-                <div className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-white/30" />
+              <div className="relative z-10 flex justify-between items-end text-white">
+                <div className="h-[1px] w-12 bg-white/40" />
+                <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
               </div>
             </motion.div>
           ))}
