@@ -109,8 +109,8 @@ export const EventsSection: React.FC<EventsSectionProps> = () => {
           <div className="flex items-center gap-8 pr-8 whitespace-nowrap">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={`mindhack-track1-${i}`} className="flex items-center gap-8">
-                <span className="font-heading text-xs sm:text-sm tracking-[0.25em] font-bold text-slate-800 dark:text-white">
-                  mindhack.ai
+                <span className="font-heading text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-slate-800 dark:text-white">
+                  MINDHACK.AI
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-white/40" />
               </div>
@@ -121,8 +121,8 @@ export const EventsSection: React.FC<EventsSectionProps> = () => {
           <div className="flex items-center gap-8 pr-8 whitespace-nowrap" aria-hidden="true">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={`mindhack-track2-${i}`} className="flex items-center gap-8">
-                <span className="font-heading text-xs sm:text-sm tracking-[0.25em] font-bold text-slate-800 dark:text-white">
-                  mindhack.ai
+                <span className="font-heading text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-slate-800 dark:text-white">
+                  MINDHACK.AI
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-white/40" />
               </div>

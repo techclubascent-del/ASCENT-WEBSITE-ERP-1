@@ -1,15 +1,21 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { ACHIEVEMENTS } from '../data/platformData';
 
 interface AchievementsSectionProps {
   accentColor1: string;
   accentColor2: string;
 }
 
+const ACHIEVEMENT_GALLERY = [
+  { id: 1, src: '/assets/achievements/achievement-1.jpg', alt: 'MindHack Hackathon Certificate Presentation' },
+  { id: 2, src: '/assets/achievements/achievement-2.jpg', alt: 'MindHack Student Award Felicitation' },
+  { id: 3, src: '/assets/achievements/achievement-3.jpg', alt: 'MindHack Excellence Award Presentation' },
+  { id: 4, src: '/assets/achievements/achievement-4.jpg', alt: 'MindHack Winner Certificate Ceremony' },
+];
+
 export const AchievementsSection: React.FC<AchievementsSectionProps> = () => {
   return (
-    <section id="achievements" className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 border-t border-slate-200 dark:border-[#545454]/30">
+    <section id="achievements" className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 border-t border-slate-200 dark:border-[#545454]/30 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Section Header with Scroll Reveal */}
         <motion.div
@@ -24,43 +30,66 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = () => {
           </h2>
 
           <p className="font-body text-base text-slate-600 dark:text-[#A6A6A6] leading-relaxed">
-            Honouring the achievements that reflect the talent ,innovation and spirit of Ascent
+            Honouring the achievements that reflect the talent, innovation and spirit of Ascent
           </p>
         </motion.div>
+      </div>
 
-        {/* 4 Empty Cards with Staggered Scroll Animation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {ACHIEVEMENTS.map((item, idx) => {
-            return (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 35 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{
-                  duration: 0.55,
-                  delay: idx * 0.12,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                whileHover={{ y: -6 }}
-                className="group relative p-7 rounded-2xl border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#080808]/90 backdrop-blur-xl min-h-[220px] sm:min-h-[250px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] flex flex-col justify-between"
+      {/* Continuous Motion Track for Achievement Images */}
+      <div className="relative w-full overflow-hidden py-4">
+        {/* Left & Right Edge Fade Masks */}
+        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-32 bg-gradient-to-r from-[#FAF8F5] dark:from-[#000000] to-transparent z-20 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-32 bg-gradient-to-l from-[#FAF8F5] dark:from-[#000000] to-transparent z-20 pointer-events-none" />
+
+        {/* Moving Row with Continuous Seamless Motion */}
+        <div className="flex w-max animate-marquee-scroll cursor-grab active:cursor-grabbing">
+          {/* Primary Track */}
+          <div className="flex items-center gap-6 pr-6">
+            {ACHIEVEMENT_GALLERY.map((img) => (
+              <div
+                key={`achieve-track1-${img.id}`}
+                className="group relative flex-shrink-0 w-[320px] sm:w-[440px] h-[220px] sm:h-[300px] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] transition-all duration-300"
               >
-                {/* Clean Top Layout Watermark */}
-                <div className="flex justify-between items-start opacity-20 group-hover:opacity-60 transition-opacity">
-                  <div className="w-2 h-2 rounded-full border border-slate-400 dark:border-[#A6A6A6]" />
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-[#A6A6A6]">
-                    ASCENT // ACHIEVEMENTS
+                {/* MINDHACK.AI in Caps in the Left Corner */}
+                <div className="absolute top-4 left-4 z-20">
+                  <span className="font-heading text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-black/70 backdrop-blur-md text-white border border-white/20 shadow-lg">
+                    MINDHACK.AI
                   </span>
                 </div>
 
-                {/* Clean Bottom Subtle Corner Accent */}
-                <div className="flex justify-between items-end opacity-20 group-hover:opacity-40 transition-opacity">
-                  <div className="h-[1px] w-12 bg-slate-400 dark:bg-white/30" />
-                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-white/30" />
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Secondary Track (Seamless Loop) */}
+          <div className="flex items-center gap-6 pr-6" aria-hidden="true">
+            {ACHIEVEMENT_GALLERY.map((img) => (
+              <div
+                key={`achieve-track2-${img.id}`}
+                className="group relative flex-shrink-0 w-[320px] sm:w-[440px] h-[220px] sm:h-[300px] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] transition-all duration-300"
+              >
+                {/* MINDHACK.AI in Caps in the Left Corner */}
+                <div className="absolute top-4 left-4 z-20">
+                  <span className="font-heading text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-black/70 backdrop-blur-md text-white border border-white/20 shadow-lg">
+                    MINDHACK.AI
+                  </span>
                 </div>
-              </motion.div>
-            );
-          })}
+
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
