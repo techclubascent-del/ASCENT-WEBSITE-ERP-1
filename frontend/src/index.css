@@ -116,3 +116,18 @@ html.light ::-webkit-scrollbar-thumb:hover {
   animation-play-state: paused;
 }
 
+/* Continuous horizontal marquee scroll for text tickers */
+@keyframes marquee-scroll-text {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-text {
+  animation: marquee-scroll-text 18s linear infinite;
+  will-change: transform;
+}
+
