@@ -26,6 +26,12 @@ export const TeamSection: React.FC<TeamSectionProps> = () => {
       image: '/assets/team/team-member-3.jpg',
       tag: 'ASCENT // TEAM // 03',
     },
+    {
+      id: 4,
+      name: 'Mohammed',
+      image: '/assets/team/team-member-4.jpg',
+      tag: 'ASCENT // TEAM // 04',
+    },
   ];
 
   return (
@@ -44,8 +50,8 @@ export const TeamSection: React.FC<TeamSectionProps> = () => {
           </h2>
         </motion.div>
 
-        {/* 3 Cards Grid with Staggered Scroll Animation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {/* 4 Cards Grid with Staggered Scroll Animation */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {teamCards.map((card, idx) => (
             <div key={card.id} className="flex flex-col items-center">
               <motion.div
