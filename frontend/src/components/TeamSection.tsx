@@ -10,16 +10,19 @@ export const TeamSection: React.FC<TeamSectionProps> = () => {
   const teamCards = [
     {
       id: 1,
+      name: 'Harsha Bharath',
       image: '/assets/team/team-member-1.jpg',
       tag: 'ASCENT // TEAM // 01',
     },
     {
       id: 2,
+      name: 'Tripti Singh',
       image: '/assets/team/team-member-2.jpg',
       tag: 'ASCENT // TEAM // 02',
     },
     {
       id: 3,
+      name: 'Rishi Jayaram',
       image: '/assets/team/team-member-3.jpg',
       tag: 'ASCENT // TEAM // 03',
     },
@@ -44,27 +47,35 @@ export const TeamSection: React.FC<TeamSectionProps> = () => {
         {/* 3 Cards Grid with Staggered Scroll Animation */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {teamCards.map((card, idx) => (
-            <motion.div
-              key={card.id}
-              initial={{ opacity: 0, y: 35 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{
-                duration: 0.55,
-                delay: idx * 0.15,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              whileHover={{ y: -6 }}
-              className="group relative flex flex-col justify-between p-8 rounded-2xl border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[380px] sm:min-h-[440px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden"
-            >
-              <div className="absolute inset-0 w-full h-full">
-                <img
-                  src={card.image}
-                  alt={`Team Member ${card.id}`}
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-            </motion.div>
+            <div key={card.id} className="flex flex-col items-center">
+              <motion.div
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{
+                  duration: 0.55,
+                  delay: idx * 0.15,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                whileHover={{ y: -6 }}
+                className="w-full group relative flex flex-col justify-between p-8 rounded-2xl border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[380px] sm:min-h-[440px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden"
+              >
+                <div className="absolute inset-0 w-full h-full">
+                  <img
+                    src={card.image}
+                    alt={card.name}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </motion.div>
+              {card.name && (
+                <div className="mt-4 text-center">
+                  <h3 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                    {card.name}
+                  </h3>
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
