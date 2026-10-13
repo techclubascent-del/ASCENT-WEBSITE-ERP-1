@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { PROJECTS } from '../data/platformData';
 import { ProjectItem } from '../types';
 
 interface ProjectsSectionProps {
@@ -9,22 +8,61 @@ interface ProjectsSectionProps {
   onSelectProject?: (project: ProjectItem) => void;
 }
 
-const PROJECT_IMAGES: Record<string, string> = {
-  'proj-1': '/assets/projects/project-1.jpg',
-  'proj-2': '/assets/projects/project-2.jpg',
-  'proj-3': '/assets/projects/project-3.jpg',
-  'proj-4': '/assets/projects/project-4.jpg',
-};
+interface ProjectCardItem {
+  id: string;
+  title: string;
+  tag: string;
+  image?: string | null;
+}
+
+const LIVE_PROJECTS: ProjectCardItem[] = [
+  {
+    id: 'live-1',
+    title: 'Autonomous Robotics Rover',
+    tag: 'ASCENT // LIVE PROJECT // 01',
+    image: '/assets/projects/project-1.jpg',
+  },
+  {
+    id: 'live-2',
+    title: 'Swarm Robotics Vehicle Fleet',
+    tag: 'ASCENT // LIVE PROJECT // 02',
+    image: '/assets/projects/project-2.jpg',
+  },
+  {
+    id: 'live-3',
+    title: 'AI Cinematic Recommendation Engine',
+    tag: 'ASCENT // LIVE PROJECT // 03',
+    image: '/assets/projects/project-3.jpg',
+  },
+  {
+    id: 'live-4',
+    title: 'CineScope Discovery Platform',
+    tag: 'ASCENT // LIVE PROJECT // 04',
+    image: '/assets/projects/project-4.jpg',
+  },
+];
+
+const UPCOMING_PROJECTS: ProjectCardItem[] = [
+  {
+    id: 'upcoming-1',
+    title: 'Upcoming Project',
+    tag: 'ASCENT // UPCOMING // 01',
+    image: null,
+  },
+  {
+    id: 'upcoming-2',
+    title: 'Upcoming Project',
+    tag: 'ASCENT // UPCOMING // 02',
+    image: null,
+  },
+];
 
 export const ProjectsSection: React.FC<ProjectsSectionProps> = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('Live Projects');
 
   const categories = ['Live Projects', 'Upcoming Projects'];
 
-  const filteredProjects =
-    selectedCategory === 'Live Projects'
-      ? PROJECTS.filter((p) => p.status === 'Active' || p.status === 'Deployed')
-      : PROJECTS.filter((p) => p.status === 'Research' || p.status === 'Incubating');
+  const currentProjects = selectedCategory === 'Live Projects' ? LIVE_PROJECTS : UPCOMING_PROJECTS;
 
   return (
     <section id="projects" className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 border-t border-slate-200 dark:border-[#545454]/30">
@@ -61,10 +99,9 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = () => {
           </div>
         </motion.div>
 
-        {/* Projects Cards Grid with Dummy Pictures */}
+        {/* Projects Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {filteredProjects.map((project, idx) => {
-            const imageSrc = PROJECT_IMAGES[project.id] || '/assets/projects/project-1.jpg';
+          {currentProjects.map((project, idx) => {
             return (
               <motion.div
                 key={project.id}
@@ -79,13 +116,31 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = () => {
                 whileHover={{ y: -6 }}
                 className="group relative flex flex-col justify-between p-8 rounded-2xl border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[300px] sm:min-h-[360px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden"
               >
-                <div className="absolute inset-0 w-full h-full">
-                  <img
-                    src={imageSrc}
-                    alt={project.title}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
+                {project.image ? (
+                  <div className="absolute inset-0 w-full h-full">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                ) : (
+                  <>
+                    {/* Clean Top Layout Watermark for Blank State */}
+                    <div className="flex justify-between items-start opacity-20 group-hover:opacity-60 transition-opacity">
+                      <div className="w-2 h-2 rounded-full border border-slate-400 dark:border-[#A6A6A6]" />
+                      <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-[#A6A6A6]">
+                        {project.tag}
+                      </span>
+                    </div>
+
+                    {/* Clean Bottom Subtle Corner Accent */}
+                    <div className="flex justify-between items-end opacity-20 group-hover:opacity-40 transition-opacity">
+                      <div className="h-[1px] w-12 bg-slate-400 dark:bg-white/30" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-white/30" />
+                    </div>
+                  </>
+                )}
               </motion.div>
             );
           })}
