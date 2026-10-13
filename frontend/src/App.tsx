@@ -26,6 +26,8 @@ import { useAuth } from './context/AuthContext';
 import { LoginPage } from './components/portal/LoginPage';
 import { RegistrationPage } from './components/portal/RegistrationPage';
 import { MemberPortal } from './components/portal/MemberPortal';
+import { AdminPortal } from './components/admin/AdminPortal';
+import { AdminLoginPage } from './components/admin/AdminLoginPage';
 
 // Brand secondary color pairings
 const DARK_ACCENT_PAIRS = [
@@ -71,7 +73,17 @@ const LIGHT_ACCENT_PAIRS = [
 
 export default function App() {
   const { theme } = useTheme();
-  const { isAuthenticated, profile, login, register, logout } = useAuth();
+  const { isAuthenticated, profile, user, login, register, logout } = useAuth();
+
+  // Subdomain detection for admin.teamascent.in (supports hostname, path, and ?subdomain=admin / ?view=admin)
+  const isInitialAdmin =
+    typeof window !== 'undefined' &&
+    (window.location.hostname.startsWith('admin.') ||
+      window.location.pathname.startsWith('/admin') ||
+      new URLSearchParams(window.location.search).get('subdomain') === 'admin' ||
+      new URLSearchParams(window.location.search).get('view') === 'admin');
+
+  const [isAdminSubdomain, setIsAdminSubdomain] = useState<boolean>(isInitialAdmin);
 
   // App View Routing: 'landing' | 'login' | 'register' | 'portal'
   const [currentView, setCurrentView] = useState<'landing' | 'login' | 'register' | 'portal'>('landing');
@@ -197,6 +209,52 @@ export default function App() {
     setSelectedProject(null);
     setDetailModalOpen(true);
   };
+
+  // ── SUBDOMAIN ROUTING: admin.teamascent.in ───────────────────
+  if (isAdminSubdomain) {
+    const hasAdminAccess = isAuthenticated && (user?.role === 'admin' || user?.role === 'super_admin');
+
+    if (hasAdminAccess) {
+      return (
+        <AdminPortal
+          onReturnToMain={() => {
+            setIsAdminSubdomain(false);
+            if (typeof window !== 'undefined') {
+              if (window.location.hostname.startsWith('admin.')) {
+                window.location.href = 'https://teamascent.in';
+              } else {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('subdomain');
+                url.searchParams.delete('view');
+                window.history.pushState({}, '', url.pathname + (url.search ? url.search : ''));
+              }
+            }
+          }}
+        />
+      );
+    }
+
+    return (
+      <AdminLoginPage
+        onLoginSuccess={() => {
+          // AuthContext will re-evaluate user and role
+        }}
+        onReturnToMain={() => {
+          setIsAdminSubdomain(false);
+          if (typeof window !== 'undefined') {
+            if (window.location.hostname.startsWith('admin.')) {
+              window.location.href = 'https://teamascent.in';
+            } else {
+              const url = new URL(window.location.href);
+              url.searchParams.delete('subdomain');
+              url.searchParams.delete('view');
+              window.history.pushState({}, '', url.pathname + (url.search ? url.search : ''));
+            }
+          }
+        }}
+      />
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-[#FAF8F5] text-[#1E1E1E] dark:bg-[#000000] dark:text-white selection:bg-[#D4A373] selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300">
