@@ -7,10 +7,42 @@ interface AchievementsSectionProps {
 }
 
 const ACHIEVEMENT_GALLERY = [
-  { id: 1, src: '/assets/achievements/achievement-1.jpg', alt: 'MindHack Hackathon Certificate Presentation' },
-  { id: 2, src: '/assets/achievements/achievement-2.jpg', alt: 'MindHack Student Award Felicitation' },
-  { id: 3, src: '/assets/achievements/achievement-3.jpg', alt: 'MindHack Excellence Award Presentation' },
-  { id: 4, src: '/assets/achievements/achievement-4.jpg', alt: 'MindHack Winner Certificate Ceremony' },
+  {
+    id: 1,
+    src: '/assets/achievements/achievement-1.jpg',
+    alt: 'MindHack Hackathon Certificate Presentation',
+    badge: 'MINDHACK.AI',
+  },
+  {
+    id: 2,
+    src: '/assets/achievements/achievement-2.jpg',
+    alt: 'MindHack Student Award Felicitation',
+    badge: 'MINDHACK.AI',
+  },
+  {
+    id: 3,
+    src: '/assets/achievements/achievement-3.jpg',
+    alt: 'MindHack Excellence Award Presentation',
+    badge: 'MINDHACK.AI',
+  },
+  {
+    id: 4,
+    src: '/assets/achievements/achievement-4.jpg',
+    alt: 'MindHack Winner Certificate Ceremony',
+    badge: 'MINDHACK.AI',
+  },
+  {
+    id: 5,
+    src: '/assets/achievements/achievement-5.jpg',
+    alt: 'OpenAI Academy × NxtWave Buildathon Finalists Ceremony',
+    badge: 'OpenAI Academy × NxtWave Buildathon',
+  },
+  {
+    id: 6,
+    src: '/assets/achievements/achievement-6.jpg',
+    alt: 'OpenAI Academy × NxtWave Buildathon Team Winners',
+    badge: 'OpenAI Academy × NxtWave Buildathon',
+  },
 ];
 
 export const AchievementsSection: React.FC<AchievementsSectionProps> = () => {
@@ -50,10 +82,10 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = () => {
                 key={`achieve-track1-${img.id}`}
                 className="group relative flex-shrink-0 w-[320px] sm:w-[440px] h-[220px] sm:h-[300px] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] transition-all duration-300"
               >
-                {/* MINDHACK.AI in Caps in the Left Corner */}
-                <div className="absolute top-4 left-4 z-20">
-                  <span className="font-heading text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-black/70 backdrop-blur-md text-white border border-white/20 shadow-lg">
-                    MINDHACK.AI
+                {/* Event Name Corner Badge */}
+                <div className="absolute top-4 left-4 z-20 max-w-[85%]">
+                  <span className="inline-block font-heading text-[10px] sm:text-xs font-bold uppercase tracking-[0.14em] px-3.5 py-1.5 rounded-full bg-black/75 backdrop-blur-md text-white border border-white/20 shadow-lg truncate">
+                    {img.badge}
                   </span>
                 </div>
 
@@ -74,10 +106,10 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = () => {
                 key={`achieve-track2-${img.id}`}
                 className="group relative flex-shrink-0 w-[320px] sm:w-[440px] h-[220px] sm:h-[300px] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] transition-all duration-300"
               >
-                {/* MINDHACK.AI in Caps in the Left Corner */}
-                <div className="absolute top-4 left-4 z-20">
-                  <span className="font-heading text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-black/70 backdrop-blur-md text-white border border-white/20 shadow-lg">
-                    MINDHACK.AI
+                {/* Event Name Corner Badge */}
+                <div className="absolute top-4 left-4 z-20 max-w-[85%]">
+                  <span className="inline-block font-heading text-[10px] sm:text-xs font-bold uppercase tracking-[0.14em] px-3.5 py-1.5 rounded-full bg-black/75 backdrop-blur-md text-white border border-white/20 shadow-lg truncate">
+                    {img.badge}
                   </span>
                 </div>
 
