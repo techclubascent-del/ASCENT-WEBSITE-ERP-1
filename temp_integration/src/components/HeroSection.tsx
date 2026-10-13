@@ -98,9 +98,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* Body Text */}
             <p className="font-body text-base sm:text-lg text-[#545454] dark:text-[#A6A6A6] max-w-2xl leading-relaxed">
-              ASCENT is the premier public infrastructure empowering visionary engineers, researchers,
-              and ventures. Discover frontier opportunities, access non-dilutive R&D resources, and deploy
-              autonomous, quantum, and aerospace architectures.
+              Ascent is a technical club that fosters innovation, creativity, and technical skills.
+              It empowers students to learn, collaborate, and turn ideas into real-world solutions.
             </p>
           </motion.div>
         </div>

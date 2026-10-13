@@ -24,13 +24,12 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = () => {
           </h2>
 
           <p className="font-body text-base text-slate-600 dark:text-[#A6A6A6] leading-relaxed">
-            Quantified breakthroughs from ASCENT innovation clusters deployed across defense,
-            commercial aviation, and sovereign quantum research initiatives.
+            Honouring the achievements that reflect the talent ,innovation and spirit of Ascent
           </p>
         </motion.div>
 
         {/* 4 Empty Cards with Staggered Scroll Animation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {ACHIEVEMENTS.map((item, idx) => {
             return (
               <motion.div
@@ -63,23 +62,6 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = () => {
             );
           })}
         </div>
-
-        {/* Callout Banner without Trophy symbol */}
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="rounded-2xl border border-slate-200 dark:border-[#545454]/50 bg-gradient-to-r from-slate-50 via-slate-100 to-slate-50 dark:from-[#0d0d0d] dark:via-[#121212] dark:to-[#0d0d0d] p-8 text-center max-w-4xl mx-auto flex flex-col items-center space-y-4 shadow-sm dark:shadow-none"
-        >
-          <h3 className="font-heading text-lg sm:text-xl font-bold uppercase text-slate-900 dark:text-white">
-            Accelerating The Next Wave Of Breakthroughs
-          </h3>
-          <p className="font-body text-xs sm:text-sm text-slate-600 dark:text-[#A6A6A6] max-w-xl">
-            Are you leading an advanced research initiative or developing high-performance hardware?
-            ASCENT provides immediate evaluation, lab facilities, and non-dilutive capital.
-          </p>
-        </motion.div>
       </div>
     </section>
   );

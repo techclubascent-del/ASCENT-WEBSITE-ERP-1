@@ -14,9 +14,9 @@ import { AboutSection } from './components/AboutSection';
 import { InitiativesSection } from './components/InitiativesSection';
 import { ProjectsSection } from './components/ProjectsSection';
 import { EventsSection } from './components/EventsSection';
+import { FoundersSection } from './components/FoundersSection';
 import { TeamSection } from './components/TeamSection';
 import { AchievementsSection } from './components/AchievementsSection';
-import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { RegistrationModal } from './components/RegistrationModal';
 import { ProjectDetailModal } from './components/ProjectDetailModal';
@@ -102,6 +102,7 @@ export default function App() {
       'initiatives',
       'projects',
       'events',
+      'founders',
       'team',
       'achievements',
       'contacts',
@@ -118,8 +119,12 @@ export default function App() {
         if (entry.isIntersecting) {
           const sectionId = entry.target.id as NavSection;
           let mappedSection = sectionId;
-          if (['initiatives', 'projects', 'events', 'team', 'achievements'].includes(sectionId)) {
+          if (['about', 'founders', 'team'].includes(sectionId)) {
             mappedSection = 'about';
+          } else if (['achievements', 'contacts'].includes(sectionId)) {
+            mappedSection = 'contacts';
+          } else if (['initiatives', 'projects', 'events'].includes(sectionId)) {
+            mappedSection = 'home';
           }
           setActiveSection(mappedSection);
         }
@@ -284,7 +289,7 @@ export default function App() {
                 onRegisterClick={() => setCurrentView('register')}
               />
 
-              {/* About Section */}
+              {/* About / Know More (Mission, Vision, Objectives) Section */}
               <AboutSection
                 accentColor1={activePair.c1}
                 accentColor2={activePair.c2}
@@ -311,6 +316,12 @@ export default function App() {
                 onRegisterEvent={handleOpenRegistration}
               />
 
+              {/* Founders Section */}
+              <FoundersSection
+                accentColor1={activePair.c1}
+                accentColor2={activePair.c2}
+              />
+
               {/* Team Section */}
               <TeamSection
                 accentColor1={activePair.c1}
@@ -319,12 +330,6 @@ export default function App() {
 
               {/* Achievements Section */}
               <AchievementsSection
-                accentColor1={activePair.c1}
-                accentColor2={activePair.c2}
-              />
-
-              {/* Contact & Communications Section */}
-              <ContactSection
                 accentColor1={activePair.c1}
                 accentColor2={activePair.c2}
               />

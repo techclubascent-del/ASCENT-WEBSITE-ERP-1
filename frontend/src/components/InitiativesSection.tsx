@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
 import { INITIATIVES } from '../data/platformData';
 import { InitiativeItem } from '../types';
@@ -10,11 +10,6 @@ interface InitiativesSectionProps {
 }
 
 export const InitiativesSection: React.FC<InitiativesSectionProps> = () => {
-  const [activeTab, setActiveTab] = useState<number>(0);
-
-  // 4 empty tabs as requested
-  const emptyTabs = [0, 1, 2, 3];
-
   return (
     <section id="initiatives" className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 border-t border-[#545454]/30">
       <div className="max-w-7xl mx-auto">
@@ -24,28 +19,12 @@ export const InitiativesSection: React.FC<InitiativesSectionProps> = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
+          className="mb-12"
         >
           <div>
             <h2 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-slate-900 dark:text-white">
               Initiatives
             </h2>
-          </div>
-
-          {/* Empty Tabs Placeholder */}
-          <div className="flex flex-wrap items-center gap-2">
-            {emptyTabs.map((tabIndex) => (
-              <button
-                key={tabIndex}
-                onClick={() => setActiveTab(tabIndex)}
-                className={`w-14 sm:w-16 h-8 rounded-full border transition-all ${
-                  activeTab === tabIndex
-                    ? 'bg-slate-900 border-slate-900 dark:bg-white dark:border-white shadow-sm'
-                    : 'bg-white/80 dark:bg-[#111111] border-slate-300/80 dark:border-[#545454]/40 hover:border-slate-400 dark:hover:border-[#A6A6A6]'
-                }`}
-                aria-label={`Tab ${tabIndex + 1}`}
-              />
-            ))}
           </div>
         </motion.div>
 

@@ -13,7 +13,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<ThemeMode>(() => {
     if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('ascent_theme') as ThemeMode | null;
+      const savedTheme = localStorage.getItem('ascent_theme_v2') as ThemeMode | null;
       if (savedTheme === 'light' || savedTheme === 'dark') {
         return savedTheme;
       }
@@ -35,6 +35,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       root.style.colorScheme = 'light';
     }
     localStorage.setItem('ascent_theme', theme);
+    localStorage.setItem('ascent_theme_v2', theme);
   }, [theme]);
 
   const toggleTheme = () => {

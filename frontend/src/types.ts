@@ -6,6 +6,7 @@ export type NavSection =
   | 'initiatives'
   | 'projects'
   | 'events'
+  | 'founders'
   | 'team'
   | 'achievements'
   | 'contacts';

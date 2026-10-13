@@ -41,7 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const handleNavClick = (id: NavSection) => {
     onNavigate(id);
     setMobileMenuOpen(false);
-    const element = document.getElementById(id);
+    const element = document.getElementById(id) || (id === 'about' ? document.getElementById('founders') : null);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }

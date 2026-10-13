@@ -10,14 +10,14 @@ interface ProjectsSectionProps {
 }
 
 export const ProjectsSection: React.FC<ProjectsSectionProps> = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Live Projects');
 
-  const categories = ['All', 'Aerospace', 'Quantum', 'Autonomous', 'AI Systems'];
+  const categories = ['Live Projects', 'Upcoming Projects'];
 
   const filteredProjects =
-    selectedCategory === 'All'
-      ? PROJECTS
-      : PROJECTS.filter((p) => p.category === selectedCategory);
+    selectedCategory === 'Live Projects'
+      ? PROJECTS.filter((p) => p.status === 'Active' || p.status === 'Deployed')
+      : PROJECTS.filter((p) => p.status === 'Research' || p.status === 'Incubating');
 
   return (
     <section id="projects" className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 border-t border-slate-200 dark:border-[#545454]/30">

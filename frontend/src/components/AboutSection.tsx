@@ -15,17 +15,17 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     {
       icon: Compass,
       title: 'Mission',
-      desc: 'Centralized curation of funded fellowships, moonshot research grants, and high-altitude flight allocations for deep-tech engineers.',
+      desc: 'To empower students with technical knowledge, practical skills, and innovative thinking through collaborative projects, workshops, and hands-on learning experiences.',
     },
     {
       icon: Eye,
       title: 'Vision',
-      desc: 'Architected with strict functional boundaries, real-time telemetry APIs, and lightweight high-performance rendering layers.',
+      desc: 'To become a leading technical club that inspires innovation, nurtures future technology leaders, and creates meaningful solutions to real-world challenges.',
     },
     {
       icon: Target,
       title: 'Objectives',
-      desc: 'Direct testbed access for cryogenic quantum annealers, autonomous drone swarms, and sub-orbital atmospheric payloads.',
+      desc: "To develop student's technical skills, encourage innovation, promote teamwork, and provide practical learning opportunities that prepare them to solve real-world challenges.",
     },
   ];
 
