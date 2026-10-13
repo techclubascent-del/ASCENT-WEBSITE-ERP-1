@@ -52,30 +52,31 @@ export const FacultyAdvisorsSection: React.FC<FacultyAdvisorsSectionProps> = () 
               whileHover={{ y: -6 }}
               className="group relative flex flex-col justify-between p-8 rounded-2xl border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[380px] sm:min-h-[440px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden"
             >
-              {card.image && (
+              {card.image ? (
                 <div className="absolute inset-0 w-full h-full">
                   <img
                     src={card.image}
                     alt="Faculty Advisor"
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/25" />
                 </div>
+              ) : (
+                <>
+                  {/* Clean Top Layout Watermark for blank cards */}
+                  <div className="flex justify-between items-start opacity-20 group-hover:opacity-60 transition-opacity">
+                    <div className="w-2.5 h-2.5 rounded-full border border-slate-400 dark:border-[#A6A6A6]" />
+                    <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-[#A6A6A6]">
+                      {card.tag}
+                    </span>
+                  </div>
+
+                  {/* Clean Bottom Subtle Corner Accent */}
+                  <div className="flex justify-between items-end opacity-20 group-hover:opacity-40 transition-opacity">
+                    <div className="h-[1px] w-12 bg-slate-400 dark:bg-white/30" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-white/30" />
+                  </div>
+                </>
               )}
-
-              {/* Clean Top Layout Watermark */}
-              <div className={`relative z-10 flex justify-between items-start ${card.image ? 'text-white' : 'opacity-20 group-hover:opacity-60 transition-opacity'}`}>
-                <div className={`w-2.5 h-2.5 rounded-full border ${card.image ? 'border-white/60 bg-white/20' : 'border-slate-400 dark:border-[#A6A6A6]'}`} />
-                <span className={`font-mono text-[9px] uppercase tracking-widest ${card.image ? 'px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white' : 'text-slate-400 dark:text-[#A6A6A6]'}`}>
-                  {card.tag}
-                </span>
-              </div>
-
-              {/* Clean Bottom Subtle Corner Accent */}
-              <div className={`relative z-10 flex justify-between items-end ${card.image ? 'text-white' : 'opacity-20 group-hover:opacity-40 transition-opacity'}`}>
-                <div className={`h-[1px] w-12 ${card.image ? 'bg-white/40' : 'bg-slate-400 dark:bg-white/30'}`} />
-                <div className={`w-1.5 h-1.5 rounded-full ${card.image ? 'bg-white/40' : 'bg-slate-400 dark:bg-white/30'}`} />
-              </div>
             </motion.div>
           ))}
         </div>

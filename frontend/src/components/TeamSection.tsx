@@ -63,21 +63,6 @@ export const TeamSection: React.FC<TeamSectionProps> = () => {
                   alt={`Team Member ${card.id}`}
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/25" />
-              </div>
-
-              {/* Clean Top Layout Watermark */}
-              <div className="relative z-10 flex justify-between items-start text-white">
-                <div className="w-2.5 h-2.5 rounded-full border border-white/60 bg-white/20" />
-                <span className="font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white">
-                  {card.tag}
-                </span>
-              </div>
-
-              {/* Clean Bottom Subtle Corner Accent */}
-              <div className="relative z-10 flex justify-between items-end text-white">
-                <div className="h-[1px] w-12 bg-white/40" />
-                <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
               </div>
             </motion.div>
           ))}
