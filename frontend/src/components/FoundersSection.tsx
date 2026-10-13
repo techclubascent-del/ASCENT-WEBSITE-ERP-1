@@ -40,7 +40,7 @@ export const FoundersSection: React.FC<FoundersSectionProps> = () => {
                 ease: [0.22, 1, 0.36, 1],
               }}
               whileHover={{ y: -6 }}
-              className="group relative flex flex-col justify-between p-8 rounded-2xl border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[260px] sm:min-h-[300px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)]"
+              className="group relative flex flex-col justify-between p-8 rounded-2xl border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[380px] sm:min-h-[440px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)]"
             >
               {/* Clean Top Layout Watermark */}
               <div className="flex justify-between items-start opacity-20 group-hover:opacity-60 transition-opacity">
