@@ -1,7 +1,7 @@
 {
-  "name": "ascent-website-erp",
+  "name": "ascent-website-erp-1",
   "private": true,
   "scripts": {
-    "build": "npm --prefix frontend install && npm --prefix frontend run build"
+    "build": "npm --prefix frontend install && npm --prefix frontend run build && node -e \"const fs=require('fs'); fs.cpSync('frontend/dist', '.next', {recursive: true});\""
   }
 }
