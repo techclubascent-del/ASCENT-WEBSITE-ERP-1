@@ -11,24 +11,28 @@ export const TeamSection: React.FC<TeamSectionProps> = () => {
     {
       id: 1,
       name: 'Harsha Bharath',
+      role: 'President',
       image: '/assets/team/team-member-1.jpg',
       tag: 'ASCENT // TEAM // 01',
     },
     {
       id: 2,
       name: 'Tripti Singh',
+      role: 'Vice president',
       image: '/assets/team/team-member-2.jpg',
       tag: 'ASCENT // TEAM // 02',
     },
     {
       id: 3,
       name: 'Rishi Jayaram',
+      role: 'Secretary',
       image: '/assets/team/team-member-3.jpg',
       tag: 'ASCENT // TEAM // 03',
     },
     {
       id: 4,
       name: 'Mohammed',
+      role: 'Devx lead',
       image: '/assets/team/team-member-4.jpg',
       tag: 'ASCENT // TEAM // 04',
     },
@@ -53,7 +57,14 @@ export const TeamSection: React.FC<TeamSectionProps> = () => {
         {/* 4 Cards Grid with Staggered Scroll Animation */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {teamCards.map((card, idx) => (
-            <div key={card.id} className="flex flex-col items-center">
+            <div key={card.id} className="flex flex-col items-center w-full">
+              {card.role && (
+                <div className="mb-3 text-center">
+                  <span className="font-heading text-sm sm:text-base font-bold uppercase tracking-wider text-slate-800 dark:text-neutral-200">
+                    {card.role}
+                  </span>
+                </div>
+              )}
               <motion.div
                 initial={{ opacity: 0, y: 35 }}
                 whileInView={{ opacity: 1, y: 0 }}
