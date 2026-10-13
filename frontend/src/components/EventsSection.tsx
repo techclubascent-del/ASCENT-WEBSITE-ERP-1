@@ -98,7 +98,7 @@ export const EventsSection: React.FC<EventsSectionProps> = () => {
         </div>
       </div>
 
-      {/* Moving Line in Motion: Techfest 2025 */}
+      {/* Moving Line in Motion: mindhack.ai */}
       <div className="relative w-full overflow-hidden mt-6 py-3 border-y border-slate-200/60 dark:border-[#545454]/25 bg-slate-50/50 dark:bg-white/[0.02]">
         {/* Left & Right Edge Fade Masks */}
         <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-[#FAF8F5] dark:from-[#000000] to-transparent z-20 pointer-events-none" />
@@ -108,9 +108,9 @@ export const EventsSection: React.FC<EventsSectionProps> = () => {
           {/* Primary Track */}
           <div className="flex items-center gap-8 pr-8 whitespace-nowrap">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={`techfest-track1-${i}`} className="flex items-center gap-8">
-                <span className="font-heading text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-slate-800 dark:text-white">
-                  techfest 2025
+              <div key={`mindhack-track1-${i}`} className="flex items-center gap-8">
+                <span className="font-heading text-xs sm:text-sm tracking-[0.25em] font-bold text-slate-800 dark:text-white">
+                  mindhack.ai
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-white/40" />
               </div>
@@ -120,9 +120,9 @@ export const EventsSection: React.FC<EventsSectionProps> = () => {
           {/* Secondary Track for Seamless Loop */}
           <div className="flex items-center gap-8 pr-8 whitespace-nowrap" aria-hidden="true">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={`techfest-track2-${i}`} className="flex items-center gap-8">
-                <span className="font-heading text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-slate-800 dark:text-white">
-                  techfest 2025
+              <div key={`mindhack-track2-${i}`} className="flex items-center gap-8">
+                <span className="font-heading text-xs sm:text-sm tracking-[0.25em] font-bold text-slate-800 dark:text-white">
+                  mindhack.ai
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-white/40" />
               </div>
