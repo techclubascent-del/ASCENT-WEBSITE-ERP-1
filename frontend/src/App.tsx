@@ -335,8 +335,9 @@ export default function App() {
             <Navbar
               activeSection={activeSection}
               onNavigate={setActiveSection}
-              onLoginClick={() => (isAuthenticated ? setCurrentView('portal') : setCurrentView('login'))}
-              onRegisterClick={() => setCurrentView('register')}
+              // Temporarily hidden to restrict access as requested; reinstate later:
+              // onLoginClick={() => (isAuthenticated ? setCurrentView('portal') : setCurrentView('login'))}
+              // onRegisterClick={() => setCurrentView('register')}
               isAuthenticated={isAuthenticated}
             />
 
@@ -346,7 +347,7 @@ export default function App() {
               <HeroSection
                 accentColor1={activePair.c1}
                 accentColor2={activePair.c2}
-                onRegisterClick={() => setCurrentView('register')}
+                // onRegisterClick={() => setCurrentView('register')}
               />
 
               {/* About / Know More (Mission, Vision, Objectives) Section */}
@@ -426,7 +427,11 @@ export default function App() {
               accentColor2={activePair.c2}
               onApplyForThis={() => {
                 setDetailModalOpen(false);
-                setCurrentView('register');
+                window.open(
+                  'https://docs.google.com/forms/d/e/1FAIpQLScpFIewv3qOjC7Y8I1nqT-LeYP4qgJnb9axK8tQIFOpoOoJng/viewform?usp=sharing&ouid=116130163176487365114',
+                  '_blank',
+                  'noopener,noreferrer'
+                );
               }}
             />
           </motion.div>

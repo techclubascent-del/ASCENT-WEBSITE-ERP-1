@@ -104,7 +104,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Very Right Corner: Member Portal Login + Theme Switcher & Mobile Menu Toggle */}
         <div className="flex items-center justify-end gap-2.5 z-10">
-          {/* Member Login / Portal Link */}
+          {/* Member Login / Portal Link (Temporarily hidden per request so users don't access it; reinstate later) */}
+          {/*
           {onLoginClick && (
             <button
               onClick={onLoginClick}
@@ -124,6 +125,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </button>
           )}
+          */}
 
           {/* Theme Mode Switcher */}
           <button
@@ -173,7 +175,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               );
             })}
 
-            {/* Mobile Portal / Login Button */}
+            {/* Mobile Portal / Login Button (Temporarily hidden per request; reinstate later) */}
+            {/*
             {onLoginClick && (
               <button
                 onClick={() => {
@@ -195,8 +198,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                 )}
               </button>
             )}
+            */}
 
-            {/* Mobile Register Button */}
+            {/* Mobile Register Now Button (Redirects to Google Form) */}
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLScpFIewv3qOjC7Y8I1nqT-LeYP4qgJnb9axK8tQIFOpoOoJng/viewform?usp=sharing&ouid=116130163176487365114"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mt-2 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#D4A373] text-black font-heading font-bold text-sm shadow-sm cursor-pointer"
+            >
+              <span>Register Now</span>
+            </a>
+
+            {/* Original Mobile Register Button (Temporarily hidden per request; reinstate later) */}
+            {/*
             {onRegisterClick && (
               <button
                 onClick={() => {
@@ -208,6 +224,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span>Register Candidate Profile</span>
               </button>
             )}
+            */}
           </div>
         </div>
       )}
