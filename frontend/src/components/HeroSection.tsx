@@ -54,8 +54,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             Fueling ideas, Shaping Futures
           </p>
 
-          {/* Register Button Aligned in Center with Tagline */}
+          {/* Register Now Button (Redirects to Google Form) */}
           <div className="pt-3">
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLScpFIewv3qOjC7Y8I1nqT-LeYP4qgJnb9axK8tQIFOpoOoJng/viewform?usp=sharing&ouid=116130163176487365114"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-quicksand font-bold text-sm sm:text-base px-8 py-3.5 rounded-full bg-[#D4A373] text-black hover:bg-[#c69363] dark:bg-[#D4A373] dark:text-black dark:hover:bg-[#dfad7d] shadow-[0_4px_22px_rgba(212,163,115,0.35)] hover:shadow-[0_6px_28px_rgba(212,163,115,0.45)] transition-all duration-300 active:scale-95 cursor-pointer tracking-wider uppercase inline-flex items-center gap-2.5 group"
+              style={{ fontFamily: "'Quicksand', -apple-system, sans-serif" }}
+              id="hero-register-now-btn"
+            >
+              <UserPlus size={17} className="transition-transform group-hover:scale-110 text-black" />
+              <span>Register Now</span>
+            </a>
+
+            {/* Original Register Button (Temporarily hidden per request; reinstate later) */}
+            {/*
             <button
               onClick={onRegisterClick}
               className="font-quicksand font-bold text-sm sm:text-base px-8 py-3.5 rounded-full bg-[#D4A373] text-black hover:bg-[#c69363] dark:bg-[#D4A373] dark:text-black dark:hover:bg-[#dfad7d] shadow-[0_4px_22px_rgba(212,163,115,0.35)] hover:shadow-[0_6px_28px_rgba(212,163,115,0.45)] transition-all duration-300 active:scale-95 cursor-pointer tracking-wider uppercase flex items-center gap-2.5 group"
@@ -65,6 +79,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <UserPlus size={17} className="transition-transform group-hover:scale-110 text-black" />
               <span>Register</span>
             </button>
+            */}
           </div>
         </motion.div>
       </section>
