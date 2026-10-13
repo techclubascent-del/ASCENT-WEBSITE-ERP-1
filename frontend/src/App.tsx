@@ -15,6 +15,7 @@ import { InitiativesSection } from './components/InitiativesSection';
 import { ProjectsSection } from './components/ProjectsSection';
 import { EventsSection } from './components/EventsSection';
 import { FoundersSection } from './components/FoundersSection';
+import { FacultyAdvisorsSection } from './components/FacultyAdvisorsSection';
 import { TeamSection } from './components/TeamSection';
 import { AchievementsSection } from './components/AchievementsSection';
 import { Footer } from './components/Footer';
@@ -103,6 +104,7 @@ export default function App() {
       'projects',
       'events',
       'founders',
+      'faculty-advisors',
       'team',
       'achievements',
       'contacts',
@@ -119,7 +121,7 @@ export default function App() {
         if (entry.isIntersecting) {
           const sectionId = entry.target.id as NavSection;
           let mappedSection = sectionId;
-          if (['about', 'founders', 'team'].includes(sectionId)) {
+          if (['about', 'founders', 'faculty-advisors', 'team'].includes(sectionId)) {
             mappedSection = 'about';
           } else if (['achievements', 'contacts'].includes(sectionId)) {
             mappedSection = 'contacts';
@@ -318,6 +320,12 @@ export default function App() {
 
               {/* Founders Section */}
               <FoundersSection
+                accentColor1={activePair.c1}
+                accentColor2={activePair.c2}
+              />
+
+              {/* Faculty Advisors Section */}
+              <FacultyAdvisorsSection
                 accentColor1={activePair.c1}
                 accentColor2={activePair.c2}
               />
