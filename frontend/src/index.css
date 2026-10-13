@@ -96,3 +96,23 @@ html.light ::-webkit-scrollbar-thumb:hover {
 .border-ascent-hover:hover {
   border-color: rgba(166, 166, 166, 0.8);
 }
+
+/* Continuous horizontal marquee scroll */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-scroll {
+  animation: marquee-scroll 28s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-scroll:hover {
+  animation-play-state: paused;
+}
+

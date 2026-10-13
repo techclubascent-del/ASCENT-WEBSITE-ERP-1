@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { EVENTS } from '../data/platformData';
 import { EventItem } from '../types';
 import { api, ApiEvent } from '../lib/api';
 
@@ -9,6 +8,15 @@ interface EventsSectionProps {
   accentColor2: string;
   onRegisterEvent?: (event: EventItem) => void;
 }
+
+const EVENT_GALLERY = [
+  { id: 1, src: '/assets/events/event-1.jpg', alt: 'Ascent Hackathon Lab Session' },
+  { id: 2, src: '/assets/events/event-2.jpg', alt: 'Team Project Collaboration' },
+  { id: 3, src: '/assets/events/event-3.jpg', alt: 'Technical Workshop & Seminar' },
+  { id: 4, src: '/assets/events/event-4.jpg', alt: 'Keynote & Projector Hall Presentation' },
+  { id: 5, src: '/assets/events/event-5.jpg', alt: 'Engineering Review & Mentorship' },
+];
+
 
 export const EventsSection: React.FC<EventsSectionProps> = () => {
   const [, setBackendEvents] = useState<ApiEvent[]>([]);
@@ -26,8 +34,9 @@ export const EventsSection: React.FC<EventsSectionProps> = () => {
         console.debug('Events API response deferred:', err.message);
       });
   }, []);
+
   return (
-    <section id="events" className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 border-t border-slate-200 dark:border-[#545454]/30">
+    <section id="events" className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 border-t border-slate-200 dark:border-[#545454]/30 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Section Header with Scroll Reveal */}
         <motion.div
@@ -43,40 +52,49 @@ export const EventsSection: React.FC<EventsSectionProps> = () => {
             </h2>
           </div>
         </motion.div>
+      </div>
 
-        {/* Empty Events Cards with Staggered Scroll Animation */}
-        <div className="space-y-4">
-          {EVENTS.map((event, idx) => {
-            return (
-              <motion.div
-                key={event.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-30px' }}
-                transition={{
-                  duration: 0.5,
-                  delay: idx * 0.1,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                whileHover={{ x: 4 }}
-                className="group relative p-6 sm:p-8 rounded-2xl border border-slate-200/90 dark:border-[#545454]/30 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[140px] sm:min-h-[160px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_10px_35px_rgba(0,0,0,0.8)] flex flex-col justify-between"
+      {/* Straight Line Continuous Motion Track */}
+      <div className="relative w-full overflow-hidden py-4">
+        {/* Left & Right Edge Fade Masks */}
+        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-32 bg-gradient-to-r from-[#FAF8F5] dark:from-[#000000] to-transparent z-20 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-32 bg-gradient-to-l from-[#FAF8F5] dark:from-[#000000] to-transparent z-20 pointer-events-none" />
+
+        {/* Moving Row in a Straight Line with Motion */}
+        <div className="flex w-max animate-marquee-scroll">
+          {/* Primary Track */}
+          <div className="flex items-center gap-6 pr-6">
+            {EVENT_GALLERY.map((img) => (
+              <div
+                key={`track1-${img.id}`}
+                className="group relative flex-shrink-0 w-[300px] sm:w-[420px] h-[200px] sm:h-[280px] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] transition-all duration-300"
               >
-                {/* Clean Top Layout Watermark */}
-                <div className="flex justify-between items-start opacity-20 group-hover:opacity-60 transition-opacity">
-                  <div className="w-2 h-2 rounded-full border border-slate-400 dark:border-[#A6A6A6]" />
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-[#A6A6A6]">
-                    ASCENT // EVENTS &amp; HACKATHONS
-                  </span>
-                </div>
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
 
-                {/* Clean Bottom Subtle Corner Accent */}
-                <div className="flex justify-between items-end opacity-20 group-hover:opacity-40 transition-opacity">
-                  <div className="h-[1px] w-12 bg-slate-400 dark:bg-white/30" />
-                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-white/30" />
-                </div>
-              </motion.div>
-            );
-          })}
+          {/* Secondary Track (Seamless Loop) */}
+          <div className="flex items-center gap-6 pr-6" aria-hidden="true">
+            {EVENT_GALLERY.map((img) => (
+              <div
+                key={`track2-${img.id}`}
+                className="group relative flex-shrink-0 w-[300px] sm:w-[420px] h-[200px] sm:h-[280px] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] transition-all duration-300"
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
