@@ -19,14 +19,14 @@ export const InitiativesSection: React.FC<InitiativesSectionProps> = () => {
     },
     {
       id: 'init-2',
-      image: null,
-      title: null,
+      image: '/assets/initiatives/workshop.jpg',
+      title: 'Workshop',
       tag: 'ASCENT // INITIATIVE // 02',
     },
     {
       id: 'init-3',
-      image: null,
-      title: null,
+      image: '/assets/initiatives/tech-fest.jpg',
+      title: 'Tech Fest',
       tag: 'ASCENT // INITIATIVE // 03',
     },
   ];
