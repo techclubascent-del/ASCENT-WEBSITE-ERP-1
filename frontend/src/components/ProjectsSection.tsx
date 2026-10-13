@@ -9,6 +9,13 @@ interface ProjectsSectionProps {
   onSelectProject?: (project: ProjectItem) => void;
 }
 
+const PROJECT_IMAGES: Record<string, string> = {
+  'proj-1': '/assets/projects/project-1.jpg',
+  'proj-2': '/assets/projects/project-2.jpg',
+  'proj-3': '/assets/projects/project-3.jpg',
+  'proj-4': '/assets/projects/project-4.jpg',
+};
+
 export const ProjectsSection: React.FC<ProjectsSectionProps> = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('Live Projects');
 
@@ -54,23 +61,10 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = () => {
           </div>
         </motion.div>
 
-        {/* Empty Space Container replacing 3D holodeck */}
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full h-56 sm:h-72 rounded-2xl border border-dashed border-slate-300/80 dark:border-[#545454]/40 bg-white/40 dark:bg-[#080808]/40 backdrop-blur-sm mb-12 flex flex-col items-center justify-center p-6 text-center"
-        >
-          <div className="w-10 h-10 rounded-xl border border-dashed border-slate-400/60 dark:border-white/20 mb-3 flex items-center justify-center opacity-30" />
-          <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-[#A6A6A6]/60">
-            ASCENT // PROJECT LAB
-          </span>
-        </motion.div>
-
-        {/* Projects Cards Grid with Empty Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Projects Cards Grid with Dummy Pictures */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {filteredProjects.map((project, idx) => {
+            const imageSrc = PROJECT_IMAGES[project.id] || '/assets/projects/project-1.jpg';
             return (
               <motion.div
                 key={project.id}
@@ -82,21 +76,15 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = () => {
                   delay: (idx % 2) * 0.12,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                whileHover={{ y: -4 }}
-                className="group relative flex flex-col justify-between p-7 rounded-2xl border border-slate-200/90 dark:border-[#545454]/30 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[220px] sm:min-h-[260px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)]"
+                whileHover={{ y: -6 }}
+                className="group relative flex flex-col justify-between p-8 rounded-2xl border border-slate-200/90 dark:border-[#545454]/40 bg-white/70 dark:bg-[#070707]/90 backdrop-blur-xl min-h-[300px] sm:min-h-[360px] transition-all duration-300 hover:border-slate-400 dark:hover:border-[#A6A6A6] shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden"
               >
-                {/* Clean Top Layout Watermark */}
-                <div className="flex justify-between items-start opacity-20 group-hover:opacity-60 transition-opacity">
-                  <div className="w-2 h-2 rounded-full border border-slate-400 dark:border-[#A6A6A6]" />
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-[#A6A6A6]">
-                    ASCENT // PROJECTS
-                  </span>
-                </div>
-
-                {/* Clean Bottom Subtle Corner Accent */}
-                <div className="flex justify-between items-end opacity-20 group-hover:opacity-40 transition-opacity">
-                  <div className="h-[1px] w-12 bg-slate-400 dark:bg-white/30" />
-                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-white/30" />
+                <div className="absolute inset-0 w-full h-full">
+                  <img
+                    src={imageSrc}
+                    alt={project.title}
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
               </motion.div>
             );
