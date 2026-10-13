@@ -1,0 +1,14 @@
+name = "ascent-website-erp"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+pages_build_output_dir = "dist"
+
+[assets]
+directory = "dist"
+
+[vars]
+NEXT_PUBLIC_SUPABASE_URL = "https://nmupkoncrddqzuhnjfhz.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY = "sb_publishable_kIaH6UFYQuwj1oIu9V8KCw_TLGRlluZ"
+NEXT_PUBLIC_APP_URL = "https://ascent-website-erp.pages.dev"
+NEXT_PUBLIC_API_URL = "http://localhost:8000"
