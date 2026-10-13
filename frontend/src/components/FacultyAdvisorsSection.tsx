@@ -57,9 +57,9 @@ export const FacultyAdvisorsSection: React.FC<FacultyAdvisorsSectionProps> = () 
                   <img
                     src={card.image}
                     alt="Faculty Advisor"
-                    className="w-full h-full object-cover object-top filter grayscale contrast-[1.05] brightness-95 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/35" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/25" />
                 </div>
               )}
 
