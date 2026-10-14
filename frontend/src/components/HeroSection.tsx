@@ -113,8 +113,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* Body Text */}
             <p className="font-body text-base sm:text-lg text-[#545454] dark:text-[#A6A6A6] max-w-2xl leading-relaxed">
-              Ascent is a technical club that fosters innovation, creativity, and technical skills.
-              It empowers students to learn, collaborate, and turn ideas into real-world solutions.
+              Ascent is a technical club that fosters innovation, creativity and technical skills.
+              It empowers students to learn, collaborate and turn ideas into real-world solutions.
             </p>
           </motion.div>
         </div>
