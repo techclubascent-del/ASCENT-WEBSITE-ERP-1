@@ -38,7 +38,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
           className="flex flex-col items-start gap-2"
         >
           <h2 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-slate-900 dark:text-white">
-            The Team
+            THE CORE
           </h2>
           <p className="font-body text-xs sm:text-sm text-slate-500 dark:text-[#A6A6A6]">
             Double click any card to reveal profile details
