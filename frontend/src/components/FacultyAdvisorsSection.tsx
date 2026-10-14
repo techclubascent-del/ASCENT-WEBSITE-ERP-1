@@ -16,7 +16,7 @@ export const FacultyAdvisorsSection: React.FC<FacultyAdvisorsSectionProps> = () 
     },
     {
       id: 2,
-      name: 'Ramesh Kulkarni',
+      name: 'Ramesh P Kulkarni',
       image: '/assets/advisors/faculty-advisor-2.jpg',
       tag: 'ASCENT // FACULTY ADVISOR // 02',
     },
