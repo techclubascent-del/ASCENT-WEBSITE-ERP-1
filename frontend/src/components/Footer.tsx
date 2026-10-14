@@ -1,7 +1,7 @@
 import React from 'react';
 import { AscentLogo } from './AscentLogo';
 import { NavSection } from '../types';
-import { ArrowUp, Mail, Linkedin, Github } from 'lucide-react';
+import { ArrowUp, Mail, Linkedin, Github, Instagram } from 'lucide-react';
 
 interface FooterProps {
   onNavigate?: (section: NavSection) => void;
@@ -54,6 +54,18 @@ export const Footer: React.FC<FooterProps> = () => {
                 className="group flex items-center justify-center w-9 h-9 rounded-xl bg-white/70 dark:bg-white/[0.06] border border-slate-300/80 dark:border-white/10 backdrop-blur-xl text-slate-700 dark:text-[#A6A6A6] hover:text-[#004AAD] dark:hover:text-white hover:border-[#004AAD] dark:hover:border-white transition-all shadow-sm hover:scale-105"
               >
                 <Linkedin size={16} />
+              </a>
+
+              {/* Instagram Link */}
+              <a
+                href="https://instagram.com/ascent.techhub"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Ascent Instagram"
+                title="Ascent Instagram"
+                className="group flex items-center justify-center w-9 h-9 rounded-xl bg-white/70 dark:bg-white/[0.06] border border-slate-300/80 dark:border-white/10 backdrop-blur-xl text-slate-700 dark:text-[#A6A6A6] hover:text-[#004AAD] dark:hover:text-white hover:border-[#004AAD] dark:hover:border-white transition-all shadow-sm hover:scale-105"
+              >
+                <Instagram size={16} />
               </a>
 
               {/* GitHub Link */}
