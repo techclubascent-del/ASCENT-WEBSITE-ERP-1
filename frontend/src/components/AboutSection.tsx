@@ -15,17 +15,17 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     {
       icon: Compass,
       title: 'Mission',
-      desc: 'To empower students with technical knowledge, practical skills, and innovative thinking through collaborative projects, workshops, and hands-on learning experiences.',
+      desc: 'To empower students with technical knowledge, practical skills and innovative thinking through collaborative projects, workshops and hands-on learning experiences.',
     },
     {
       icon: Eye,
       title: 'Vision',
-      desc: 'To become a leading technical club that inspires innovation, nurtures future technology leaders, and creates meaningful solutions to real-world challenges.',
+      desc: 'To become a leading technical club that inspires innovation, nurtures future technology leaders and creates meaningful solutions to real-world challenges.',
     },
     {
       icon: Target,
       title: 'Objectives',
-      desc: "To develop student's technical skills, encourage innovation, promote teamwork, and provide practical learning opportunities that prepare them to solve real-world challenges.",
+      desc: "To develop student's technical skills, encourage innovation, promote teamwork and provide practical learning opportunities that prepare them to solve real-world challenges.",
     },
   ];
 
@@ -46,7 +46,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
 
           <p className="font-body text-base sm:text-lg text-[#545454] dark:text-[#A6A6A6] leading-relaxed">
             ASCENT is structured around an uncompromising standard: remove clutter, maximize
-            clarity, and give builders direct access to the frontier of scientific and engineering
+            clarity and give builders direct access to the frontier of scientific and engineering
             endeavors. We bridge pure research with real-world deployment.
           </p>
         </motion.div>
