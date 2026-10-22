@@ -20,6 +20,12 @@ export const FoundersSection: React.FC<FoundersSectionProps> = () => {
       image: '/assets/founders/founder-2.jpg',
       tag: 'ASCENT // FOUNDER // 02',
     },
+    {
+      id: 3,
+      name: 'BALASUBRAMANYAN J R',
+      image: '/assets/founders/founder-3.jpg',
+      tag: 'ASCENT // FOUNDER // 03',
+    },
   ];
 
   return (
@@ -38,8 +44,8 @@ export const FoundersSection: React.FC<FoundersSectionProps> = () => {
           </h2>
         </motion.div>
 
-        {/* 2 Cards Grid with Staggered Scroll Animation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        {/* 3 Cards Grid with Staggered Scroll Animation */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {founderCards.map((card, idx) => (
             <div key={card.id} className="flex flex-col items-center">
               <motion.div
