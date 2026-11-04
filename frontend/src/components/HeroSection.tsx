@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { AscentLogo } from './AscentLogo';
+import { UserPlus } from 'lucide-react';
 
 interface HeroSectionProps {
   accentColor1: string;
@@ -13,6 +14,7 @@ interface HeroSectionProps {
 export const HeroSection: React.FC<HeroSectionProps> = ({
   accentColor1,
   accentColor2,
+  onRegisterClick,
 }) => {
   return (
     <>
@@ -30,7 +32,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           }}
         />
 
-        {/* Center Space: ASCENT Logo + ASCENT Word + Tagline */}
+        {/* Center Space: ASCENT Logo + ASCENT Word + Tagline + Register Button */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
@@ -51,6 +53,34 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <p className="font-body text-base sm:text-xl md:text-2xl font-normal text-[#545454] dark:text-[#A6A6A6] tracking-wide">
             Fueling ideas, Shaping Futures
           </p>
+
+          {/* Register Now Button (Redirects to Google Form) */}
+          <div className="pt-3">
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLScpFIewv3qOjC7Y8I1nqT-LeYP4qgJnb9axK8tQIFOpoOoJng/viewform?usp=sharing&ouid=116130163176487365114"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-quicksand font-bold text-sm sm:text-base px-8 py-3.5 rounded-full bg-[#D4A373] text-black hover:bg-[#c69363] dark:bg-[#D4A373] dark:text-black dark:hover:bg-[#dfad7d] shadow-[0_4px_22px_rgba(212,163,115,0.35)] hover:shadow-[0_6px_28px_rgba(212,163,115,0.45)] transition-all duration-300 active:scale-95 cursor-pointer tracking-wider uppercase inline-flex items-center gap-2.5 group"
+              style={{ fontFamily: "'Quicksand', -apple-system, sans-serif" }}
+              id="hero-register-now-btn"
+            >
+              <UserPlus size={17} className="transition-transform group-hover:scale-110 text-black" />
+              <span>Register Now</span>
+            </a>
+
+            {/* Original Register Button (Temporarily hidden per request; reinstate later) */}
+            {/*
+            <button
+              onClick={onRegisterClick}
+              className="font-quicksand font-bold text-sm sm:text-base px-8 py-3.5 rounded-full bg-[#D4A373] text-black hover:bg-[#c69363] dark:bg-[#D4A373] dark:text-black dark:hover:bg-[#dfad7d] shadow-[0_4px_22px_rgba(212,163,115,0.35)] hover:shadow-[0_6px_28px_rgba(212,163,115,0.45)] transition-all duration-300 active:scale-95 cursor-pointer tracking-wider uppercase flex items-center gap-2.5 group"
+              style={{ fontFamily: "'Quicksand', -apple-system, sans-serif" }}
+              id="hero-register-btn"
+            >
+              <UserPlus size={17} className="transition-transform group-hover:scale-110 text-black" />
+              <span>Register</span>
+            </button>
+            */}
+          </div>
         </motion.div>
       </section>
 
